@@ -9,7 +9,7 @@ AOUT=$(basename $(SRC))
 all: $(AOUT)
 
 clean:
-	\rm -rf \#* *~ $(AOUT)
+	@\rm -rf \#* *~ $(AOUT)
 
 define template
 $(basename $(1)): $(1)
