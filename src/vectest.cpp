@@ -8,20 +8,9 @@
 using namespace std;
 using fmt::format;
 
-
-
-// template<class T> vector<T> vdouble(vector<T> && data){
-//   for (int& val: data) {
-//     val = val * 2 + 100;
-//   }
-//   return data;
-// }
-
 template <class T>
 concept Arithmetic = requires(T x){
-  is_arithmetic<T>::value;
-  //x * 3 + 100;
-  //static_assert(is_arithmetic<T>::value == true, "hoge");
+  x * 2 + 100;
 };
 
 template<class T> requires Arithmetic<T>
@@ -54,12 +43,11 @@ int main() {
   for(auto val: ddata2) cout << val << endl;
   cout << endl;
 
-#ifdef HOGE
+#ifdef IGNOREED
   vector<string> sdata = {"hoge", "moge"};
   vector<string> sdata2 = vdouble(move(sdata));
   cout << "string:" << endl;
   for(auto val: sdata2) cout << val << endl;
   cout << endl;
 #endif
-  cout << format("{}:{}", __FILE__, __LINE__) << endl;;
 }

@@ -3,7 +3,7 @@ CXX=clang++-14
 CXXFLAGS+=-std=c++20
 CXXFLAGS+=-lPocoUtil -lPocoXML -lPocoJSON -lPocoNet -lPocoFoundation
 
-SRC=vectest.cpp hello.cpp
+SRC=vectest.cpp zipcode.cpp
 AOUT=$(basename $(SRC))
 
 all: $(AOUT)

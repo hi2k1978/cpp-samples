@@ -21,19 +21,11 @@ using json = nlohmann::json;
 
 int main() {
   try{
-    const string zipcode = "1130021";
+    const string zipcode = "1500032";
     const string url = fmt::format("http://zipcloud.ibsnet.co.jp/api/search?zipcode={}", zipcode);
 
     unique_ptr<URI> moge;
     cout << fmt::format("url={}, zipcode={}",url, zipcode) << endl;
-    auto hoge = make_unique<URI>(url);
-    cout << hoge -> getHost() << endl;;
-    moge = move(hoge);
-    cout << moge -> getHost() << endl;;
-    cout << endl;
-    // URI uri2(url);
-    // unique_ptr<URI> pp= nullptr;
-    // pp(new uri2);
 
     URI uri(url);    
     HTTPClientSession session(uri.getHost(), uri.getPort());
@@ -50,7 +42,7 @@ int main() {
     HTTPResponse res;
     const int status = res.getStatus();
     const string reason = res.getReason();
-    cout << fmt::format("{}, {}", status, reason)<<endl;
+    // cout << fmt::format("{}, {}", status, reason)<<endl;
 
     if (200 <= status && status <= 299){
       istream &is = session.receiveResponse(res);
@@ -59,7 +51,7 @@ int main() {
 	// cout << fmt::format("buf = {}", buf) << endl;
 	data += buf;
       }
-      cout << fmt::format("data = {}", data) << endl;
+      // cout << fmt::format("data = {}", data) << endl;
       json jdata = json::parse(data);
       string result = fmt::format("{}{}{}",
 				  jdata["results"][0]["address1"],
