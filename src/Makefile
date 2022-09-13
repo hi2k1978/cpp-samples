@@ -8,12 +8,13 @@ AOUT=$(basename $(SRC))
 
 all: $(AOUT)
 
+.PHONY: clean
 clean:
-	@\rm -rf \#* *~ $(AOUT)
+	@\rm -rf \#* *~ \.\#* $(AOUT)
 
 define template
-$(basename $(1)): $(1)
-	$(CXX) $(CXXFLAGS) $(1) -o $(basename $(1))
+$@: $^
+	$(CXX) $(CXXFLAGS) $^ -o $@
 endef
 $(foreach src, $(SRC), $(eval $(call template, $(src))))
 
