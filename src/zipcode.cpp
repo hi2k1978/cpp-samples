@@ -81,11 +81,11 @@ public:
 
 int main() {
   auto inquiry = make_unique<AddressInquiry>();
-  string address_list[] = {"1500032", "4040001", "0010013"};
+  string zipcode_list[] = {"1500032", "4040001", "0010013"};
 
-  cout << endl << "address_list:" << endl;
-  for (auto address: address_list){
-    AddressInquiryResult result = inquiry->search(address);
+  cout << endl << "zipcode -> address:" << endl;
+  for (auto zipcode: zipcode_list){
+    AddressInquiryResult result = inquiry->search(zipcode);
     cout << fmt::format("{} -> {}", result.zipcode, result.address) << endl;
   }
   return 0;
