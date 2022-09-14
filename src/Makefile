@@ -4,17 +4,19 @@ CXXFLAGS+=-std=c++20
 CXXFLAGS+=-lPocoUtil -lPocoXML -lPocoJSON -lPocoNet -lPocoFoundation
 
 SRC=$(wildcard *.cpp)
-AOUT=$(basename $(SRC))
+TARGET=$(basename $(SRC))
 
-all: $(AOUT)
+
+all: $(TARGET)
 
 .PHONY: clean
 clean:
-	@\rm -rf \#* *~ \.\#* $(AOUT)
+	echo $(SHELL) $(VPATH) $(MAKESHELL) $(MAKE) $(MAKE_VERSION)
+	@\rm -rf \#* *~ \.\#* $(TARGET)
 
 define template
 $@: $^
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 endef
 $(foreach src, $(SRC), $(eval $(call template, $(src))))
 
