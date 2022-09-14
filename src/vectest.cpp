@@ -8,6 +8,9 @@
 using namespace std;
 using fmt::format;
 
+template<class T> auto vdouble(vector<T> && data) -> vector<T>;
+
+
 template <class T>
 concept Arithmetic = requires(T x){
   x * 2 + 100;
@@ -22,9 +25,11 @@ auto vdouble(vector<T> && data) -> vector<T> {
   auto calc = [kk, vv](T xx) -> T {
     return kk * xx + vv;
   };
-  for (T& val: data) {
+  for (int i=0, j=100; T& val: data) {
     //val = val * 2 + 100;
     val = calc(val);
+    cout << format("i: {}, j: {}, val: {}", i, j, val) << endl;
+    ++i; ++j;
   }
   return data;
 }

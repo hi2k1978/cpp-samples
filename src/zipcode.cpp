@@ -15,9 +15,9 @@
 #include<Poco/RegularExpression.h>
 
 using namespace std;
-using namespace Poco::Net;
-using namespace Poco;
-using json = nlohmann::json;
+using fmt::format;
+
+
 
 struct AddressInquiryResult {
   bool success;
@@ -26,12 +26,16 @@ struct AddressInquiryResult {
 };
 
 class AddressInquiry {
+
   const string inquiry_url = "http://zipcloud.ibsnet.co.jp/api/search?zipcode=";
   AddressInquiryResult failed {false, "", ""};
 
 public:
-  AddressInquiry(){}
   AddressInquiryResult search(string zipcode){
+
+    using namespace Poco::Net;
+    using namespace Poco;
+    using json = nlohmann::json;
     try{
       const string url = inquiry_url + zipcode;
       
@@ -81,12 +85,13 @@ public:
 
 int main() {
   auto inquiry = make_unique<AddressInquiry>();
-  string zipcode_list[] = {"1500032", "4040001", "0010013"};
+  string zipcode_list[] = {"1500032"};
+  // string zipcode_list[] = {"1500032", "4040001", "0010013"};
 
   cout << endl << "zipcode -> address:" << endl;
   for (auto zipcode: zipcode_list){
     AddressInquiryResult result = inquiry->search(zipcode);
-    cout << fmt::format("{} -> {}", result.zipcode, result.address) << endl;
+    cout << format("{} -> {}", result.zipcode, result.address) << endl;
   }
   return 0;
  
