@@ -6,12 +6,10 @@ CXXFLAGS+=-lPocoUtil -lPocoXML -lPocoJSON -lPocoNet -lPocoFoundation
 SRC=$(wildcard *.cpp)
 TARGET=$(basename $(SRC))
 
-
 all: $(TARGET)
 
 .PHONY: clean
-clean:
-	echo $(SHELL) $(VPATH) $(MAKESHELL) $(MAKE) $(MAKE_VERSION)
+clean: 
 	@\rm -rf \#* *~ \.\#* $(TARGET)
 
 define template
