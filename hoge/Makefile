@@ -1,6 +1,6 @@
 CXX=clang++-14
-INCLUDE=./include
-LIB=./lib
+INCLUDEDIR=./include
+LIBDIR=./lib
 
 SRC=hoge.cpp
 OBJ=hige.o moge.o
@@ -9,20 +9,21 @@ CXXFLAGS+=-std=c++20
 SUBDIRS:=include lib
 BUILDDIR=build
 
-CPPFLAGS+=$(addprefix -I,$(INCLUDE)) $(addprefix -L,$(LIB))
+CPPFLAGS+=$(addprefix -I,$(INCLUDEDIR)) $(addprefix -L,$(LIBDIR))
 TARGET:=$(SRC:.cpp=)
 
 .PHONY: all clean $(SUBDIRS) $(TARGET)
-all: $(SUBDIRS) $(TARGET)
+
+all: $(SUBDIRS) $(TARGET) $(TASK2)
 
 clean: $(SUBDIRS)
-	@echo \rm -rf \#* *~ \.\#* $(TARGET) 
+	@\rm -rf \#* *~ \.\#*
 
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-$(TARGET): $(SRC) $(addprefix $(LIB)/,$(OBJ))
-	-@mkdir $(BUILDDIR) 
+$(TARGET): $(SRC) $(addprefix $(LIBDIR)/,$(OBJ))
+	@mkdir -p $(BUILDDIR) 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $(addprefix $(BUILDDIR)/, $@)
 define template
 $@: $^

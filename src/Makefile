@@ -1,20 +1,24 @@
 CXX=clang++-14
 
+SRCS=$(wildcard *.cpp)
+LIBS=PocoUtil PocoXML PocoJSON PocoNet PocoFoundation
+
+BUILDDIR=build
+TARGET=$(basename $(SRCS))
+
 CXXFLAGS+=-std=c++20
-CXXFLAGS+=-lPocoUtil -lPocoXML -lPocoJSON -lPocoNet -lPocoFoundation
+CXXFLAGS+=$(addprefix -l, $(LIBS))
 
-SRC=$(wildcard *.cpp)
-TARGET=$(basename $(SRC))
-
+.PHONY: all clean
 all: $(TARGET)
-
-.PHONY: clean
+	echo $(TARGET)
 clean: 
-	@\rm -rf \#* *~ \.\#* $(TARGET)
+	@\rm -rf \#* *~ \.\#*
 
 define template
-$@: $^
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+$(basename $1): $1
+	@mkdir -p $(BUILDDIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $1 -o $(BUILDDIR)/$(basename $1)
 endef
-$(foreach src, $(SRC), $(eval $(call template, $(src))))
+$(foreach src, $(SRCS), $(eval $(call template, $(src))))
 
