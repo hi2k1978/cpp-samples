@@ -22,7 +22,7 @@ clean: $(SUBDIRS)
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-$(TARGET): $(SRC) $(addprefix $(LIBDIR)/,$(OBJS))
+$(TARGET): $(SRC) $(LIBDIR)/*.o
 	@mkdir -p $(BUILDDIR) 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $(addprefix $(BUILDDIR)/, $@)
 
