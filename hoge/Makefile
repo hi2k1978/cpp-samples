@@ -3,7 +3,7 @@ INCLUDEDIR=./include
 LIBDIR=./lib
 
 SRC=hoge.cpp
-OBJ=hige.o moge.o
+OBJS=hige.o moge.o
 CXXFLAGS+=-std=c++20
 
 SUBDIRS:=include lib
@@ -22,12 +22,7 @@ clean: $(SUBDIRS)
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-$(TARGET): $(SRC) $(addprefix $(LIBDIR)/,$(OBJ))
+$(TARGET): $(SRC) $(addprefix $(LIBDIR)/,$(OBJS))
 	@mkdir -p $(BUILDDIR) 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $(addprefix $(BUILDDIR)/, $@)
-define template
-$@: $^
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
-endef
-$(foreach src, $(SRC), $(eval $(call template, $(src))))
 
