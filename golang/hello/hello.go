@@ -2,12 +2,20 @@ package main
 
 import (
 	"fmt"
-
-	"example.com/greetings"
+	"log"	
+	"example.com/greetings"	
 )
 
 func main() {
-	message1, message2 := greetings.Hello("Hogetter")
+	log.SetPrefix("greetings: ")
+	log.SetFlags(0)
+
+	message1, message2, err := greetings.Hello("Hogetter")
+	// message1, message2, err := greetings.Hello("")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println(message1)
 	fmt.Println(message2)
 
@@ -18,5 +26,4 @@ func main() {
 		a, b = greetings.Fibonacci(a, b)
 	}
 	// fmt.Printf("a=%d, b=%d\n", a, b)
-
 }
