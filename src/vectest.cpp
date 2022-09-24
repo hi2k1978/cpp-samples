@@ -21,7 +21,7 @@ auto vdouble(vector<T> && data) -> vector<T> {
   static_assert(is_arithmetic<T>::value, "hoge");
   const int kk = 2;
   const int vv = 200;
-  
+
   auto calc = [kk, vv](T xx) -> T {
     return kk * xx + vv;
   };

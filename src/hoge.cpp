@@ -1,21 +1,31 @@
 #include<iostream>
+using namespace std;
 #define  FMT_HEADER_ONLY
 #include<fmt/core.h>
-
-using namespace std;
 using fmt::format;
 
-template<typename T1, typename T2>
-auto moge(T1 x, T2 y) -> decltype(x+y) {
-  return x + y;
+#include<thread>
+#include<memory>
+#include<chrono>
+
+mutex printMutex_;
+void print(const string& s){
+  lock_guard<mutex> lock{printMutex_};
+  cout << s << endl;
 }
 
-int main() {
-  auto xx = 3;
-  auto yy = 8.0;
-  auto zz = moge(xx, yy);
-  cout << format("zz={}", zz) << endl; 
-  cout << format("zz={}", static_cast<char>(65)) << endl;
-  cout << R"(ho"ge)" << endl;
+void f(stop_token s, string title){
+  while(!s.stop_requested()){
+    print(title + "...");
+    this_thread::sleep_for(chrono::seconds{1});
+  }
+  print(title+": stopped.");
+}
+
+
+int main(){
+  thread th{f, "[Thread A]"};
+  this_thread::sleep_for(chrono::seconds{3});
+  th.request_stop();
   return 0;
 }
