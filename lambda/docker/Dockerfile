@@ -40,7 +40,7 @@ RUN git clone https://github.com/aws/aws-sdk-cpp.git && \
     -DENABLE_UNITY_BUILD=ON && \
   make && make install
 
-COPY ./run.sh /usr/local/bin/run.sh
+COPY ./docker/run.sh /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh
 
 WORKDIR /src

@@ -1,8 +1,8 @@
-dockerfile:=httpd/Dockerfile
+dockerfile:=docker/Dockerfile
 dockertag:=lambda-cpp-runtime
 linuxtag:=linux
 
-.PHONY: all clean force docker-build 
+.PHONY: all clean force docker-run docker-build 
 
 all: svgs pdf
 
@@ -15,5 +15,5 @@ force:
 docker-run: force
 	@sudo docker run -dit amazonlinux:latest
 docker-build: force
-	@sudo docker image build -t $(dockertag) .
+	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
 
