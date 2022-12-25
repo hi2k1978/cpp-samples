@@ -12,8 +12,8 @@ clean: $(subdirs)
 
 force:
 
-docker-run: force
-	@sudo docker run -dit amazonlinux:latest
 docker-build: force
 	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
 
+docker-run: force
+	@sudo docker run --rm -v $(pwd):/src $(dockertag) aws-lambda-package-api
