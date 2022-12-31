@@ -3,6 +3,7 @@ group:=inokuchi
 dockerfile:=docker/Dockerfile
 dockertag:=lambda-cpp-runtime
 linuxtag:=linux
+apis=apigw
 
 .PHONY: all clean force docker-run docker-build apigw
 
@@ -17,7 +18,12 @@ force:
 docker-build: force
 	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
 
-docker-run: apigw
-apigw: force
-	@sudo docker run --rm -v $(abspath ./src/$@):/src $(dockertag) aws-lambda-package-api
-	@sudo chown -R $(user):$(group) ./src/$@/build
+docker-run: $(apis)
+
+define template
+$1: force
+	@sudo docker run --rm -v $(abspath ./src/$(strip $1)):/src $(dockertag) aws-lambda-package-api
+	@sudo chown -R $(user):$(group) ./src/$(strip $1)/build
+
+endef
+$(foreach api, $(apis), $(eval $(call template, $(api))))
