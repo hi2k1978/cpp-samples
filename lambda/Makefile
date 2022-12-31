@@ -3,9 +3,9 @@ group:=inokuchi
 dockerfile:=docker/Dockerfile
 dockertag:=lambda-cpp-runtime
 linuxtag:=linux
-apis=apigw
+target=apigw
 
-.PHONY: all clean force docker-run docker-build apigw
+.PHONY: all clean force docker-run docker-build $(target)
 
 all: docker-run
 
@@ -18,7 +18,7 @@ force:
 docker-build: force
 	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
 
-docker-run: $(apis)
+docker-run: $(target)
 
 define template
 $1: force
@@ -26,4 +26,4 @@ $1: force
 	@sudo chown -R $(user):$(group) ./src/$1/build
 
 endef
-$(foreach api, $(apis), $(eval $(call template,$(api))))
+$(foreach api, $(target), $(eval $(call template,$(api))))
