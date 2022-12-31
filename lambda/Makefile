@@ -15,7 +15,6 @@ force:
 docker-build: force
 	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
 
-docker-run: apigw force
-	sudo docker run --rm -v $(abspath ./src/$(<)):/src $(dockertag) aws-lambda-package-api
-
-apigw:
+docker-run: apigw
+apigw: force
+	@sudo docker run --rm -v $(abspath ./src/$@):/src $(dockertag) aws-lambda-package-api
