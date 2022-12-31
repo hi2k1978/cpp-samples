@@ -2,7 +2,7 @@ dockerfile:=docker/Dockerfile
 dockertag:=lambda-cpp-runtime
 linuxtag:=linux
 
-.PHONY: all clean force docker-run docker-build 
+.PHONY: all clean force docker-run docker-build apigw
 
 all: svgs pdf
 
@@ -15,5 +15,7 @@ force:
 docker-build: force
 	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
 
-docker-run: force
-	@sudo docker run --rm -v $(pwd):/src $(dockertag) aws-lambda-package-api
+docker-run: apigw force
+	sudo docker run --rm -v $(abspath ./src/$(<)):/src $(dockertag) aws-lambda-package-api
+
+apigw:

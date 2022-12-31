@@ -39,14 +39,7 @@ RUN git clone https://github.com/aws/aws-sdk-cpp.git && \
     -DCMAKE_INSTALL_PREFIX=~/install \
     -DENABLE_TESTING=OFF && \
   make && make install
-  # cmake .. -DBUILD_ONLY="core" \
-  #   -DCMAKE_BUILD_TYPE=Release \
-  #   -DBUILD_SHARED_LIBS=OFF \
-  #   -DENABLE_UNITY_BUILD=ON \
-  #   -DCUSTOM_MEMORY_MANAGEMENT=OFF \
-  #   -DCMAKE_INSTALL_PREFIX=~/install \
-  #   -DENABLE_UNITY_BUILD=ON && \
-
+ 
 COPY ./docker/run.sh /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh
 
