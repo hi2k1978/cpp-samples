@@ -1,3 +1,5 @@
+user:=inokuchi
+group:=inokuchi
 dockerfile:=docker/Dockerfile
 dockertag:=lambda-cpp-runtime
 linuxtag:=linux
@@ -18,3 +20,4 @@ docker-build: force
 docker-run: apigw
 apigw: force
 	@sudo docker run --rm -v $(abspath ./src/$@):/src $(dockertag) aws-lambda-package-api
+	@sudo chown -R $(user):$(group) ./src/$@/build
