@@ -7,7 +7,7 @@ apis=apigw
 
 .PHONY: all clean force docker-run docker-build apigw
 
-all: svgs pdf
+all: docker-run
 
 clean: $(subdirs)
 	@\rm -f $(pdf) $(html)
