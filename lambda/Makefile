@@ -22,8 +22,8 @@ docker-run: $(apis)
 
 define template
 $1: force
-	@sudo docker run --rm -v $(abspath ./src/$(strip $1)):/src $(dockertag) aws-lambda-package-api
-	@sudo chown -R $(user):$(group) ./src/$(strip $1)/build
+	@sudo docker run --rm -v $(abspath ./src/$1):/src $(dockertag) aws-lambda-package-api
+	@sudo chown -R $(user):$(group) ./src/$1/build
 
 endef
-$(foreach api, $(apis), $(eval $(call template, $(api))))
+$(foreach api, $(apis), $(eval $(call template,$(api))))
