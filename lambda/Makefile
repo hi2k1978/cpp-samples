@@ -19,14 +19,14 @@ clean: $(subdirs)
 
 force:
 
-docker-build: force
+image-build: force
 	docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
 
 build: $(TARGET)
 
 define template
 $1: force
-	docker run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) $(DOCKERARGS)
+	docker container run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) $(DOCKERARGS)
 endef
 $(foreach api, $(TARGET), $(eval $(call template,$(api))))
 
