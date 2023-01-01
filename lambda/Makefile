@@ -5,7 +5,6 @@ GROUP:=$(shell id -g -n)
 ## Docker variables
 DOCKERFILE:=docker/Dockerfile
 DOCKERTAG:=lambda-cpp-runtime
-DOCKERARGS:=aws-lambda-package-api
 
 ## Makefile variables
 TARGET:=apigw
@@ -24,13 +23,14 @@ image-build: force
 
 build: $(TARGET)
 
-define template
+define lambda-cpp
 $1: force
-	docker container run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) $(DOCKERARGS)
+	docker container run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) aws-lambda-package-$1
 endef
-$(foreach api, $(TARGET), $(eval $(call template,$(api))))
+$(foreach api, $(TARGET), $(eval $(call lambda-cpp,$(api))))
 
 push: 
+
 
 
 
