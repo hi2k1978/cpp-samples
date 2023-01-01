@@ -1,29 +1,37 @@
-user:=inokuchi
-group:=inokuchi
-dockerfile:=docker/Dockerfile
-dockertag:=lambda-cpp-runtime
-linuxtag:=linux
-target=apigw
+## user info
+USER:=$(shell id -u -n)
+GROUP:=$(shell id -g -n)
 
-.PHONY: all clean force docker-run docker-build $(target)
+## Docker variables
+DOCKERFILE:=docker/Dockerfile
+DOCKERTAG:=lambda-cpp-runtime
+DOCKERARGS:=aws-lambda-package-api
 
-all: docker-run
+## Makefile variables
+TARGET:=apigw
+
+.PHONY: all clean force docker-build build push $(TARGET)
+
+all: build
 
 clean: $(subdirs)
-	@\rm -f $(pdf) $(html)
 	@echo "clean current directory & sub-directories"
 
 force:
 
 docker-build: force
-	@sudo docker image build -t $(dockertag) -f $(dockerfile) .
+	@sudo docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
 
-docker-run: $(target)
+build: $(TARGET)
 
 define template
 $1: force
-	@sudo docker run --rm -v $(abspath ./src/$1):/src $(dockertag) aws-lambda-package-api
-	@sudo chown -R $(user):$(group) ./src/$1/build
-
+	@sudo docker run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) $(DOCKERARGS)
+	@sudo chown -R $(USER):$(GROUP) ./src/$1/build # bad code:-(
 endef
-$(foreach api, $(target), $(eval $(call template,$(api))))
+$(foreach api, $(TARGET), $(eval $(call template,$(api))))
+
+push: 
+
+
+
