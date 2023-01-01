@@ -20,14 +20,13 @@ clean: $(subdirs)
 force:
 
 docker-build: force
-	@sudo docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
+	docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
 
 build: $(TARGET)
 
 define template
 $1: force
-	@sudo docker run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) $(DOCKERARGS)
-	@sudo chown -R $(USER):$(GROUP) ./src/$1/build # bad code:-(
+	docker run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) $(DOCKERARGS)
 endef
 $(foreach api, $(TARGET), $(eval $(call template,$(api))))
 
