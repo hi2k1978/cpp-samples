@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -euo pipefail
 
 ##
 ## read modules
@@ -8,7 +8,7 @@ set -u
 . ./aws/modules.sh
 
 ##
-## read run commands
+## read run commands configurations
 ##
 . ./aws/rc.conf
 
@@ -29,7 +29,5 @@ if true; then
     print_result
 fi
 
-# result=$(get_arn_from_iam_role "lambda_basic_execution")
-# echo $result
 
 

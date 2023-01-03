@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -euo pipefail
 
 ##
 ## read modules
@@ -8,13 +8,13 @@ set -u
 . ./aws/modules.sh
 
 ##
-## read run commands
+## read run commands configurations
 ##
 . ./aws/rc.conf
 
 
 if true; then
-    print_title "create lambda functions"
+    print_title "update lambda functions"
     update_lambda_functions
     print_result
 fi
