@@ -80,3 +80,22 @@ function create_lambda_functions() {
 
     return 0
 }
+
+
+function update_lambda_functions() {
+
+    # update lambda-functions
+    for lambda_function in ${lambda_functions[@]}; do
+	local zip_file=./src/${lambda_function}/build/${lambda_function}.zip
+	local cmd="aws lambda  update-function-code
+	      	       --function-name ${lambda_function}
+		       --zip-file fileb://${zip_file}"
+
+	echo $cmd 1>&2
+	if ${is_execute}; then eval $cmd; fi
+	if [ $? -ne 0 ]; then return 1; fi
+    done
+
+    return 0
+    
+}
