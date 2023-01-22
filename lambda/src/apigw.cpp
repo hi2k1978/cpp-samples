@@ -17,8 +17,7 @@ invocation_response my_handler(invocation_request const& request)
 
     auto v = json.View();
     Aws::SimpleStringStream ss;
-    ss << "Good ";
-    std::cout << "hoge";
+
     if (v.ValueExists("body") && v.GetObject("body").IsString()) {
         auto body = v.GetString("body");
         JsonValue body_json(body);
@@ -51,7 +50,6 @@ invocation_response my_handler(invocation_request const& request)
 
     JsonValue resp;
     resp.WithString("message", ss.str());
-
     return invocation_response::success(resp.View().WriteCompact(), "application/json");
 }
 

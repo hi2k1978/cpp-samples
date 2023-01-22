@@ -80,6 +80,12 @@ function create_lambda_functions() {
 
     return 0
 }
+# aws lambda add-permission \
+#  --statement-id 133e26af-b50d-5ad7-8c34-558eb69acbbb \
+#  --action lambda:InvokeFunction \
+#  --function-name "arn:aws:lambda:ap-northeast-1:681609929005:function:apigw" \
+#  --principal apigateway.amazonaws.com \
+#  --source-arn "arn:aws:execute-api:ap-northeast-1:681609929005:b89c1ptd5h/*/*/apigw"
 
 
 function update_lambda_functions() {

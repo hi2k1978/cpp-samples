@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# base_endpoint="https://b89c1ptd5h.execute-api.ap-northeast-1.amazonaws.com/default"
 base_endpoint="https://b89c1ptd5h.execute-api.ap-northeast-1.amazonaws.com/default"
 endpoint="${base_endpoint}/apigw?name=Bradley&city=Chicago"
-echo
 echo "endpoint: ${endpoint}"
 echo
 sleep 1
@@ -13,4 +13,5 @@ curl -v -X POST \
   -d '{ "time": "evening" }'
 echo
 echo
+
 
