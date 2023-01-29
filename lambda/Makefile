@@ -11,7 +11,7 @@ TARGET:=apigw
 
 .PHONY: all clean force docker-build build push $(TARGET)
 
-all: build push
+all: build
 
 clean: $(subdirs)
 	@echo "clean current directory & sub-directories"
@@ -32,7 +32,7 @@ $(foreach api, $(TARGET), $(eval $(call lambda-cpp,$(api))))
 push: 
 	./aws/update.sh
 
-
-
-test:
+test: 
 	./aws/test.sh
+
+full: build push test

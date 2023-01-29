@@ -49,13 +49,11 @@ invocation_response my_handler(invocation_request const& request)
     }
 
 
-    JsonValue resp, bodyJsonValue;
-    resp.WithString("statusCode", "200");
-    //resp.WithString("body", R"({"message": "ok hoge", "result": "hoge"})");
+    JsonValue resp;
     
-    bodyJsonValue.WithString("message", "ok");
-    bodyJsonValue.WithString("result", ss.str());
-    resp.WithString("body", bodyJsonValue.View().WriteCompact());
+    // resp.WithString("message", ss.str());
+    resp.WithString("statusCode", "200");
+    resp.WithString("body", "{\"message\": \"ok hoge\"}");
     return invocation_response::success(resp.View().WriteCompact(), "application/json");
 }
 
