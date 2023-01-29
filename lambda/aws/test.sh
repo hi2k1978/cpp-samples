@@ -10,7 +10,7 @@ curl -v -X POST \
   ${endpoint} \
   -H 'content-type: application/json' \
   -H 'day: Sunday' \
-  -d '{ "time": "evening" }'
+  -d '{ "time": "evening1" }'
 echo
 echo
 

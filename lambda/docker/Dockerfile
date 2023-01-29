@@ -19,7 +19,8 @@ RUN git clone https://github.com/awslabs/aws-lambda-cpp-runtime.git && \
   cd aws-lambda-cpp-runtime && \
   mkdir build && \
   cd build && \
-  cmake .. -DCMAKE_BUILD_TYPE=Release \
+  # Debug or Release 
+  cmake .. -DCMAKE_BUILD_TYPE=Debug \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_INSTALL_PREFIX=~/install && \
   make && make install
@@ -30,9 +31,10 @@ RUN git clone https://github.com/aws/aws-sdk-cpp.git && \
   git pull origin main && \
   git submodule update --init --recursive && \
   mkdir build && \
-  cd build && \
+    cd build && \
+  # Debug or Release 
   cmake .. -DBUILD_ONLY="core" \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=Debug \
     -DBUILD_SHARED_LIBS=OFF \
     -DENABLE_UNITY_BUILD=ON \
     -DCUSTOM_MEMORY_MANAGEMENT=OFF \

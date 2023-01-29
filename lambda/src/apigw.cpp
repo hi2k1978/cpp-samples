@@ -1,6 +1,7 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 #include <aws/core/utils/memory/stl/SimpleStringStream.h>
+#include <stdio.h>
 
 using namespace aws::lambda_runtime;
 
@@ -56,6 +57,7 @@ invocation_response my_handler(invocation_request const& request)
 
 int main()
 {
+    printf("hoge");
     run_handler(my_handler);
     return 0;
 }
