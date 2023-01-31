@@ -7,9 +7,9 @@ DOCKERFILE:=docker/Dockerfile
 DOCKERTAG:=lambda-cpp-runtime
 
 ## Makefile variables
-TARGET:=apigw
+TARGET:=sample-get sample-post
 
-.PHONY: all clean force docker-build build push $(TARGET)
+.PHONY: all clean force docker-build build push full $(TARGET) 
 
 all: build
 
@@ -23,12 +23,6 @@ docker-build: force
 
 build: $(TARGET)
 
-define lambda-cpp
-$1: force
-	docker container run --rm -v $(abspath ./src):/src $(DOCKERTAG) aws-lambda-package-$1
-endef
-$(foreach api, $(TARGET), $(eval $(call lambda-cpp,$(api))))
-
 push: 
 	./aws/update.sh
 
@@ -36,3 +30,12 @@ test:
 	./aws/test.sh
 
 full: build push test
+
+define lambda-build
+$1: force
+	cp ./src/CMakeLists.txt ./src/${1}
+	docker container run --rm -v $(abspath ./src/${1}):/src $(DOCKERTAG) aws-lambda-package-handler
+	rm ./src/${1}/CMakeLists.txt
+endef
+$(foreach api, $(TARGET), $(eval $(call lambda-build,$(api))))
+
