@@ -15,7 +15,7 @@ set -euo pipefail
 
 if true; then
     print_title "update lambda functions"
-    update_lambda_functions
+    update_lambda_functions rc_lambda_function
     print_result
 fi
 

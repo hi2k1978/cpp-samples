@@ -7,7 +7,7 @@ DOCKERFILE:=docker/Dockerfile
 DOCKERTAG:=lambda-cpp-runtime
 
 ## Makefile variables
-TARGET:=sample-get sample-post
+TARGET:=cpp-sample-get cpp-sample-put
 
 .PHONY: all clean force docker-build build push full $(TARGET) 
 
