@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-retval=
+# retval=
 
 function print_title() {
     echo "#####################################################"
@@ -19,29 +19,33 @@ function print_result() {
 }
 
 function get_lambda_iam_role() {
-
     declare -n rc=$1
-
-    # set local variables
+    declare -n retval=$2
     local result_json
-    
+
+
     # convert iam-role to arn
     local cmd="aws iam get-role --role-name ${rc["role_name"]}"
     echo $cmd
-    if ${is_execute}; then
-	local -r result_json=$(eval $cmd)
-	if [ $? -ne 0 ]; then return 1; fi
-	retval=$(echo $result_json | jq '.Role.Arn')
-    fi
+    case $is_execute in
+	true)
+	    result_json=$(eval $cmd)
+	    if [ $? -ne 0 ]; then return 1; fi
+	    retval=$(echo $result_json | jq '.Role.Arn')
+	    ;;
+	*)
+	    retval="__lambda_iam_role__"
+	    ;;
+    esac
+    echo "arn = $retval"
     return 0
 }
 
 function create_lambda_iam_roles() {
-
     declare -n rc=$1
-    
+    local cmd
     # create iam-role to use in lambda functions
-    local -r cmd="aws iam create-role
+    cmd="aws iam create-role
     	     --role-name ${rc["role_name"]} 
 	     --assume-role-policy-document file://${rc["policy_json"]}"
     echo $cmd
@@ -49,7 +53,7 @@ function create_lambda_iam_roles() {
     if [ $? -ne 0 ]; then return 1; fi
 
     # attach role with role-policy used in lambda
-    local cmd="aws iam attach-role-policy
+    cmd="aws iam attach-role-policy
     	     --role-name ${rc["role_name"]}
     	     --policy-arn ${rc["policy_arn"]}"
     echo $cmd
@@ -65,10 +69,10 @@ function create_lambda_functions() {
     declare -n rc_iam_role=$2
     local -r lambda_functions=( ${rc["lambda_functions"]} )
     local -r lambda_iam_role=${rc_iam_role["role_name"]}
+    local arn
     # convert iam-role to arn
-    get_lambda_iam_role rc_iam_role
+    get_lambda_iam_role rc_iam_role arn
     if [ $? -ne 0 ]; then return 1; fi
-    arn=$retval
 
     # creacte lambda-functions
     for lambda_function in ${lambda_functions[@]}; do
