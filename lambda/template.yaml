@@ -10,33 +10,42 @@ Globals:
 
 Resources:
   CppSampleGet:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
+      CodeUri: ./src/CppSampleGet/build/handler.zip
+      Handler: handler
+      PackageType: Zip
+      Runtime: provided
+      MemorySize: 512
       Events:
         CppSampleGet:
           Type: Api
           Properties:
             Path: /cpp-sample-get
             Method: get
+      AutoPublishAlias: dev
+      FunctionName: 'cpp-sample-get'
+      # Role: 'arn:aws:iam::xxxxxxxxxxxx:role/FullAccess'
+      # DeploymentPreference:
+      #     Type: Linear10PercentEvery1Minute
     Metadata:
-      DockerTag: cpp-sample-get-v001
-      DockerContext: ./src/cpp-sample-get
-      Dockerfile: Dockerfile
-  CppSamplePost:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      PackageType: Image
-      Events:
-        CppSamplePost:
-          Type: Api
-          Properties:
-            Path: /cpp-sample-post
-            Method: post
-    Metadata:
-      DockerTag: cpp-sample-post-v001
-      DockerContext: ./src/cpp-sample-post
-      Dockerfile: Dockerfile
+      # BuildMethod: makefile
+  # CppSamplePost:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     CodeUri: ./src/CppSamplePost/build/handler.zip
+  #     Handler: handler
+  #     PackageType: Zip
+  #     Runtime: provided
+  #     MemorySize: 512
+  #     Events:
+  #       CppSamplePost:
+  #         Type: Api
+  #         Properties:
+  #           Path: /cpp-sample-post
+  #           Method: post
+  #   Metadata:
+  #     # BuildMethod: makefile
 
 Outputs:
   CppSampleGet:

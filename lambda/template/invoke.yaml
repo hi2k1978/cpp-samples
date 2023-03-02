@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: cpp-lambda
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+
+Resources:
+  CppSampleGet:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./src/CppSampleGet/build/handler.zip
+      Handler: handler
+      PackageType: Zip
+      Runtime: provided
+      MemorySize: 512
+      Events:
+        CppSampleGet:
+          Type: Api
+          Properties:
+            Path: /cpp-sample-get
+            Method: get
+    Metadata:
+      BuildMethod: makefile
+  CppSamplePost:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./src/CppSamplePost/build/handler.zip
+      Handler: handler
+      PackageType: Zip
+      Runtime: provided
+      MemorySize: 512
+      Events:
+        CppSamplePost:
+          Type: Api
+          Properties:
+            Path: /cpp-sample-post
+            Method: post
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  CppSampleGet:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/cpp-sample-get/"
+    
+

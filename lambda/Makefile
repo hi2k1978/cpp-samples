@@ -1,37 +1,32 @@
-## user info
-# USER:=$(shell id -u -n)
-# GROUP:=$(shell id -g -n)
-
 ## Docker variables
 DOCKERFILE:=docker/Dockerfile
-DOCKERTAG:=lambda-cpp-runtime
+DOCKERTAG:=lambda-cpp-runtime:latest
 
 ## Makefile variables
-TARGET:=cpp-sample-get cpp-sample-post
+TARGET:=CppSampleGet CppSamplePost
 
-.PHONY: all clean force compiler-build sam-build sam-test build push full $(TARGET) 
+.PHONY: all clean force compiler-build sam-test build push full $(TARGET) 
 
 all: build
 
-clean: $(subdirs)
+clean: $(TARGET)
 	@echo "clean current directory & sub-directories"
+	@for dir in $(TARGET); do sudo rm -rf ./src/$$dir/build; done
+	ls src/**
 
 force:
 
 compiler-build: force
 	docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
 
-sam-build: force
-	for package in $(TARGET); do cp ./src/scripts/Dockerfile ./src/$${package}; done
-	sam build
-	for package in $(TARGET); do rm ./src/$${package}/Dockerfile; done
+compiler-clean: force
+	docker image rm -f $(DOCKERTAG)
 
-sam-test: force
-	sam local invoke CppSampleGet
+compiler-rebuild: compiler-clean compiler-build
 
-build: $(TARGET) sam-build
 
-push: 
+
+deploy: 
 	./aws/update.sh
 
 test: 
@@ -39,13 +34,21 @@ test:
 
 full: build push test
 
-define handler-build
-$1: force
+define build-resource
+build-$1: force
 	cp ./src/scripts/CMakeLists.txt ./src/$1
-	docker container run --rm -v $(abspath ./src/$1):/src $(DOCKERTAG) aws-lambda-package-handler
+	docker container run --rm -v $(abspath ./src/$1):/tmp/src $(DOCKERTAG) aws-lambda-package-handler
 	rm ./src/$1/CMakeLists.txt
 endef
-$(foreach api, $(TARGET), $(eval $(call handler-build,$(api))))
+$(foreach resource, $(TARGET), $(eval $(call build-resource,$(resource))))
+
+build: $(addprefix build-,$(TARGET))
 
 
+define sam-invoke-resource
+sam-invoke-$1: force
+	sam local invoke --event ./events/event.json CppSampleGet
+endef
+$(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
 
+sam-invoke: $(addprefix sam-invoke-,$(TARGET))
