@@ -19,43 +19,42 @@ function print_result() {
 }
 
 function get_lambda_iam_role() {
-    declare -n rc=$1
-    declare -n retval=$2
+    declare -n retval=$1
+    # declare -n rc=$2
     local result_json
 
 
     # convert iam-role to arn
-    local cmd="aws iam get-role --role-name ${rc["role_name"]}"
+    local cmd="aws iam get-role --role-name ${rc_lambda_iam_role["role_name"]}"
     echo $cmd
     case $is_execute in
 	true)
 	    result_json=$(eval $cmd)
 	    if [ $? -ne 0 ]; then return 1; fi
-	    retval=$(echo $result_json | jq '.Role.Arn')
+	    retval["arn"]=$(echo $result_json | jq '.Role.Arn')
 	    ;;
 	*)
-	    retval="__lambda_iam_role__"
+	    retval["arn"]="__lambda_iam_role__"
 	    ;;
     esac
-    echo "arn = $retval"
+    echo "lambda-iam-role: " ${retval["arn"]} 
     return 0
 }
 
 function create_lambda_iam_roles() {
-    declare -n rc=$1
     local cmd
     # create iam-role to use in lambda functions
     cmd="aws iam create-role
-    	     --role-name ${rc["role_name"]} 
-	     --assume-role-policy-document file://${rc["policy_json"]}"
+    	     --role-name ${rc_lambda_iam_role["role_name"]} 
+	     --assume-role-policy-document file://${rc_lambda_iam_role["policy_json"]}"
     echo $cmd
     if ${is_execute}; then eval $cmd; fi
     if [ $? -ne 0 ]; then return 1; fi
 
     # attach role with role-policy used in lambda
     cmd="aws iam attach-role-policy
-    	     --role-name ${rc["role_name"]}
-    	     --policy-arn ${rc["policy_arn"]}"
+    	     --role-name ${rc_lambda_iam_role["role_name"]}
+    	     --policy-arn ${rc_lambda_iam_role["policy_arn"]}"
     echo $cmd
     if ${is_execute}; then eval $cmd; fi
     if [ $? -ne 0 ]; then return 1; fi
@@ -65,26 +64,26 @@ function create_lambda_iam_roles() {
 	      
 function create_lambda_functions() {
 
-    declare -n rc=$1
-    declare -n rc_iam_role=$2
-    local -r lambda_functions=( ${rc["lambda_functions"]} )
-    local -r lambda_iam_role=${rc_iam_role["role_name"]}
-    local arn
+    declare -A _lambda_iam_role
+
+    local -r lambda_functions=( ${rc_lambda_function["lambda_functions"]} )
+
     # convert iam-role to arn
-    get_lambda_iam_role rc_iam_role arn
+    get_lambda_iam_role _lambda_iam_role # rc_iam_role
     if [ $? -ne 0 ]; then return 1; fi
 
     # creacte lambda-functions
     for lambda_function in ${lambda_functions[@]}; do
-	local zip_file=./src/${lambda_function}/build/${rc["handler"]}.zip
+	local zip_file=./src/${lambda_function}/build/${rc_lambda_function["handler"]}.zip
 	local cmd="aws lambda create-function
 	       --function-name ${lambda_function}
-	       --role ${arn} 
-	       --runtime ${rc["runtime"]}
-	       --timeout ${rc["timeout"]}
-	       --memory-size ${rc["memory-size"]}
-	       --handler ${rc["handler"]}
+	       --role ${_lambda_iam_role["arn"]} 
+	       --runtime ${rc_lambda_function["runtime"]}
+	       --timeout ${rc_lambda_function["timeout"]}
+	       --memory-size ${rc_lambda_function["memory-size"]}
+	       --handler ${rc_lambda_function["handler"]}
 	       --zip-file fileb://${zip_file}"
+	#      --code S3Bucket=bucket-name,S3Key=zip-file-object-key
 	echo $cmd
 	if ${is_execute}; then eval $cmd; fi
 	if [ $? -ne 0 ]; then return 1; fi
@@ -100,10 +99,9 @@ function create_lambda_functions() {
 #  --source-arn "arn:aws:execute-api:ap-northeast-1:681609929005:b89c1ptd5h/*/*/apigw"
 
 
-function update_lambda_functions() {
+function deploy_lambda_functions() {
 
-    declare -n rc=$1
-    local -r lambda_functions=( ${rc["lambda_functions"]} )
+    local -r lambda_functions=( ${rc_lambda_function["lambda_functions"]} )
 
     # update lambda-functions
     for lambda_function in ${lambda_functions[@]}; do
@@ -118,6 +116,21 @@ function update_lambda_functions() {
     done
 
     return 0
-    
 }
 
+function delete_lambda_functions() {
+
+    local -r lambda_functions=( ${rc_lambda_function["lambda_functions"]} )
+
+    # update lambda-functions
+    for lambda_function in ${lambda_functions[@]}; do
+	local zip_file=./src/${lambda_function}/build/handler.zip
+	local cmd="aws lambda delete-function
+	      	       --function-name ${lambda_function}"
+	echo $cmd
+	if ${is_execute}; then eval $cmd; fi
+	if [ $? -ne 0 ]; then return 1; fi
+    done
+
+    return 0
+}

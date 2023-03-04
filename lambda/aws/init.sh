@@ -21,18 +21,17 @@ print_result
 function init(){
     if true; then
 	print_title "create lambda iam roles"
-	arn=""
-	get_lambda_iam_role rc_lambda_iam_role arn
-	if [ $? -eq 0 ]; then
-	    echo $arn
-	    create_lambda_iam_roles rc_lambda_iam_role
+	declare -A lambda_iam_role
+	get_lambda_iam_role lambda_iam_role
+	if [ ${lambda_iam_role["arn"]} == "__lambda_iam_role__" ]; then
+	    create_lambda_iam_roles
 	fi
 	print_result
     fi
 
     if true; then
 	print_title "create lambda functions"
-	create_lambda_functions rc_lambda_function rc_lambda_iam_role
+	create_lambda_functions
 	print_result
     fi
 }
