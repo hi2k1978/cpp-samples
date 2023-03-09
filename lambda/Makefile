@@ -30,7 +30,7 @@ compiler-rebuild: compiler-clean compiler-build
 .PHONY : compiler-rebuild
 
 deploy: 
-	./aws/update.sh
+	./aws/deploy.sh
 .PHONY : deploy
 
 test: 
