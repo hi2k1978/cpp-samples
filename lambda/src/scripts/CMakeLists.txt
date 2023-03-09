@@ -13,6 +13,6 @@ include_directories(include)
 add_subdirectory(lib)
 
 add_executable(${PROJECT_NAME} "handler.cpp")
-target_link_libraries(${PROJECT_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} aws_lambda_handler)
+target_link_libraries(${PROJECT_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} aws_lambda_handler response)
 
 aws_lambda_package_target(${PROJECT_NAME})

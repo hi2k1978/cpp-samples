@@ -1,11 +1,14 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 #include <aws/core/utils/memory/stl/SimpleStringStream.h>
+#include<memory>
+
+#include "response.h"
 
 using namespace aws::lambda_runtime;
 
 
-invocation_response my_handler(invocation_request const& request)
+invocation_response lambda_handler(invocation_request const& request)
 {
 
     using namespace Aws::Utils::Json;
@@ -49,19 +52,21 @@ invocation_response my_handler(invocation_request const& request)
     }
 
 
-    JsonValue resp, bodyJsonValue;
-    resp.WithString("statusCode", "200");
-    //resp.WithString("body", R"({"message": "ok hoge", "result": "hoge"})");
-    
+    JsonValue body, bodyJsonValue;
+
+    body.WithString("statusCode", "200");
+
     bodyJsonValue.WithString("message", "ok");
     bodyJsonValue.WithString("result", ss.str());
-    resp.WithString("body", bodyJsonValue.View().WriteCompact());
-    return invocation_response::success(resp.View().WriteCompact(), "application/json");
+    body.WithString("body", bodyJsonValue.View().WriteCompact());
+
+    auto response = std::make_unique<CppLambda::Response>(std::move(body));
+    return response->get();
 }
 
 
 int main()
 {
-    run_handler(my_handler);
+    run_handler(lambda_handler);
     return 0;
 }
