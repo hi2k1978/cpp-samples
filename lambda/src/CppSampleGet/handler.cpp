@@ -7,7 +7,6 @@
 #include "response.h"
 
 using namespace aws::lambda_runtime;
-using namespace aws::http;
 
 invocation_response lambda_handler(invocation_request const& request)
 {
@@ -53,8 +52,7 @@ invocation_response lambda_handler(invocation_request const& request)
     }
 
 
-    // int status_code = 201;
-    int status_code = 200;
+    CppLambda::StatusCode status_code = CppLambda::StatusCode::OK;
     JsonValue body;
     body.WithString("message", "ok");
     body.WithString("result", ss.str());

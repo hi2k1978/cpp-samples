@@ -4,22 +4,24 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 
-#define CONTENT_TYPE_JSON "application/json"
+#define CONTENT_TYPE_APPLICATION_JSON "application/json"
 
 using namespace aws::lambda_runtime;
-using namespace aws::http;
+
 
 namespace CppLambda {
 
     using namespace Aws::Utils::Json;
+
+    using StatusCode = aws::http::response_code;
     
     class Response{
     private:
-	int status_code;
+	StatusCode status_code;
 	JsonValue body;
 	
     public:
-	Response(int status_code_, JsonValue body_);
+	Response(StatusCode status_code_, JsonValue body_);
 	invocation_response get() const;
 	
     };
