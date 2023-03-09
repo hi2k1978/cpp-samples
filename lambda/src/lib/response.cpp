@@ -15,11 +15,8 @@ namespace CppLambda {
 
     invocation_response Response::get() const {
 	
-	std::ostringstream status_code_stream;
-	status_code_stream << status_code;
-	
 	JsonValue response;
-	response.WithString("statusCode", status_code_stream.str());
+	response.WithInteger("statusCode", status_code);
 	response.WithString("body", body.View().WriteCompact());
 	return invocation_response::success(response.View().WriteCompact(), CONTENT_TYPE_JSON);	
     }

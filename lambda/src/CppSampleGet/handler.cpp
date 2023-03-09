@@ -56,7 +56,7 @@ invocation_response lambda_handler(invocation_request const& request)
     // int status_code = 201;
     int status_code = 200;
     JsonValue body;
-    body.WithString("message", "ok-bokuju");
+    body.WithString("message", "ok");
     body.WithString("result", ss.str());
     
     auto response = std::make_unique<CppLambda::Response>(std::move(status_code), std::move(body));
