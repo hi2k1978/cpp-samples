@@ -10,6 +10,9 @@
 
 #define CONTENT_TYPE_APPLICATION_JSON "application/json"
 
+#define HTTP_METHOD_OPTIONS "OPTIONS"
+#define HTTP_METHOD_GET "GET"
+#define HTTP_METHOD_POST "POST"
 
 using namespace aws::lambda_runtime;
 
@@ -20,22 +23,18 @@ namespace CppLambda {
 
     using StatusCode = aws::http::response_code;
 
-    static constexpr std::string_view HTTP_METHOD_OPTIONS { "OPTIONS" };
-    static constexpr std::string_view HTTP_METHOD_GET { "GET" };
-    static constexpr std::string_view HTTP_METHOD_POST { "POST" };
-
     struct Event {
-	std::string http_method; // "httpMethod"
-	std::string path; // "path"
-	JsonView headers; // "headers"
-	JsonView body; // "body"
-	JsonView query; // "queryStringParameters"
+	std::string http_method;
+	std::string path;
+	JsonView headers;
+	JsonView body;
+	JsonView query;
 	
 	Event(invocation_request const& request_);
 	void show() const;
     };
 
-    class Response{
+    class Response {
     private:
 	StatusCode status_code;
 	JsonValue body;
@@ -46,6 +45,22 @@ namespace CppLambda {
 	
     };
 
+    class BaseRequest {
+    public:
+	virtual invocation_response handler() const = 0;
+    };
+
+    class InvalidRequest : public BaseRequest {
+    private:
+	StatusCode status_code;
+	std::string error_message;
+    public:
+	InvalidRequest(StatusCode status_code_, std::string error_message_)
+	    : status_code(std::move(status_code_)), error_message(std::move(error_message_)) {};
+	
+	invocation_response handler() const override;
+    };
+    
 }
 
 #endif

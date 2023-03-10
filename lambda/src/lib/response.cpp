@@ -42,7 +42,6 @@ namespace CppLambda {
 	if (pv.ValueExists("queryStringParameters")) {
 	    query = pv.GetObject("queryStringParameters");
 	}
-	show();
     }
 
     void Event::show() const {
@@ -69,4 +68,12 @@ namespace CppLambda {
 	return invocation_response::success(response.View().WriteCompact(), CONTENT_TYPE_APPLICATION_JSON);	
     }
 
+
+    invocation_response InvalidRequest::handler() const {
+	JsonValue body;
+	body.WithString("error_message", error_message);
+
+	auto response = std::make_unique<CppLambda::Response>(std::move(status_code), std::move(body));
+	return response->get();	
+    }
 }
