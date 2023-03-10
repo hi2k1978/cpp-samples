@@ -4,7 +4,12 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 
+#include<iostream>
+#include<map>
+#include<memory>
+
 #define CONTENT_TYPE_APPLICATION_JSON "application/json"
+
 
 using namespace aws::lambda_runtime;
 
@@ -14,7 +19,22 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
     using StatusCode = aws::http::response_code;
-    
+
+    static constexpr std::string_view HTTP_METHOD_OPTIONS { "OPTIONS" };
+    static constexpr std::string_view HTTP_METHOD_GET { "GET" };
+    static constexpr std::string_view HTTP_METHOD_POST { "POST" };
+
+    struct Event {
+	std::string http_method; // "httpMethod"
+	std::string path; // "path"
+	JsonView headers; // "headers"
+	JsonView body; // "body"
+	JsonView query; // "queryStringParameters"
+	
+	Event(invocation_request const& request_);
+	void show() const;
+    };
+
     class Response{
     private:
 	StatusCode status_code;
@@ -25,6 +45,7 @@ namespace CppLambda {
 	invocation_response get() const;
 	
     };
+
 }
 
 #endif
