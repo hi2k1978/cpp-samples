@@ -28,6 +28,7 @@ namespace CppSamplesGet {
         StatusCode status_code = StatusCode::OK;
         JsonValue body;
         body.WithString("message", "ok");
+        body.WithString("httpMethod", "get");
         // body.WithString("httpMethod", "get");
 
         Response response(status_code, body);
@@ -37,11 +38,9 @@ namespace CppSamplesGet {
     invocation_response lambda_handler(const invocation_request& request) {
         Event event(request);
         RequestMap request_map;
-        request_map.emplace(
-            RequestType::GET,
-            std::make_unique<GetRequest>(event));
-        Main main(event.request_type, request_map);
-        return main.handler();
+        request_map.emplace(RequestType::GET, std::make_unique<GetRequest>(event));
+        Selector selector(request_map);
+        return selector.handler(event.request_type);
     }
 }  // namespace CppSamplesGet
 

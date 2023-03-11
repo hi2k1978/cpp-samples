@@ -49,15 +49,14 @@ namespace CppLambda {
         void show() const;
     };
 
-    class Response final {
+    class Response {
     private:
-        // const JsonValue& response;
-        JsonValue response;
+        const StatusCode& status_code;
+        const JsonValue& body;
 
     public:
-        // Response(const JsonValue& response_) noexcept;
-        Response(const StatusCode& status_code_, const JsonValue& body_) noexcept;
-        Response(const StatusCode& status_code_, const std::string& message_) noexcept;
+        Response(const StatusCode& status_code_, const JsonValue& body_) noexcept
+            : status_code(status_code_), body(body_) {}
         invocation_response get() const;
     };
 
@@ -66,30 +65,25 @@ namespace CppLambda {
         virtual invocation_response handler() const = 0;
     };
 
-    class InvalidRequest final : public BaseRequest {
+    class InvalidRequest  : public BaseRequest {
     private:
         const StatusCode& status_code;
-        const std::string& error_message;
+        const std::string& message;
     public:
-        InvalidRequest(const StatusCode& status_code_, const std::string& error_message_) noexcept
-            : status_code(status_code_),
-              error_message(error_message_) {
-            std::cout << error_message << std::endl;
-        }
+        InvalidRequest(const StatusCode& status_code_, const std::string& message_) noexcept
+            : status_code(status_code_), message(message_) {}
         invocation_response handler() const override;
     };
 
     using RequestMap = std::map<RequestType, std::unique_ptr<BaseRequest>>;
 
-    class Main final {
+    class Selector {
     private:
-        const RequestType& request_type;
         const RequestMap& request_map;
     public:
-        Main(const RequestType& request_type_,
-             const RequestMap& request_map_) noexcept
-            : request_type(request_type_), request_map(request_map_) {}
-        invocation_response handler() const;
+        explicit Selector(const RequestMap& request_map_) noexcept
+            : request_map(request_map_) {}
+        invocation_response handler(const RequestType request_type_) const;
     };
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
