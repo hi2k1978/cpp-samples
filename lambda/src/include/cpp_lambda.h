@@ -18,12 +18,12 @@ namespace CppLambda {
 
     using namespace Aws::Utils::Json;
 
-    using StatusCode = aws::http::response_code;
 
-    static constexpr char* CONTENT_TYPE_APPLICATION_JSON =
-        const_cast<char*>("application/json");
-    static constexpr char* HTTP_METHOD_GET = const_cast<char*>("GET");
-    static constexpr char* HTTP_METHOD_POST = const_cast<char*>("POST");
+    static constexpr auto CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    static constexpr auto HTTP_METHOD_GET = "GET";
+    static constexpr auto HTTP_METHOD_POST = "POST";
+
+    using StatusCode = aws::http::response_code;
 
     enum class RequestType {
         NONE = 0,
@@ -51,12 +51,13 @@ namespace CppLambda {
 
     class Response final {
     private:
-        StatusCode status_code;
-        JsonValue body;
+        // const JsonValue& response;
+        JsonValue response;
 
     public:
-        Response(StatusCode status_code_, JsonValue body_)
-            : status_code(std::move(status_code_)), body(std::move(body_)) {}
+        // Response(const JsonValue& response_) noexcept;
+        Response(const StatusCode& status_code_, const JsonValue& body_) noexcept;
+        Response(const StatusCode& status_code_, const std::string& message_) noexcept;
         invocation_response get() const;
     };
 
@@ -67,12 +68,14 @@ namespace CppLambda {
 
     class InvalidRequest final : public BaseRequest {
     private:
-        StatusCode status_code;
-        std::string error_message;
+        const StatusCode& status_code;
+        const std::string& error_message;
     public:
-        InvalidRequest(StatusCode status_code_, std::string error_message_)
-            : status_code(std::move(status_code_)),
-              error_message(std::move(error_message_)) {}
+        InvalidRequest(const StatusCode& status_code_, const std::string& error_message_) noexcept
+            : status_code(status_code_),
+              error_message(error_message_) {
+            std::cout << error_message << std::endl;
+        }
         invocation_response handler() const override;
     };
 

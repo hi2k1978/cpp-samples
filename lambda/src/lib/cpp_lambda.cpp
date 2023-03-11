@@ -65,21 +65,40 @@ namespace CppLambda {
         return;
     }
 
+    // Response::Response(const JsonValue& response_) noexcept : response(response_) {};
+    Response::Response(const StatusCode& status_code_, const JsonValue& body_) noexcept {
+        JsonValue response_;
+        response_.WithInteger("statusCode", static_cast<int>(status_code_));
+        response_.WithString("body", body_.View().WriteCompact());
+        if (!response_.WasParseSuccessful()) {
+            std::cerr << "Response: Json Parse was invalid." << std::endl;
+            return;
+        }
+        response = response_;
+    }
+
+    Response::Response(const StatusCode& status_code_, const std::string& message_) noexcept {
+        JsonValue body_;
+        body_.WithString("message", message_);
+
+        if (!body_.WasParseSuccessful()) {
+            std::cerr << "Response: Json Parse was invalid." << std::endl;
+            return;
+        }
+        Response(status_code_, body_);
+    }
+
     invocation_response Response::get() const {
-        JsonValue response;
-        response.WithInteger("statusCode", static_cast<int>(status_code));
-        response.WithString("body", body.View().WriteCompact());
         return invocation_response::success(response.View().WriteCompact(),
                                             CONTENT_TYPE_APPLICATION_JSON);
     }
 
     invocation_response InvalidRequest::handler() const {
         JsonValue body;
-        body.WithString("error_message", error_message);
-        auto response = std::make_unique<CppLambda::Response>(
-            std::move(status_code),
-            std::move(body));
-        return response->get();
+        body.WithString("message", error_message);
+        Response response(status_code, body);
+        // Response response(status_code, error_message);
+        return response.get();
     }
 
     invocation_response Main::handler() const {
@@ -87,13 +106,11 @@ namespace CppLambda {
             ? (request_map.at(request_type)).get()
             : nullptr;
 
-        if (target == nullptr) {
-            // TODO(hi2k1978): 例外を搬送に書き変える。
-            auto invalid_request = std::make_unique<InvalidRequest>(
-                StatusCode::BAD_REQUEST, "httpMethod is not found.");
-            target = dynamic_cast<BaseRequest*>(invalid_request.get());
+        if (target != nullptr) [[likely]] {
+            return target->handler();
+        } else {
+            InvalidRequest invalid_request(StatusCode::BAD_REQUEST, "httpMethod is not found.");
+            return invalid_request.handler();
         }
-        return target->handler();
     }
-
 }  // namespace CppLambda

@@ -28,9 +28,9 @@ namespace CppSamplesGet {
         StatusCode status_code = StatusCode::OK;
         JsonValue body;
         body.WithString("message", "ok");
-        body.WithString("httpMethod", "get");
+        // body.WithString("httpMethod", "get");
 
-        Response response(std::move(status_code), std::move(body));
+        Response response(status_code, body);
         return response.get();
     }
 
