@@ -5,9 +5,7 @@
 using namespace aws::lambda_runtime;
 
 
-invocation_response my_handler(invocation_request const& request)
-{
-
+invocation_response my_handler(invocation_request const& request) {
     using namespace Aws::Utils::Json;
 
     JsonValue json(request.payload);
@@ -24,18 +22,23 @@ invocation_response my_handler(invocation_request const& request)
 
         if (body_json.WasParseSuccessful()) {
             auto body_v = body_json.View();
-            ss << (body_v.ValueExists("time") && body_v.GetObject("time").IsString() ? body_v.GetString("time") : "");
+            ss << (body_v.ValueExists("time")
+                   && body_v.GetObject("time").IsString()
+                   ? body_v.GetString("time")
+                   : "");
         }
     }
     ss << ", ";
 
     if (v.ValueExists("queryStringParameters")) {
         auto query_params = v.GetObject("queryStringParameters");
-        ss << (query_params.ValueExists("name") && query_params.GetObject("name").IsString()
+        ss << (query_params.ValueExists("name")
+               && query_params.GetObject("name").IsString()
                    ? query_params.GetString("name")
                    : "")
            << " of ";
-        ss << (query_params.ValueExists("city") && query_params.GetObject("city").IsString()
+        ss << (query_params.ValueExists("city")
+               && query_params.GetObject("city").IsString()
                    ? query_params.GetString("city")
                    : "")
            << ". ";
@@ -44,24 +47,25 @@ invocation_response my_handler(invocation_request const& request)
     if (v.ValueExists("headers")) {
         auto headers = v.GetObject("headers");
         ss << "Happy "
-           << (headers.ValueExists("day") && headers.GetObject("day").IsString() ? headers.GetString("day") : "")
+           << (headers.ValueExists("day")
+               && headers.GetObject("day").IsString()
+               ? headers.GetString("day")
+               : "")
            << "!";
     }
 
 
     JsonValue resp, bodyJsonValue;
     resp.WithString("statusCode", "200");
-    //resp.WithString("body", R"({"message": "ok hoge", "result": "hoge"})");
-    
+    // resp.WithString("body", R"({"message": "ok hoge", "result": "hoge"})");
+
     bodyJsonValue.WithString("message", "ok");
     bodyJsonValue.WithString("result", ss.str());
     resp.WithString("body", bodyJsonValue.View().WriteCompact());
     return invocation_response::success(resp.View().WriteCompact(), "application/json");
 }
 
-
-int main()
-{
+int main() {
     run_handler(my_handler);
     return 0;
 }

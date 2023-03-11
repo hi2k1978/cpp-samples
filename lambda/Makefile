@@ -6,6 +6,7 @@ DOCKERTAG:=lambda-cpp-runtime:latest
 # TARGET:=CppSamplesGet CppSamplesPost
 TARGET:=CppSamplesGet
 
+
 all: build
 .PHONY : all
 
@@ -17,6 +18,11 @@ clean:
 
 force:
 .PHONY : force
+
+lint:
+	$(eval target:=$(wildcard src/**/*.h) $(wildcard src/**/*.cpp)) 
+	cpplint $(target)
+.PHONY : lint
 
 compiler-build: force
 	docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
@@ -37,7 +43,7 @@ test:
 	./aws/test.sh
 .PHONY : test
 
-full: build push test
+full: build sam-invoke
 .PHONY : full
 
 define build-resource

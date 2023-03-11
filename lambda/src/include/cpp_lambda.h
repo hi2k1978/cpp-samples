@@ -1,5 +1,5 @@
-#ifndef __CPP_SAMPLES_CPP_LAMBDA_H_
-#define __CPP_SAMPLES_CPP_LAMBDA_H_
+#ifndef LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
+#define LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
 
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
@@ -7,6 +7,8 @@
 #include<iostream>
 #include<map>
 #include<memory>
+#include<string>
+#include<utility>
 #include<type_traits>
 
 using namespace aws::lambda_runtime;
@@ -18,73 +20,76 @@ namespace CppLambda {
 
     using StatusCode = aws::http::response_code;
 
-    static constexpr char* CONTENT_TYPE_APPLICATION_JSON = (char*)"application/json";
-    static constexpr char* HTTP_METHOD_GET = (char*)"GET";
-    static constexpr char* HTTP_METHOD_POST = (char*)"POST";
-    
+    static constexpr char* CONTENT_TYPE_APPLICATION_JSON =
+        const_cast<char*>("application/json");
+    static constexpr char* HTTP_METHOD_GET = const_cast<char*>("GET");
+    static constexpr char* HTTP_METHOD_POST = const_cast<char*>("POST");
+
     enum class RequestType {
-	NONE = 0,
-	GET = 1,
-	POST = 2,
+        NONE = 0,
+        GET = 1,
+        POST = 2,
     };
 
-    template<typename E, typename = typename std::enable_if<std::is_enum<E>::value, E>::type>
+    template<typename E, typename =
+             typename std::enable_if<std::is_enum<E>::value, E>::type>
     inline std::ostream& operator << (std::ostream& os, E e ) {
-	return os << static_cast<std::underlying_type<E>::type>(e);
+        return os << static_cast<std::underlying_type<E>::type>(e);
     }
 
     struct Event {
-	RequestType request_type;
-	std::string http_method;
-	std::string path;
-	JsonView headers;
-	JsonView body;
-	JsonView query;
-	
-	Event(invocation_request const& request_);
-	void show() const;
+        RequestType request_type;
+        std::string http_method;
+        std::string path;
+        JsonView headers;
+        JsonView body;
+        JsonView query;
+
+        explicit Event(invocation_request const& request_);
+        void show() const;
     };
 
     class Response final {
     private:
-	StatusCode status_code;
-	JsonValue body;
-	
+        StatusCode status_code;
+        JsonValue body;
+
     public:
-	Response(StatusCode status_code_, JsonValue body_)
-	    : status_code(std::move(status_code_)), body(std::move(body_)) {};
-	invocation_response get() const;
+        Response(StatusCode status_code_, JsonValue body_)
+            : status_code(std::move(status_code_)), body(std::move(body_)) {}
+        invocation_response get() const;
     };
 
     class BaseRequest {
     public:
-	virtual invocation_response handler() const = 0;
+        virtual invocation_response handler() const = 0;
     };
 
     class InvalidRequest final : public BaseRequest {
     private:
-	StatusCode status_code;
-	std::string error_message;
+        StatusCode status_code;
+        std::string error_message;
     public:
-	InvalidRequest(StatusCode status_code_, std::string error_message_)
-	    : status_code(std::move(status_code_)), error_message(std::move(error_message_)) {};
-	invocation_response handler() const override;
+        InvalidRequest(StatusCode status_code_, std::string error_message_)
+            : status_code(std::move(status_code_)),
+              error_message(std::move(error_message_)) {}
+        invocation_response handler() const override;
     };
 
     using RequestMap = std::map<RequestType, std::unique_ptr<BaseRequest>>;
 
     class Main final {
     private:
-	const RequestType& request_type;
-	const RequestMap& request_map;
+        const RequestType& request_type;
+        const RequestMap& request_map;
     public:
-	Main(const RequestType& request_type_, const RequestMap& request_map_) noexcept
-	    : request_type(request_type_), request_map(request_map_) {};
-	invocation_response handler() const;
+        Main(const RequestType& request_type_,
+             const RequestMap& request_map_) noexcept
+            : request_type(request_type_), request_map(request_map_) {}
+        invocation_response handler() const;
     };
-}
-
-#endif
+}  // namespace CppLambda
+#endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
 
 /*
   enum class response_code {
