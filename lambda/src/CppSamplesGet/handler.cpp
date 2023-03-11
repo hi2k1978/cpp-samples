@@ -14,20 +14,21 @@ namespace CppSamplesGet {
     using namespace CppLambda;
 
     // This class is hard-coded. Because it is only used in this source file.
-    class GetRequest final : public BaseRequest {
+    class GetRequestHandler final : public BaseRequestHandler {
     private:
         const Event& event;
     public:
-        GetRequest(const Event& event_) : event(event_) {}
-        invocation_response handler() const override;
+        GetRequestHandler(const Event& event_) : event(event_) {}
+        invocation_response getResponse() const override;
     };
 
-    invocation_response GetRequest::handler() const {
+    invocation_response GetRequestHandler::getResponse() const {
         using namespace Aws::Utils::Json;
 
         StatusCode status_code = StatusCode::OK;
         JsonValue body;
         body.WithString("message", "ok");
+        body.WithString("httpMethod", "get");
         // body.WithString("httpMethod", "get");
 
         Response response(status_code, body);
@@ -36,12 +37,10 @@ namespace CppSamplesGet {
 
     invocation_response lambda_handler(const invocation_request& request) {
         Event event(request);
-        RequestMap request_map;
-        request_map.emplace(
-            RequestType::GET,
-            std::make_unique<GetRequest>(event));
-        Main main(event.request_type, request_map);
-        return main.handler();
+        RequestHandlerMap request_handler_map;
+        request_handler_map.emplace(RequestType::GET, std::make_unique<GetRequestHandler>(event));
+        RequestHandlerSelector selector(request_handler_map);
+        return selector.getResponse(event.request_type);
     }
 }  // namespace CppSamplesGet
 

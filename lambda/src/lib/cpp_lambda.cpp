@@ -65,52 +65,41 @@ namespace CppLambda {
         return;
     }
 
-    // Response::Response(const JsonValue& response_) noexcept : response(response_) {};
-    Response::Response(const StatusCode& status_code_, const JsonValue& body_) noexcept {
-        JsonValue response_;
-        response_.WithInteger("statusCode", static_cast<int>(status_code_));
-        response_.WithString("body", body_.View().WriteCompact());
-        if (!response_.WasParseSuccessful()) {
-            std::cerr << "Response: Json Parse was invalid." << std::endl;
-            return;
-        }
-        response = response_;
-    }
-
-    Response::Response(const StatusCode& status_code_, const std::string& message_) noexcept {
-        JsonValue body_;
-        body_.WithString("message", message_);
-
-        if (!body_.WasParseSuccessful()) {
-            std::cerr << "Response: Json Parse was invalid." << std::endl;
-            return;
-        }
-        Response(status_code_, body_);
-    }
-
     invocation_response Response::get() const {
+        JsonValue response;
+        std::cout << "\n\n\n\n" << std::endl;
+        std::cout << static_cast<int>(status_code);
+        std::cout << "\n\n\n\n" << std::endl;
+        response.WithInteger("statusCode", static_cast<int>(status_code));
+        response.WithString("body", body.View().WriteCompact());
+        if (!response.WasParseSuccessful()) {
+            std::cerr << "Response: Json Parse was invalid." << std::endl;
+            // return;
+        }
         return invocation_response::success(response.View().WriteCompact(),
                                             CONTENT_TYPE_APPLICATION_JSON);
     }
 
-    invocation_response InvalidRequest::handler() const {
+    invocation_response InvalidRequestHandler::getResponse() const {
         JsonValue body;
-        body.WithString("message", error_message);
+        body.WithString("message", message);
+        if (!body.WasParseSuccessful()) {
+            std::cerr << "Response: Json Parse was invalid." << std::endl;
+            // return;
+        }
         Response response(status_code, body);
-        // Response response(status_code, error_message);
         return response.get();
     }
 
-    invocation_response Main::handler() const {
-        BaseRequest *target = request_map.contains(request_type)
-            ? (request_map.at(request_type)).get()
-            : nullptr;
-
-        if (target != nullptr) [[likely]] {
-            return target->handler();
+    invocation_response RequestHandlerSelector::getResponse(const RequestType request_type) const {
+        if (request_handler_map.contains(request_type)) {
+            BaseRequestHandler *target = (request_handler_map.at(request_type)).get();
+            return target->getResponse();
         } else {
-            InvalidRequest invalid_request(StatusCode::BAD_REQUEST, "httpMethod is not found.");
-            return invalid_request.handler();
+            StatusCode status_code = StatusCode::BAD_REQUEST;
+            std::string message = "httpMethod is invalid.";
+            InvalidRequestHandler invalid_request(status_code, message);
+            return invalid_request.getResponse();
         }
     }
 }  // namespace CppLambda

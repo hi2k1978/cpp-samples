@@ -67,7 +67,7 @@ build: $(addprefix build-,$(TARGET))
 
 define sam-invoke-resource
 sam-invoke-$1: force
-	sam local invoke --event ./events/event.json $1
+	sam local invoke --event ./events/event-get.json $1
 .PHONY : sam-invoke-$1
 endef
 $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
