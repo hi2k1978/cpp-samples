@@ -9,16 +9,16 @@ Globals:
     MemorySize: 128
 
 Resources:
-  CppSampleGet:
+  CppSamplesGet:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/CppSampleGet/build/handler.zip
+      CodeUri: ./src/CppSamplesGet/build/handler.zip
       Handler: handler
       PackageType: Zip
       Runtime: provided
       MemorySize: 512
       Events:
-        CppSampleGet:
+        CppSamplesGet:
           Type: Api
           Properties:
             Path: /cpp-sample-get
@@ -30,16 +30,16 @@ Resources:
       #     Type: Linear10PercentEvery1Minute
     Metadata:
       # BuildMethod: makefile
-  # CppSamplePost:
+  # CppSamplesPost:
   #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
   #   Properties:
-  #     CodeUri: ./src/CppSamplePost/build/handler.zip
+  #     CodeUri: ./src/CppSamplesPost/build/handler.zip
   #     Handler: handler
   #     PackageType: Zip
   #     Runtime: provided
   #     MemorySize: 512
   #     Events:
-  #       CppSamplePost:
+  #       CppSamplesPost:
   #         Type: Api
   #         Properties:
   #           Path: /cpp-sample-post
@@ -48,7 +48,7 @@ Resources:
   #     # BuildMethod: makefile
 
 Outputs:
-  CppSampleGet:
+  CppSamplesGet:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/cpp-sample-get/"
     

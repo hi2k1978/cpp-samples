@@ -9,7 +9,7 @@
 
 using namespace aws::lambda_runtime;
 
-namespace CppSampleGet {
+namespace CppSamplesGet {
     using namespace CppLambda;
     
     // This class is hard-coded. Because it is only used in this source file.
@@ -47,6 +47,6 @@ namespace CppSampleGet {
 
 int main()
 {
-    run_handler(CppSampleGet::lambda_handler);
+    run_handler(CppSamplesGet::lambda_handler);
     return 0;
 }

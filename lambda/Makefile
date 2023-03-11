@@ -3,13 +3,13 @@ DOCKERFILE:=docker/Dockerfile
 DOCKERTAG:=lambda-cpp-runtime:latest
 
 ## Makefile variables
-# TARGET:=CppSampleGet CppSamplePost
-TARGET:=CppSampleGet
+# TARGET:=CppSamplesGet CppSamplesPost
+TARGET:=CppSamplesGet
 
 all: build
 .PHONY : all
 
-clean: $(TARGET)
+clean: 
 	@echo "clean current directory & sub-directories"
 	@for dir in $(TARGET); do sudo rm -rf ./src/$$dir/build; done
 	ls src/**
@@ -61,7 +61,7 @@ build: $(addprefix build-,$(TARGET))
 
 define sam-invoke-resource
 sam-invoke-$1: force
-	sam local invoke --event ./events/event.json CppSampleGet
+	sam local invoke --event ./events/event.json $1
 .PHONY : sam-invoke-$1
 endef
 $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
