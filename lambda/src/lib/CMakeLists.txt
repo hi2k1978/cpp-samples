@@ -9,5 +9,4 @@ find_package(AWSSDK COMPONENTS core)
 
 include_directories(../include)
 
-add_library(aws_lambda_handler STATIC aws_lambda_handler.cpp)
-add_library(response STATIC response.cpp)
+add_library(cpp_lambda STATIC cpp_lambda.cpp)

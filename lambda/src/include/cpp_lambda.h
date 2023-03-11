@@ -1,5 +1,5 @@
-#ifndef __RESPONSE_H__
-#define __RESPONSE_H__
+#ifndef __CPP_SAMPLES_CPP_LAMBDA_H_
+#define __CPP_SAMPLES_CPP_LAMBDA_H_
 
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>

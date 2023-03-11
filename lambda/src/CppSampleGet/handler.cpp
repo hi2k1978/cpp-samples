@@ -4,7 +4,8 @@
 #include<memory>
 #include<iostream>
 #include<vector>
-#include "response.h"
+
+#include "cpp_lambda.h"
 
 using namespace aws::lambda_runtime;
 

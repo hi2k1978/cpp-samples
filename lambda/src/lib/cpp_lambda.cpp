@@ -1,12 +1,12 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 
-#include "response.h"
+#include "cpp_lambda.h"
 
-using namespace aws::lambda_runtime;
 
 namespace CppLambda {
 
+    using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
     Event::Event(invocation_request const& request_){
