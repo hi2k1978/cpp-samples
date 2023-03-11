@@ -7,7 +7,7 @@
 #include<iostream>
 #include<map>
 #include<memory>
-
+#include<type_traits>
 
 using namespace aws::lambda_runtime;
 
@@ -17,17 +17,22 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
     using StatusCode = aws::http::response_code;
-    
-    const std::string CONTENT_TYPE_APPLICATION_JSON = "application/json";
-    const std::string_view HTTP_METHOD_GET = "GET";
-    const std::string_view HTTP_METHOD_POST = "POST";
+
+    static constexpr char* CONTENT_TYPE_APPLICATION_JSON = (char*)"application/json";
+    static constexpr char* HTTP_METHOD_GET = (char*)"GET";
+    static constexpr char* HTTP_METHOD_POST = (char*)"POST";
     
     enum class RequestType {
 	NONE = 0,
 	GET = 1,
 	POST = 2,
     };
-    
+
+    template<typename E, typename = typename std::enable_if<std::is_enum<E>::value, E>::type>
+    inline std::ostream& operator << (std::ostream& os, E e ) {
+	return os << static_cast<std::underlying_type<E>::type>(e);
+    }
+
     struct Event {
 	RequestType request_type;
 	std::string http_method;

@@ -37,7 +37,6 @@ namespace CppSamplesGet {
     invocation_response lambda_handler(const invocation_request& request)
     {
 	Event event(request);
-	// event.show();	
 	RequestMap request_map;
 	request_map.emplace(RequestType::GET, std::make_unique<GetRequest>(event));
 	Main main(event.request_type, request_map);

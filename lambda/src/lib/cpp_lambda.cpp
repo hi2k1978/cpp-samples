@@ -22,7 +22,7 @@ namespace CppLambda {
 	    std::transform(http_method.cbegin(), http_method.cend(), http_method.begin(), toupper);
 	    if (http_method ==  HTTP_METHOD_GET) {
 		request_type = RequestType::GET;
-	    } else if (http_method ==  HTTP_METHOD_POST) {
+	    } else if (http_method == HTTP_METHOD_POST) {
 		request_type = RequestType::POST;
 	    } else { 
 		request_type = RequestType::NONE;
@@ -48,27 +48,28 @@ namespace CppLambda {
 	if (pv.ValueExists("queryStringParameters")) {
 	    query = pv.GetObject("queryStringParameters");
 	}
+	// show();
     }
 
     void Event::show() const {
-	const int request_type_ = static_cast<typename std::underlying_type<RequestType>::type>(request_type);	
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl;
 	std::cout << "Event Parameters" << std::endl;
 	std::cout << "================" << std::endl;
-	std::cout << "httpMethod: " << http_method << "(" << request_type_ << ")" << std::endl;
+	std::cout << "httpMethod: " << http_method << "(request_type: " << request_type << ")" << std::endl;
 	std::cout << "path: " << path << std::endl;
 	std::cout << "headers: " << headers.WriteCompact() << std::endl;
 	std::cout << "body: " << body.WriteCompact() << std::endl;
 	std::cout << "query: " << query.WriteCompact() << std::endl;
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl;
 	return;
     }
-    
+   
     invocation_response Response::get() const {	
 	JsonValue response;
 	response.WithInteger("statusCode", static_cast<int>(status_code));
 	response.WithString("body", body.View().WriteCompact());
 	return invocation_response::success(response.View().WriteCompact(), CONTENT_TYPE_APPLICATION_JSON);	
+	// return invocation_response::success(response.View().WriteCompact(), CONTENT_TYPE_APPLICATION_JSON);	
     }
 
     invocation_response InvalidRequest::handler() const {
