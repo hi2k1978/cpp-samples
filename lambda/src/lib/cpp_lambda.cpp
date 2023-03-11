@@ -51,11 +51,10 @@ namespace CppLambda {
     }
 
     void Event::show() const {
-	const int request_type_ = static_cast<typename std::underlying_type<RequestType>::type>(request_type);	
 	std::cout << std::endl << std::endl;
 	std::cout << "Event Parameters" << std::endl;
 	std::cout << "================" << std::endl;
-	std::cout << "httpMethod: " << http_method << "(" << request_type_ << ")" << std::endl;
+	std::cout << "httpMethod: " << http_method << "(" << get_request_type() << ")" << std::endl;
 	std::cout << "path: " << path << std::endl;
 	std::cout << "headers: " << headers.WriteCompact() << std::endl;
 	std::cout << "body: " << body.WriteCompact() << std::endl;
@@ -63,7 +62,11 @@ namespace CppLambda {
 	std::cout << std::endl << std::endl;
 	return;
     }
-    
+
+    int Event::get_request_type() const {
+	return static_cast<typename std::underlying_type<RequestType>::type>(request_type);	
+    }
+   
     invocation_response Response::get() const {	
 	JsonValue response;
 	response.WithInteger("statusCode", static_cast<int>(status_code));

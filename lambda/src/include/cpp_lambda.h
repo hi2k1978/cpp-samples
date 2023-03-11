@@ -38,6 +38,7 @@ namespace CppLambda {
 	
 	Event(invocation_request const& request_);
 	void show() const;
+	int get_request_type() const;
     };
 
     class Response final {
