@@ -18,9 +18,15 @@ namespace CppLambda {
 	JsonView pv = payload.View();
 
 	if (pv.ValueExists("httpMethod")) {
-	    std::string http_method_ = pv.GetString("httpMethod");
-	    std::transform(http_method_.cbegin(), http_method_.cend(), http_method_.begin(), toupper);
-	    http_method = http_method_;
+	    http_method = pv.GetString("httpMethod");
+	    std::transform(http_method.cbegin(), http_method.cend(), http_method.begin(), toupper);
+	    if (http_method ==  HTTP_METHOD_GET) {
+		request_type = RequestType::GET;
+	    } else if (http_method ==  HTTP_METHOD_POST) {
+		request_type = RequestType::POST;
+	    } else { 
+		request_type = RequestType::NONE;
+	    }
 	}
 	if (pv.ValueExists("path")) {
 	    path = pv.GetString("path");
@@ -45,10 +51,11 @@ namespace CppLambda {
     }
 
     void Event::show() const {
+	const int request_type_ = static_cast<typename std::underlying_type<RequestType>::type>(request_type);	
 	std::cout << std::endl << std::endl;
 	std::cout << "Event Parameters" << std::endl;
 	std::cout << "================" << std::endl;
-	std::cout << "httpMethod: " << http_method << std::endl;
+	std::cout << "httpMethod: " << http_method << "(" << request_type_ << ")" << std::endl;
 	std::cout << "path: " << path << std::endl;
 	std::cout << "headers: " << headers.WriteCompact() << std::endl;
 	std::cout << "body: " << body.WriteCompact() << std::endl;
@@ -57,23 +64,32 @@ namespace CppLambda {
 	return;
     }
     
-    Response::Response(StatusCode status_code_, JsonValue body_)
-	: status_code(std::move(status_code_)), body(std::move(body_)) {}
-
-    invocation_response Response::get() const {
-	
+    invocation_response Response::get() const {	
 	JsonValue response;
 	response.WithInteger("statusCode", static_cast<int>(status_code));
 	response.WithString("body", body.View().WriteCompact());
 	return invocation_response::success(response.View().WriteCompact(), CONTENT_TYPE_APPLICATION_JSON);	
     }
 
-
     invocation_response InvalidRequest::handler() const {
 	JsonValue body;
 	body.WithString("error_message", error_message);
-
 	auto response = std::make_unique<CppLambda::Response>(std::move(status_code), std::move(body));
 	return response->get();	
     }
+
+    invocation_response Main::handler() const {
+	BaseRequest *target = request_map.contains(request_type)
+	    ? (request_map.at(request_type)).get()
+	    : nullptr;
+
+	if (target == nullptr){
+	    // TODO: 例外を搬送に書き変える。
+	    auto invalid_request = std::make_unique<InvalidRequest>(
+		StatusCode::BAD_REQUEST, "httpMethod is not found.");
+	    target = dynamic_cast<BaseRequest*>(invalid_request.get());
+	}
+	return target->handler();
+    };
+
 }

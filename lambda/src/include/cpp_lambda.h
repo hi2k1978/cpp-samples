@@ -8,11 +8,6 @@
 #include<map>
 #include<memory>
 
-#define CONTENT_TYPE_APPLICATION_JSON "application/json"
-
-#define HTTP_METHOD_OPTIONS "OPTIONS"
-#define HTTP_METHOD_GET "GET"
-#define HTTP_METHOD_POST "POST"
 
 using namespace aws::lambda_runtime;
 
@@ -22,8 +17,19 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
     using StatusCode = aws::http::response_code;
-
+    
+    const std::string CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    const std::string_view HTTP_METHOD_GET = "GET";
+    const std::string_view HTTP_METHOD_POST = "POST";
+    
+    enum class RequestType {
+	NONE = 0,
+	GET = 1,
+	POST = 2,
+    };
+    
     struct Event {
+	RequestType request_type;
 	std::string http_method;
 	std::string path;
 	JsonView headers;
@@ -34,15 +40,15 @@ namespace CppLambda {
 	void show() const;
     };
 
-    class Response {
+    class Response final {
     private:
 	StatusCode status_code;
 	JsonValue body;
 	
     public:
-	Response(StatusCode status_code_, JsonValue body_);
+	Response(StatusCode status_code_, JsonValue body_)
+	    : status_code(std::move(status_code_)), body(std::move(body_)) {};
 	invocation_response get() const;
-	
     };
 
     class BaseRequest {
@@ -50,17 +56,27 @@ namespace CppLambda {
 	virtual invocation_response handler() const = 0;
     };
 
-    class InvalidRequest : public BaseRequest {
+    class InvalidRequest final : public BaseRequest {
     private:
 	StatusCode status_code;
 	std::string error_message;
     public:
 	InvalidRequest(StatusCode status_code_, std::string error_message_)
 	    : status_code(std::move(status_code_)), error_message(std::move(error_message_)) {};
-	
 	invocation_response handler() const override;
     };
-    
+
+    using RequestMap = std::map<RequestType, std::unique_ptr<BaseRequest>>;
+
+    class Main final {
+    private:
+	const RequestType& request_type;
+	const RequestMap& request_map;
+    public:
+	Main(const RequestType& request_type_, const RequestMap& request_map_) noexcept
+	    : request_type(request_type_), request_map(request_map_) {};
+	invocation_response handler() const;
+    };
 }
 
 #endif

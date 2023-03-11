@@ -9,13 +9,15 @@
 
 using namespace aws::lambda_runtime;
 
-namespace CppLambda {
-
+namespace CppSampleGet {
+    using namespace CppLambda;
+    
+    // This class is hard-coded. Because it is only used in this source file.
     class GetRequest final : public BaseRequest {
     private:
-	Event* event;
+	const Event& event;
     public:
-	GetRequest(Event* event_) : event(event_) {};
+	GetRequest(const Event& event_) : event(event_) {};
 	invocation_response handler() const override;
     };
 
@@ -31,31 +33,20 @@ namespace CppLambda {
 	Response response(std::move(status_code), std::move(body));
 	return response.get();
     }
-}
 
-invocation_response lambda_handler(invocation_request const& request)
-{
-    auto event = std::make_unique<CppLambda::Event>(request);
-	
-    std::map<std::string, std::unique_ptr<CppLambda::BaseRequest>> request_map;
-    request_map.emplace(HTTP_METHOD_GET, std::make_unique<CppLambda::GetRequest>(event.get()));
-
-    CppLambda::BaseRequest *target = request_map.contains(event->http_method)
-	? (request_map.at(event->http_method)).get()
-	: nullptr;
-
-    if (target == nullptr){
-	// 例外を搬送に書き変える。
-	auto invalid_request = std::make_unique<CppLambda::InvalidRequest>(
-	    CppLambda::StatusCode::BAD_REQUEST, "httpMethod is not found.");
-	target = dynamic_cast<CppLambda::BaseRequest*>(invalid_request.get());
+    invocation_response lambda_handler(const invocation_request& request)
+    {
+	Event event(request);
+	// event.show();	
+	RequestMap request_map;
+	request_map.emplace(RequestType::GET, std::make_unique<GetRequest>(event));
+	Main main(event.request_type, request_map);
+	return main.handler();
     }
-    return target->handler();
 }
-
 
 int main()
 {
-    run_handler(lambda_handler);
+    run_handler(CppSampleGet::lambda_handler);
     return 0;
 }
