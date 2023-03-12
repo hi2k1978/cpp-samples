@@ -29,8 +29,6 @@ namespace CppSamplesGet {
         JsonValue body;
         body.WithString("message", "ok");
         body.WithString("httpMethod", "get");
-        // body.WithString("httpMethod", "get");
-
         Response response(status_code, body);
         return response.get();
     }

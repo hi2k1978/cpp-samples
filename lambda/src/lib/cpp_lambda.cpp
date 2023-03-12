@@ -69,10 +69,6 @@ namespace CppLambda {
         JsonValue response;
         response.WithInteger("statusCode", static_cast<int>(status_code));
         response.WithString("body", body.View().WriteCompact());
-        if (!response.WasParseSuccessful()) {
-            std::cerr << "Response: Json Parse was invalid." << std::endl;
-            // return;
-        }
         return invocation_response::success(response.View().WriteCompact(),
                                             CONTENT_TYPE_APPLICATION_JSON);
     }
@@ -80,10 +76,6 @@ namespace CppLambda {
     invocation_response InvalidRequestHandler::getResponse() const {
         JsonValue body;
         body.WithString("message", message);
-        if (!body.WasParseSuccessful()) {
-            std::cerr << "Response: Json Parse was invalid." << std::endl;
-            // return;
-        }
         Response response(status_code, body);
         return response.get();
     }
