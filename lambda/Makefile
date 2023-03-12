@@ -19,6 +19,15 @@ clean:
 force:
 .PHONY : force
 
+show:
+	@echo Makefile Variables
+	@echo ==================
+	@echo "DOCKERFILE: " $(DOCKERFILE)
+	@echo "DOCKERTAG: " $(DOCKERTAG)
+	@echo "TARGET: " $(TARGET)
+	@echo
+.PHONY : show
+
 lint:
 	$(eval target:=$(wildcard src/**/*.h) $(wildcard src/**/*.cpp)) 
 	cpplint $(target)
@@ -66,11 +75,21 @@ build: $(addprefix build-,$(TARGET))
 
 
 define sam-invoke-resource
-sam-invoke-$1: force
-	sam local invoke --event ./events/event-get.json $1
-.PHONY : sam-invoke-$1
+sam-invoke-$1-get: force
+	$(eval event:=$(wildcard ls ./events/event-$1-get.json))
+ifeq ($(event), ./events/event-$1-get.json)
+	sam local invoke --event $(event) $1; 
+endif
+.PHONY : sam-invoke-$1-get
+
+sam-invoke-$1-post: force
+	$(eval event:=$(shell ls ./events/event-$1-post.json))
+ifeq ($(event), ./events/event-$1-post.json)
+	sam local invoke --event ./events/event-$1-post.json $1
+endif
+.PHONY : sam-invoke-$1-post
 endef
 $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
 
-sam-invoke: $(addprefix sam-invoke-,$(TARGET))
+sam-invoke: $(addprefix sam-invoke-,$(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
 .PHONY : sam-invoke
