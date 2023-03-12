@@ -83,7 +83,7 @@ endif
 .PHONY : sam-invoke-$1-get
 
 sam-invoke-$1-post: force
-	$(eval event:=$(shell ls ./events/event-$1-post.json))
+	$(eval event:=$(wildcard ls ./events/event-$1-post.json))
 ifeq ($(event), ./events/event-$1-post.json)
 	sam local invoke --event ./events/event-$1-post.json $1
 endif
