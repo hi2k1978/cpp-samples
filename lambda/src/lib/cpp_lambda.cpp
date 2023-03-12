@@ -67,9 +67,6 @@ namespace CppLambda {
 
     invocation_response Response::get() const {
         JsonValue response;
-        std::cout << "\n\n\n\n" << std::endl;
-        std::cout << static_cast<int>(status_code);
-        std::cout << "\n\n\n\n" << std::endl;
         response.WithInteger("statusCode", static_cast<int>(status_code));
         response.WithString("body", body.View().WriteCompact());
         if (!response.WasParseSuccessful()) {
