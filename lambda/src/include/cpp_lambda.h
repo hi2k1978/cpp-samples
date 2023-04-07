@@ -11,31 +11,13 @@
 #include<utility>
 #include<type_traits>
 
-using namespace aws::lambda_runtime;
-
+#include "request_types.h"
+#include "response_types.h"
 
 namespace CppLambda {
-
+    
+    using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
-
-
-    static constexpr auto CONTENT_TYPE_APPLICATION_JSON = "application/json";
-    static constexpr auto HTTP_METHOD_GET = "GET";
-    static constexpr auto HTTP_METHOD_POST = "POST";
-
-    using StatusCode = aws::http::response_code;
-
-    enum class RequestType {
-        NONE = 0,
-        GET = 1,
-        POST = 2,
-    };
-
-    template<typename E, typename =
-             typename std::enable_if<std::is_enum<E>::value, E>::type>
-    inline std::ostream& operator << (std::ostream& os, E e ) {
-        return os << static_cast<std::underlying_type<E>::type>(e);
-    }
 
     struct Event {
         RequestType request_type;
@@ -51,12 +33,12 @@ namespace CppLambda {
 
     class Response {
     private:
-        const StatusCode& status_code;
-        const JsonValue& body;
+        const StatusCode status_code;
+        const JsonValue body;
 
     public:
-        Response(const StatusCode& status_code_, const JsonValue& body_) noexcept
-            : status_code(status_code_), body(body_) {}
+        Response(StatusCode status_code, JsonValue&& body) noexcept
+            : status_code(status_code), body(std::move(body)) {}
         invocation_response get() const;
     };
 
@@ -67,24 +49,16 @@ namespace CppLambda {
 
     class InvalidRequestHandler  : public BaseRequestHandler {
     private:
-        const StatusCode& status_code;
-        const std::string& message;
+        const StatusCode status_code;
+        const std::string message;
     public:
-        InvalidRequestHandler(const StatusCode& status_code_, const std::string& message_) noexcept
-            : status_code(status_code_), message(message_) {}
+        InvalidRequestHandler(const StatusCode status_code, const std::string message) noexcept
+            : status_code(status_code), message(message) {}
         invocation_response getResponse() const override;
     };
 
     using RequestHandlerMap = std::map<RequestType, std::unique_ptr<BaseRequestHandler>>;
 
-    class RequestHandlerSelector {
-    private:
-        const RequestHandlerMap& request_handler_map;
-    public:
-        explicit RequestHandlerSelector(const RequestHandlerMap& request_handler_map_) noexcept
-            : request_handler_map(request_handler_map_) {}
-        invocation_response getResponse(const RequestType request_type_) const;
-    };
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
 

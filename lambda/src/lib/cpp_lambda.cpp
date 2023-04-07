@@ -1,16 +1,17 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 
+#include "request_types.h"
+#include "response_types.h"
 #include "cpp_lambda.h"
-
 
 namespace CppLambda {
 
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
-    Event::Event(invocation_request const& request_) {
-        JsonValue payload(request_.payload);
+    Event::Event(invocation_request const& request) {
+        JsonValue payload(request.payload);
         if (!payload.WasParseSuccessful()) {
             std::cerr << "InvalidJSON: Failed to parse input JSON" << std::endl;
             return;
@@ -20,12 +21,12 @@ namespace CppLambda {
         if (pv.ValueExists("httpMethod")) {
             http_method = pv.GetString("httpMethod");
             std::transform(http_method.cbegin(), http_method.cend(), http_method.begin(), toupper);
-            if (http_method ==  HTTP_METHOD_GET) {
+            if (http_method ==  HttpMethod::GET) {
                 request_type = RequestType::GET;
-            } else if (http_method == HTTP_METHOD_POST) {
+            } else if (http_method == HttpMethod::POST) {
                 request_type = RequestType::POST;
             } else {
-                request_type = RequestType::NONE;
+                request_type = RequestType::OTHERS;
             }
         }
         if (pv.ValueExists("path")) {
@@ -70,25 +71,13 @@ namespace CppLambda {
         response.WithInteger("statusCode", static_cast<int>(status_code));
         response.WithString("body", body.View().WriteCompact());
         return invocation_response::success(response.View().WriteCompact(),
-                                            CONTENT_TYPE_APPLICATION_JSON);
+                                            ContentType::APPLICATION_JSON);
     }
 
     invocation_response InvalidRequestHandler::getResponse() const {
         JsonValue body;
         body.WithString("message", message);
-        Response response(status_code, body);
+        Response response(status_code, std::move(body));
         return response.get();
-    }
-
-    invocation_response RequestHandlerSelector::getResponse(const RequestType request_type) const {
-        if (request_handler_map.contains(request_type)) {
-            BaseRequestHandler *target = (request_handler_map.at(request_type)).get();
-            return target->getResponse();
-        } else {
-            StatusCode status_code = StatusCode::BAD_REQUEST;
-            std::string message = "httpMethod is invalid.";
-            InvalidRequestHandler invalid_request(status_code, message);
-            return invalid_request.getResponse();
-        }
     }
 }  // namespace CppLambda
