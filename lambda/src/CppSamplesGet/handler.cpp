@@ -2,11 +2,14 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 #include <aws/core/utils/memory/stl/SimpleStringStream.h>
+
 #include<memory>
 #include<iostream>
 #include<vector>
 
 #include "cpp_lambda.h"
+#include "request.h"
+#include "response.h"
 
 using namespace aws::lambda_runtime;
 
@@ -18,18 +21,18 @@ namespace CppSamplesGet {
     private:
         const Event& event;
     public:
-        GetRequestHandler(const Event& event_) : event(event_) {}
+        GetRequestHandler(const Event& event) : event(event) {}
         invocation_response getResponse() const override;
     };
 
     invocation_response GetRequestHandler::getResponse() const {
         using namespace Aws::Utils::Json;
 
-        StatusCode status_code = StatusCode::OK;
         JsonValue body;
-        body.WithString("message", "ok");
+        body.WithString("message", ResponseMessage::OK);
         body.WithString("httpMethod", "get");
-        Response response(status_code, body);
+
+        Response response(StatusCode::OK, std::move(body));
         return response.get();
     }
 
@@ -37,8 +40,17 @@ namespace CppSamplesGet {
         Event event(request);
         RequestHandlerMap request_handler_map;
         request_handler_map.emplace(RequestType::GET, std::make_unique<GetRequestHandler>(event));
-        RequestHandlerSelector selector(request_handler_map);
-        return selector.getResponse(event.request_type);
+        request_handler_map.emplace(
+            RequestType::OTHERS,
+            std::make_unique<InvalidRequestHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST));
+
+        BaseRequestHandler *target;
+        if (request_handler_map.contains(event.request_type)) {
+            target = (request_handler_map.at(event.request_type)).get();
+        } else {
+            target = (request_handler_map.at(RequestType::OTHERS)).get();
+        }
+        return target->getResponse();
     }
 }  // namespace CppSamplesGet
 
@@ -46,3 +58,15 @@ int main() {
     run_handler(CppSamplesGet::lambda_handler);
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
