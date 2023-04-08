@@ -24,7 +24,7 @@ namespace CppSamplesGet {
         return result;
     }
 
-    invocation_response GetEventHandler::get_response() const {
+    invocation_response GetHandler::get_response() const {
         using namespace Aws::Utils::Json;
 
         GetEventValidator event_validator(event);
@@ -33,7 +33,7 @@ namespace CppSamplesGet {
         if (!event_validation_result.is_valid) {
             std::cerr << ErrorMessage::EVENT_VALIDATION_ERROR << std::endl;
             event_validation_result.show();
-            InvalidEventHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+            ErrorHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
             return handler.get_response();
         }
  
@@ -49,19 +49,19 @@ namespace CppSamplesGet {
         Event event(request);
         event.initialize();
         
-        EventHandlerMap event_handler_map;
-        event_handler_map.emplace(EventType::GET, std::make_unique<GetEventHandler>(event));
-        event_handler_map.emplace(
+        HandlerMap handler_map;
+        handler_map.emplace(EventType::GET, std::make_unique<GetHandler>(event));
+        handler_map.emplace(
             EventType::OTHERS,
-            std::make_unique<InvalidEventHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST)
-            // std::make_unique<InvalidEventHandler>(StatusCode::BAD_REQUEST, ResponseMessage::NONE)
+            std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST)
+            // std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::NONE)
             );
 
-        BaseEventHandler *target;
-        if (event_handler_map.contains(event.type)) {
-            target = (event_handler_map.at(event.type)).get();
+        BaseHandler *target;
+        if (handler_map.contains(event.type)) {
+            target = (handler_map.at(event.type)).get();
         } else {
-            target = (event_handler_map.at(EventType::OTHERS)).get();
+            target = (handler_map.at(EventType::OTHERS)).get();
         }
         return target->get_response();
     }

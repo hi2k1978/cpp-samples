@@ -59,14 +59,14 @@ namespace CppLambda {
         const JsonValue body;
     };
 
-    class BaseEventHandler {
+    class BaseHandler {
     public:
         virtual invocation_response get_response() const = 0;
     };
 
-    class InvalidEventHandler : public BaseEventHandler {
+    class ErrorHandler : public BaseHandler {
     public:
-        InvalidEventHandler(const StatusCode status_code, const std::string message) noexcept
+        ErrorHandler(const StatusCode status_code, const std::string message) noexcept
             : status_code(status_code), message(message) {}
         invocation_response get_response() const noexcept override;
     private:
@@ -74,7 +74,7 @@ namespace CppLambda {
         const std::string message;
     };
 
-    using EventHandlerMap = std::map<EventType, std::unique_ptr<BaseEventHandler>>;
+    using HandlerMap = std::map<EventType, std::unique_ptr<BaseHandler>>;
 
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_

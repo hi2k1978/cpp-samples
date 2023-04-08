@@ -89,7 +89,7 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
-    invocation_response InvalidEventHandler::get_response() const noexcept {
+    invocation_response ErrorHandler::get_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
             body.WithString("message", message);
