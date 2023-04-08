@@ -39,36 +39,33 @@ namespace CppSamplesGet {
  
         JsonValue body;
         body.WithString("message", ResponseMessage::OK);
-        body.WithString("result", "request(get): successful");
+        body.WithString("result", "success.");
 
         Response response(StatusCode::OK, std::move(body));
         return response.get();
     }
 
-    invocation_response handler(const invocation_request& request) {
+    invocation_response main_handler(const invocation_request& request) {
         Event event(request);
         event.initialize();
-        
-        HandlerMap handler_map;
-        handler_map.emplace(EventType::GET, std::make_unique<GetHandler>(event));
-        handler_map.emplace(
-            EventType::OTHERS,
-            std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST)
-            // std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::NONE)
-            );
 
-        BaseHandler *target;
+        HandlerMap handler_map;
+        handler_map.emplace(EventType::OPTIONS, std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE));
+        handler_map.emplace(EventType::GET, std::make_unique<GetHandler>(event));
+        handler_map.emplace(EventType::OTHERS, std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST));
+
+        BaseHandler *handler;
         if (handler_map.contains(event.type)) {
-            target = (handler_map.at(event.type)).get();
+            handler = (handler_map.at(event.type)).get();
         } else {
-            target = (handler_map.at(EventType::OTHERS)).get();
+            handler = (handler_map.at(EventType::OTHERS)).get();
         }
-        return target->get_response();
+        return handler->get_response();
     }
 }  // namespace CppSamplesGet
 
 int main() {
-    run_handler(CppSamplesGet::handler);
+    run_handler(CppSamplesGet::main_handler);
     return 0;
 }
 

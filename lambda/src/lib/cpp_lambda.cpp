@@ -22,7 +22,9 @@ namespace CppLambda {
         if (pv.ValueExists("httpMethod")) {
             http_method = pv.GetString("httpMethod");
             std::transform(http_method.cbegin(), http_method.cend(), http_method.begin(), toupper);
-            if (http_method ==  HttpMethod::GET) {
+            if (http_method ==  HttpMethod::OPTIONS) {
+                type = EventType::OPTIONS;
+            } else if (http_method ==  HttpMethod::GET) {
                 type = EventType::GET;
             } else if (http_method == HttpMethod::POST) {
                 type = EventType::POST;
@@ -89,6 +91,15 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
+    invocation_response DefaultHandler::get_response() const noexcept {
+        JsonValue body;
+        if (message.size() > 0) {
+            body.WithString("message", message);
+        }
+        Response response(status_code, std::move(body));
+        return response.get();
+    }
+
     invocation_response ErrorHandler::get_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
@@ -97,4 +108,5 @@ namespace CppLambda {
         Response response(status_code, std::move(body));
         return response.get();
     }
+
 }  // namespace CppLambda

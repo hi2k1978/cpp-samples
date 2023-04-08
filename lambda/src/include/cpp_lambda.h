@@ -64,6 +64,16 @@ namespace CppLambda {
         virtual invocation_response get_response() const = 0;
     };
 
+    class DefaultHandler : public BaseHandler {
+    public:
+        DefaultHandler(const StatusCode status_code, const std::string message) noexcept
+            : status_code(status_code), message(message) {}
+        invocation_response get_response() const noexcept override;
+    private:
+        const StatusCode status_code;
+        const std::string message;
+    };
+
     class ErrorHandler : public BaseHandler {
     public:
         ErrorHandler(const StatusCode status_code, const std::string message) noexcept

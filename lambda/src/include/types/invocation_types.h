@@ -6,14 +6,16 @@
 namespace CppLambda {
 
     namespace HttpMethod {
+        static constexpr auto OPTIONS = "OPTIONS";
         static constexpr auto GET = "GET";
         static constexpr auto POST = "POST";
     }  // namespace HttpMethod
 
     enum class EventType {
         OTHERS = 0,
-        GET = 1,
-        POST = 2,
+        OPTIONS = 1,
+        GET = 2,
+        POST = 3,
     };
     
     template<typename E, typename =
