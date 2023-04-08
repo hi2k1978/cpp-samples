@@ -53,6 +53,8 @@ namespace CppLambda {
     public:
         Response(StatusCode status_code, JsonValue&& body) noexcept
             : status_code(status_code), body(std::move(body)) {}
+        Response(StatusCode status_code, std::string message) noexcept
+            : status_code(status_code), body(std::move(JsonValue("{message:" + message + "}"))) {}
         invocation_response get() const noexcept;        
     private:
         const StatusCode status_code;

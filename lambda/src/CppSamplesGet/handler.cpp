@@ -15,7 +15,7 @@ using namespace aws::lambda_runtime;
 namespace CppSamplesGet {
     using namespace CppLambda;
 
-    EventValidationResult GetEventValidator::validate() const noexcept {
+    auto GetEventValidator::validate() const noexcept -> EventValidationResult {
         std::vector<std::string_view> error_messages;
         error_messages.push_back(EventValidationError::TEST);
 
@@ -24,7 +24,7 @@ namespace CppSamplesGet {
         return result;
     }
 
-    invocation_response GetHandler::get_response() const {
+    auto GetHandler::get_response() const -> invocation_response {
         using namespace Aws::Utils::Json;
 
         GetEventValidator event_validator(event);
@@ -33,8 +33,8 @@ namespace CppSamplesGet {
         if (!event_validation_result.is_valid) {
             std::cerr << RunTimeError::EVENT_VALIDATION_ERROR << std::endl;
             event_validation_result.show();
-            ErrorHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
-            return handler.get_response();
+            Response response(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+            return response.get();
         }
  
         JsonValue body;
@@ -45,7 +45,7 @@ namespace CppSamplesGet {
         return response.get();
     }
 
-    invocation_response main_handler(const invocation_request& request) {
+    auto main_handler(const invocation_request& request) -> invocation_response {
         Event event(request);
         event.initialize();
 
