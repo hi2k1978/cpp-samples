@@ -21,11 +21,11 @@ namespace CppSamplesGet {
     private:
         const Event& event;
     public:
-        GetRequestHandler(const Event& event) : event(event) {}
-        invocation_response getResponse() const override;
+        GetRequestHandler(const Event& event) noexcept : event(event) {}
+        invocation_response getResponse() const noexcept override;
     };
 
-    invocation_response GetRequestHandler::getResponse() const {
+    invocation_response GetRequestHandler::getResponse() const noexcept{
         using namespace Aws::Utils::Json;
 
         JsonValue body;
