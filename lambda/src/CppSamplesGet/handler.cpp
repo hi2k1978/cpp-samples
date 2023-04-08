@@ -21,7 +21,6 @@ namespace CppSamplesGet {
 
         bool is_valid = true;
         EventValidationResult result(is_valid, std::move(error_messages));
-        
         return result;
     }
 
