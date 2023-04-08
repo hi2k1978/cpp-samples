@@ -38,8 +38,8 @@ namespace CppSamplesGet {
         }
  
         JsonValue body;
-        body.WithString("message", ResponseMessage::OK);
-        body.WithString("result", "success.");
+        body.WithString(ResponseKey::MESSAGE, ResponseMessage::OK);
+        body.WithString(ResponseKey::RESULT, "success.");
 
         Response response(StatusCode::OK, std::move(body));
         return response.get();

@@ -84,9 +84,15 @@ namespace CppLambda {
     }
     
    invocation_response Response::get() const noexcept {
+        JsonValue headers;
+        headers.WithString(CorsKey::ALLOW_ORIGIN, CorsValue::ALLOW_ORIGIN);
+        headers.WithString(CorsKey::ALLOW_METHODS, CorsValue::ALLOW_METHODS);
+        headers.WithString(CorsKey::ALLOW_HEADERS, CorsValue::ALLOW_HEADERS);
+        
         JsonValue response;
-        response.WithInteger("statusCode", static_cast<int>(status_code));
-        response.WithString("body", body.View().WriteCompact());
+        response.WithInteger(ResponseKey::STATUS_CODE, static_cast<int>(status_code));
+        response.WithString(ResponseKey::HEADERS, headers.View().WriteCompact());
+        response.WithString(ResponseKey::BODY, body.View().WriteCompact());
         return invocation_response::success(response.View().WriteCompact(),
                                             ContentType::APPLICATION_JSON);
     }
@@ -94,7 +100,7 @@ namespace CppLambda {
     invocation_response DefaultHandler::get_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
-            body.WithString("message", message);
+            body.WithString(ResponseKey::MESSAGE, message);
         }
         Response response(status_code, std::move(body));
         return response.get();
@@ -103,7 +109,7 @@ namespace CppLambda {
     invocation_response ErrorHandler::get_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
-            body.WithString("message", message);
+            body.WithString(ResponseKey::MESSAGE, message);
         }
         Response response(status_code, std::move(body));
         return response.get();
