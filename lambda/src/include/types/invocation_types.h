@@ -30,36 +30,37 @@ namespace CppLambda {
 
     using StatusCode = aws::http::response_code;
 
+    namespace ResponseKey {
+        static constexpr auto STATUS_CODE = "statusCode";
+        static constexpr auto HEADERS = "headers";
+        static constexpr auto BODY = "body";
+        static constexpr auto MESSAGE = "message";
+        static constexpr auto RESULT = "result";
+    }
+
     namespace ResponseMessage {
-        static std::string NONE = "";
-        static std::string OK = "OK";
-        static std::string BAD_REQUEST = "bad request.";
+        static constexpr auto NONE = "";
+        static constexpr auto OK = "OK";
+        static constexpr auto BAD_REQUEST = "bad request.";
     }  // namespace ErrorMessage
 
     namespace CorsKey {
-        static std::string ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-        static std::string ALLOW_METHODS = "Access-Control-Allow-Methods";
-        static std::string ALLOW_HEADERS = "Access-Control-Allow-Headers";
-        static std::string EXPOSE_HEADERS = "Access-Control-Expose-Headers";
-        static std::string ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
-        static std::string MAX_AGE = "Access-Control-Max-Age";
+        static constexpr auto ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+        static constexpr auto ALLOW_METHODS = "Access-Control-Allow-Methods";
+        static constexpr auto ALLOW_HEADERS = "Access-Control-Allow-Headers";
+        static constexpr auto EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+        static constexpr auto ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+        static constexpr auto MAX_AGE = "Access-Control-Max-Age";
     }
 
     namespace CorsValue {
-        static std::string ALLOW_ORIGIN = "*";
-        static std::string ALLOW_METHODS = "GET,POST,OPTIONS";
-        static std::string ALLOW_HEADERS = "*";
-        static std::string EXPOSE_HEADERS = "*";
-        static std::string ALLOW_CREDENTIALS = "*";
+        static constexpr auto ALLOW_ORIGIN = "*";
+        static constexpr auto ALLOW_METHODS = "GET,POST,OPTIONS";
+        static constexpr auto ALLOW_HEADERS = "*";
+        static constexpr auto EXPOSE_HEADERS = "*";
+        static constexpr auto ALLOW_CREDENTIALS = "*";
         static int MAX_AGE = 86400;
     }
 
-    namespace ResponseKey {
-        static std::string STATUS_CODE = "statusCode";
-        static std::string HEADERS = "headers";
-        static std::string BODY = "body";
-        static std::string MESSAGE = "message";
-        static std::string RESULT = "result";
-    }
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_TYPES_INVOCATION_TYPES_H_
