@@ -1,5 +1,5 @@
-#ifndef LAMBDA_SRC_INCLUDE_ERROR_MESSAGE_H_
-#define LAMBDA_SRC_INCLUDE_ERROR_MESSAGE_H_
+#ifndef LAMBDA_SRC_INCLUDE_TYPES_RESPONSE_TYPES_H_
+#define LAMBDA_SRC_INCLUDE_TYPES_RESPONSE_TYPES_H_
 
 #include <aws/lambda-runtime/runtime.h>
 
@@ -13,9 +13,9 @@ namespace CppLambda {
     }  // namespace ContentType
     
     namespace ResponseMessage {
+        static std::string NONE = "";
         static std::string OK = "OK";
-        static std::string BAD_REQUEST = "httpMethod is invalid.";
+        static std::string BAD_REQUEST = "bad request.";
     }  // namespace ErrorMessage
 }  // namespace CppLambda
-#endif  // LAMBDA_SRC_INCLUDE_ERROR_MESSAGE_H_
-
+#endif  // LAMBDA_SRC_INCLUDE_TYPES_RESPONSE_TYPES_H_
