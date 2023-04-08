@@ -10,8 +10,6 @@
 #include "request_types.h"
 #include "response_types.h"
 #include "cpp_lambda.h"
-#include "request.h"
-#include "response.h"
 
 using namespace aws::lambda_runtime;
 
