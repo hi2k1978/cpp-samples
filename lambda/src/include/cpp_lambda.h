@@ -13,7 +13,7 @@
 
 #include "types/error_types.h"
 #include "types/event_validator_types.h"
-#include "types/request_types.h"
+#include "types/event_types.h"
 #include "types/response_types.h"
 
 namespace CppLambda {
@@ -22,7 +22,7 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
     struct Event {
-        RequestType request_type;
+        EventType type;
         std::string http_method;
         std::string path;
         JsonView headers;
@@ -48,7 +48,7 @@ namespace CppLambda {
 
     class BaseEventValidator {
     public:
-        virtual EventValidationResult validate() const = 0;
+        virtual EventValidationResult validate() const noexcept = 0;
     };
 
     class Response {
@@ -62,22 +62,22 @@ namespace CppLambda {
         invocation_response get() const noexcept;
     };
 
-    class BaseRequestHandler {
+    class BaseEventHandler {
     public:
         virtual invocation_response get_response() const noexcept = 0;
     };
 
-    class InvalidRequestHandler  : public BaseRequestHandler {
+    class InvalidEventHandler  : public BaseEventHandler {
     private:
         const StatusCode status_code;
         const std::string message;
     public:
-        InvalidRequestHandler(const StatusCode status_code, const std::string message) noexcept
+        InvalidEventHandler(const StatusCode status_code, const std::string message) noexcept
             : status_code(status_code), message(message) {}
         invocation_response get_response() const noexcept override;
     };
 
-    using RequestHandlerMap = std::map<RequestType, std::unique_ptr<BaseRequestHandler>>;
+    using EventHandlerMap = std::map<EventType, std::unique_ptr<BaseEventHandler>>;
 
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_

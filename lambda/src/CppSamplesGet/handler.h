@@ -8,19 +8,19 @@
 namespace CppSamplesGet {
     using namespace CppLambda;
 
-    class EventValidator final : public BaseEventValidator {
+    class GetEventValidator final : public BaseEventValidator {
     public:
-        explicit EventValidator(const Event& event) noexcept
+        explicit GetEventValidator(const Event& event) noexcept
             : event(event) {}
-        EventValidationResult validate() const override;
+        EventValidationResult validate() const noexcept override;
 
     private:
         const Event& event;        
     };
 
-    class GetRequestHandler final : public BaseRequestHandler {
+    class GetEventHandler final : public BaseEventHandler {
     public:
-        GetRequestHandler(const Event& event) noexcept : event(event) {}
+        GetEventHandler(const Event& event) noexcept : event(event) {}
         invocation_response get_response() const noexcept override;
 
     private:

@@ -23,11 +23,11 @@ namespace CppLambda {
             http_method = pv.GetString("httpMethod");
             std::transform(http_method.cbegin(), http_method.cend(), http_method.begin(), toupper);
             if (http_method ==  HttpMethod::GET) {
-                request_type = RequestType::GET;
+                type = EventType::GET;
             } else if (http_method == HttpMethod::POST) {
-                request_type = RequestType::POST;
+                type = EventType::POST;
             } else {
-                request_type = RequestType::OTHERS;
+                type = EventType::OTHERS;
             }
         }
         if (pv.ValueExists("path")) {
@@ -58,7 +58,7 @@ namespace CppLambda {
         std::cout << "Event Parameters" << std::endl;
         std::cout << "================" << std::endl;
         std::cout << "httpMethod: " << http_method
-                  << "(request_type: " << request_type << ")" << std::endl;
+                  << "(type: " << type << ")" << std::endl;
         std::cout << "path: " << path << std::endl;
         std::cout << "headers: " << headers.WriteCompact() << std::endl;
         std::cout << "body: " << body.WriteCompact() << std::endl;
@@ -89,7 +89,7 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
-    invocation_response InvalidRequestHandler::get_response() const noexcept {
+    invocation_response InvalidEventHandler::get_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
             body.WithString("message", message);

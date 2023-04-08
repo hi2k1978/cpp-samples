@@ -15,7 +15,7 @@ using namespace aws::lambda_runtime;
 namespace CppSamplesGet {
     using namespace CppLambda;
 
-    EventValidationResult EventValidator::validate() const {
+    EventValidationResult GetEventValidator::validate() const noexcept {
         std::vector<std::string_view> error_messages;
         error_messages.push_back(EventValidateErrorMessage::TEST);
 
@@ -24,9 +24,19 @@ namespace CppSamplesGet {
         return result;
     }
 
-    invocation_response GetRequestHandler::get_response() const noexcept{
+    invocation_response GetEventHandler::get_response() const noexcept{
         using namespace Aws::Utils::Json;
 
+        GetEventValidator event_validator(event);
+        EventValidationResult event_validation_result = event_validator.validate();
+        // TODO: additional coding is required. validator always returns true.
+        if (!event_validation_result.is_valid) {
+            std::cerr << ErrorMessage::EVENT_VALIDATION_ERROR << std::endl;
+            event_validation_result.show();
+            InvalidEventHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+            return handler.get_response();
+        }
+ 
         JsonValue body;
         body.WithString("message", ResponseMessage::OK);
         body.WithString("result", "request(get): successful");
@@ -39,29 +49,29 @@ namespace CppSamplesGet {
         Event event(request);
         event.initialize();
 
-        EventValidator event_validator(event);
-        EventValidationResult event_validation_result = event_validator.validate();
-        // TODO: additional coding is required. validator always returns true.
-        if (!event_validation_result.is_valid) {
-            std::cerr << ErrorMessage::EVENT_VALIDATION_ERROR << std::endl;
-            event_validation_result.show();
-            InvalidRequestHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
-            return handler.get_response();
-        }
+        // EventValidator event_validator(event);
+        // EventValidationResult event_validation_result = event_validator.validate();
+        // // TODO: additional coding is required. validator always returns true.
+        // if (!event_validation_result.is_valid) {
+        //     std::cerr << ErrorMessage::EVENT_VALIDATION_ERROR << std::endl;
+        //     event_validation_result.show();
+        //     InvalidEventHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+        //     return handler.get_response();
+        // }
         
-        RequestHandlerMap request_handler_map;
-        request_handler_map.emplace(RequestType::GET, std::make_unique<GetRequestHandler>(event));
-        request_handler_map.emplace(
-            RequestType::OTHERS,
-            std::make_unique<InvalidRequestHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST)
-            // std::make_unique<InvalidRequestHandler>(StatusCode::BAD_REQUEST, ResponseMessage::NONE)
+        EventHandlerMap event_handler_map;
+        event_handler_map.emplace(EventType::GET, std::make_unique<GetEventHandler>(event));
+        event_handler_map.emplace(
+            EventType::OTHERS,
+            std::make_unique<InvalidEventHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST)
+            // std::make_unique<InvalidEventHandler>(StatusCode::BAD_REQUEST, ResponseMessage::NONE)
             );
 
-        BaseRequestHandler *target;
-        if (request_handler_map.contains(event.request_type)) {
-            target = (request_handler_map.at(event.request_type)).get();
+        BaseEventHandler *target;
+        if (event_handler_map.contains(event.type)) {
+            target = (event_handler_map.at(event.type)).get();
         } else {
-            target = (request_handler_map.at(RequestType::OTHERS)).get();
+            target = (event_handler_map.at(EventType::OTHERS)).get();
         }
         return target->get_response();
     }

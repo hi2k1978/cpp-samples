@@ -10,7 +10,7 @@ namespace CppLambda {
         static constexpr auto POST = "POST";
     }  // namespace HttpMethod
 
-    enum class RequestType {
+    enum class EventType {
         OTHERS = 0,
         GET = 1,
         POST = 2,
