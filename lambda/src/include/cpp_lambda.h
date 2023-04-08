@@ -12,9 +12,7 @@
 #include<type_traits>
 
 #include "types/error_types.h"
-#include "types/event_validator_types.h"
-#include "types/event_types.h"
-#include "types/response_types.h"
+#include "types/invocation_types.h"
 
 namespace CppLambda {
     
