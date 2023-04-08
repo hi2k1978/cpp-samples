@@ -52,29 +52,28 @@ namespace CppLambda {
     };
 
     class Response {
-    private:
-        const StatusCode status_code;
-        const JsonValue body;
-
     public:
         Response(StatusCode status_code, JsonValue&& body) noexcept
             : status_code(status_code), body(std::move(body)) {}
-        invocation_response get() const noexcept;
+        invocation_response get() const noexcept;        
+    private:
+        const StatusCode status_code;
+        const JsonValue body;
     };
 
     class BaseEventHandler {
     public:
-        virtual invocation_response get_response() const noexcept = 0;
+        virtual invocation_response get_response() const = 0;
     };
 
-    class InvalidEventHandler  : public BaseEventHandler {
-    private:
-        const StatusCode status_code;
-        const std::string message;
+    class InvalidEventHandler : public BaseEventHandler {
     public:
         InvalidEventHandler(const StatusCode status_code, const std::string message) noexcept
             : status_code(status_code), message(message) {}
         invocation_response get_response() const noexcept override;
+    private:
+        const StatusCode status_code;
+        const std::string message;
     };
 
     using EventHandlerMap = std::map<EventType, std::unique_ptr<BaseEventHandler>>;

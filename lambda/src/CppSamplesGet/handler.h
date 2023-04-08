@@ -21,7 +21,7 @@ namespace CppSamplesGet {
     class GetEventHandler final : public BaseEventHandler {
     public:
         GetEventHandler(const Event& event) noexcept : event(event) {}
-        invocation_response get_response() const noexcept override;
+        invocation_response get_response() const override;
 
     private:
         const Event& event;

@@ -24,7 +24,7 @@ namespace CppSamplesGet {
         return result;
     }
 
-    invocation_response GetEventHandler::get_response() const noexcept{
+    invocation_response GetEventHandler::get_response() const {
         using namespace Aws::Utils::Json;
 
         GetEventValidator event_validator(event);
@@ -48,16 +48,6 @@ namespace CppSamplesGet {
     invocation_response handler(const invocation_request& request) {
         Event event(request);
         event.initialize();
-
-        // EventValidator event_validator(event);
-        // EventValidationResult event_validation_result = event_validator.validate();
-        // // TODO: additional coding is required. validator always returns true.
-        // if (!event_validation_result.is_valid) {
-        //     std::cerr << ErrorMessage::EVENT_VALIDATION_ERROR << std::endl;
-        //     event_validation_result.show();
-        //     InvalidEventHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
-        //     return handler.get_response();
-        // }
         
         EventHandlerMap event_handler_map;
         event_handler_map.emplace(EventType::GET, std::make_unique<GetEventHandler>(event));
