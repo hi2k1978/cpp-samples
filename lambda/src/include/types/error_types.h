@@ -5,11 +5,11 @@
 
 namespace CppLambda {
 
-    namespace EventValidateErrorMessage {
+    namespace EventValidationError {
         static constexpr auto TEST = "This is a test error message.";
     } // namespace VALIDATE_ERROR
 
-    namespace ErrorMessage {
+    namespace RunTimeError {
         static constexpr auto EVENT_VALIDATION_ERROR = "Event validation is failed.";
     }  // namespace HttpMethod
     

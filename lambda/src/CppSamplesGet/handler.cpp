@@ -17,7 +17,7 @@ namespace CppSamplesGet {
 
     EventValidationResult GetEventValidator::validate() const noexcept {
         std::vector<std::string_view> error_messages;
-        error_messages.push_back(EventValidateErrorMessage::TEST);
+        error_messages.push_back(EventValidationError::TEST);
 
         bool is_valid = true;
         EventValidationResult result(is_valid, std::move(error_messages));
@@ -31,7 +31,7 @@ namespace CppSamplesGet {
         EventValidationResult event_validation_result = event_validator.validate();
         // TODO: additional coding is required. validator always returns true.
         if (!event_validation_result.is_valid) {
-            std::cerr << ErrorMessage::EVENT_VALIDATION_ERROR << std::endl;
+            std::cerr << RunTimeError::EVENT_VALIDATION_ERROR << std::endl;
             event_validation_result.show();
             ErrorHandler handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
             return handler.get_response();
