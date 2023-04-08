@@ -10,6 +10,8 @@
 #include "request_types.h"
 #include "response_types.h"
 #include "cpp_lambda.h"
+#include "request.h"
+#include "response.h"
 
 using namespace aws::lambda_runtime;
 
@@ -30,7 +32,7 @@ namespace CppSamplesGet {
 
         JsonValue body;
         body.WithString("message", ResponseMessage::OK);
-        body.WithString("httpMethod", "get");
+        body.WithString("result", "request(get): successful");
 
         Response response(StatusCode::OK, std::move(body));
         return response.get();
