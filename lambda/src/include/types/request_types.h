@@ -1,7 +1,5 @@
-#ifndef LAMBDA_SRC_INCLUDE_REQUEST_H_
-#define LAMBDA_SRC_INCLUDE_REQUEST_H_
-
-#include <aws/lambda-runtime/runtime.h>
+#ifndef LAMBDA_SRC_INCLUDE_TYPES_REQUEST_TYPES_H_
+#define LAMBDA_SRC_INCLUDE_TYPES_REQUEST_TYPES_H_
 
 #include<iostream>
 
@@ -25,5 +23,4 @@ namespace CppLambda {
     }
     
 }  // namespace CppLambda
-#endif  // LAMBDA_SRC_INCLUDE_REQUEST_H_
-
+#endif  // LAMBDA_SRC_INCLUDE_TYPES_REQUEST_TYPES_H_

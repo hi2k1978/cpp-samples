@@ -1,8 +1,9 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 
-#include "request_types.h"
-#include "response_types.h"
+#include "iostream"
+#include "iomanip"
+
 #include "cpp_lambda.h"
 
 namespace CppLambda {
@@ -10,7 +11,7 @@ namespace CppLambda {
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
-    Event::Event(invocation_request const& request) {
+    void Event::initialize() noexcept {
         JsonValue payload(request.payload);
         if (!payload.WasParseSuccessful()) {
             std::cerr << "InvalidJSON: Failed to parse input JSON" << std::endl;
@@ -52,7 +53,7 @@ namespace CppLambda {
         // show();
     }
 
-    void Event::show() const {
+    void Event::show() const noexcept {
         std::cout << std::endl;
         std::cout << "Event Parameters" << std::endl;
         std::cout << "================" << std::endl;
@@ -66,7 +67,21 @@ namespace CppLambda {
         return;
     }
 
-    invocation_response Response::get() const {
+    void EventValidationResult::show() const noexcept {
+        std::cout << std::endl;
+        std::cout << "Event Validate Errors" << std::endl;
+        std::cout << "=====================" << std::endl;
+        std::cout << "     is_valid: " << is_valid << std::endl;
+        for (int ii = 0; auto error_message : error_messages) {
+            std::cout << std::right << std::setw(3) << ii;
+            std::cout << ": ";
+            std::cout << error_message << std::endl;
+            ii++;
+        }
+        std::cout << std::endl;
+    }
+    
+   invocation_response Response::get() const noexcept {
         JsonValue response;
         response.WithInteger("statusCode", static_cast<int>(status_code));
         response.WithString("body", body.View().WriteCompact());
@@ -74,7 +89,7 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
-    invocation_response InvalidRequestHandler::getResponse() const {
+    invocation_response InvalidRequestHandler::get_response() const noexcept {
         JsonValue body;
         body.WithString("message", message);
         Response response(status_code, std::move(body));

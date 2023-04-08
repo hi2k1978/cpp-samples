@@ -11,8 +11,10 @@
 #include<utility>
 #include<type_traits>
 
-#include "request_types.h"
-#include "response_types.h"
+#include "types/error_types.h"
+#include "types/event_validator_types.h"
+#include "types/request_types.h"
+#include "types/response_types.h"
 
 namespace CppLambda {
     
@@ -27,8 +29,26 @@ namespace CppLambda {
         JsonView body;
         JsonView query;
 
-        explicit Event(invocation_request const& request_);
-        void show() const;
+        explicit Event(const invocation_request& request) noexcept 
+            : request(request) {};
+        void initialize() noexcept;
+        void show() const noexcept;
+    private:
+        const invocation_request& request;
+    };
+
+    struct EventValidationResult {
+        const bool is_valid;
+        const std::vector<std::string>  error_messages;
+        
+        explicit EventValidationResult(const bool is_valid, std::vector<std::string>&& error_messages) noexcept
+            : is_valid(is_valid), error_messages(std::move(error_messages)) {}
+        void show() const noexcept;
+    };  // struct ValidateResult
+
+    class BaseEventValidator {
+    public:
+        virtual EventValidationResult validate() const = 0;
     };
 
     class Response {
@@ -39,12 +59,12 @@ namespace CppLambda {
     public:
         Response(StatusCode status_code, JsonValue&& body) noexcept
             : status_code(status_code), body(std::move(body)) {}
-        invocation_response get() const;
+        invocation_response get() const noexcept;
     };
 
     class BaseRequestHandler {
     public:
-        virtual invocation_response getResponse() const = 0;
+        virtual invocation_response get_response() const noexcept = 0;
     };
 
     class InvalidRequestHandler  : public BaseRequestHandler {
@@ -54,7 +74,7 @@ namespace CppLambda {
     public:
         InvalidRequestHandler(const StatusCode status_code, const std::string message) noexcept
             : status_code(status_code), message(message) {}
-        invocation_response getResponse() const override;
+        invocation_response get_response() const noexcept override;
     };
 
     using RequestHandlerMap = std::map<RequestType, std::unique_ptr<BaseRequestHandler>>;
