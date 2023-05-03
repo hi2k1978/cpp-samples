@@ -43,7 +43,7 @@ namespace CppSamplesGet {
         return response.get();
     }
 
-    std::unique_ptr<BaseHandler> create_target_handler(const Event& event) {
+    auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
         switch(event.type) {
         case EventType::OPTIONS:
             return std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE);
@@ -54,7 +54,7 @@ namespace CppSamplesGet {
         }
     }
     
-    invocation_response handler(const invocation_request& request) {
+    auto handler(const invocation_request& request) -> invocation_response {
         Event event(request);
         event.initialize();
         std::unique_ptr<BaseHandler> target_handler = create_target_handler(event);
