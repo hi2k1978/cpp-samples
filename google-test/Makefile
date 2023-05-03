@@ -16,13 +16,13 @@ build:
 	cd $(BUILDDIR) && cmake .. && make
 .PHONY: build
 
-run: build
+run:
 	@echo
 	@echo "################################"
 	./$(BUILDDIR)/$(SRCDIR)/$(HANDLER)
 .PHONY: run
 
-test: build
+test:
 	@echo
 	@echo "################################"
 	./$(BUILDDIR)/$(TESTDIR)/$(GTEST)
