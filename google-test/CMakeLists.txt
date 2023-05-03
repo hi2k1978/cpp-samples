@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(handler LANGUAGES CXX)
 
-add_subdirectory(src)
-add_subdirectory(tests)
+set(subdirectory_list src tests)
+foreach(subdirectory IN LISTS subdirectory_list)
+  add_subdirectory(${subdirectory})
+endforeach()
 

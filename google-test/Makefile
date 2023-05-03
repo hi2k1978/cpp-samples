@@ -2,7 +2,7 @@ BUILDDIR=build
 SRCDIR=src
 TESTDIR=tests
 HANDLER=handler
-GTEST=unittest
+GTEST=test_main
 
 all: build
 .PHONY: all
@@ -16,7 +16,14 @@ build:
 	cd $(BUILDDIR) && cmake .. && make
 .PHONY: build
 
+run: build
+	@echo
+	@echo "################################"
+	./$(BUILDDIR)/$(SRCDIR)/$(HANDLER)
+.PHONY: run
+
 test: build
-	# ./$(BUILDDIR)/$(SRCDIR)/$(HANDLER)
+	@echo
+	@echo "################################"
 	./$(BUILDDIR)/$(TESTDIR)/$(GTEST)
 .PHONY: test

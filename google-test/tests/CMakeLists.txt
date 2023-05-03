@@ -16,6 +16,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(unittest unittest.cpp)
-target_link_libraries(unittest gtest_main sample1 sample2)
-add_test(NAME unittest_test COMMAND unittest)
+add_executable(test_main test_main.cpp)
+target_link_libraries(test_main gtest_main sample1 sample2)
+add_test(NAME test_main_test COMMAND test_main)
