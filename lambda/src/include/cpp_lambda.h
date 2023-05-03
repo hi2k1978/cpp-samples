@@ -86,7 +86,7 @@ namespace CppLambda {
         const std::string message;
     };
 
-    using HandlerMap = std::map<EventType, std::unique_ptr<BaseHandler>>;
+    // using HandlerMap = std::map<EventType, std::unique_ptr<BaseHandler>>;
 
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
