@@ -12,7 +12,9 @@ find_package(AWSSDK COMPONENTS core)
 include_directories(include)
 add_subdirectory(lib)
 
-add_executable(${PROJECT_NAME} "handler.cpp")
-target_link_libraries(${PROJECT_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_lambda)
+add_library(cpp_samples_get STATIC cpp_samples_get.cpp)
+target_link_libraries(cpp_samples_get AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_lambda)
+add_executable(${PROJECT_NAME} handler.cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_samples_get)
 
 aws_lambda_package_target(${PROJECT_NAME})

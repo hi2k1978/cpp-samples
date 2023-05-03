@@ -59,7 +59,7 @@ define build-resource
 build-$1:
 	$(eval path:=$(abspath ./src/$1))
 	$(eval dest:=/tmp/src)
-	cp ./src/scripts/CMakeLists.txt $(path)
+	# cp ./src/scripts/CMakeLists.txt $(path)
 	docker container run --rm \
 		-v $(path):$(dest) \
 		-v $(path)/../include:$(dest)/include \
