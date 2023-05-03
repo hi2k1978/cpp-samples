@@ -5,7 +5,7 @@ if [ $# != 1 ]; then
   exit 1
 fi
 
-mkdir build
+mkdir -p build
 cd build
 cmake --build .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tmp/install
 make

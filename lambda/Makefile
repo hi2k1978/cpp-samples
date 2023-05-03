@@ -56,7 +56,7 @@ full: build sam-invoke
 .PHONY : full
 
 define build-resource
-build-$1: force
+build-$1:
 	$(eval path:=$(abspath ./src/$1))
 	$(eval dest:=/tmp/src)
 	cp ./src/scripts/CMakeLists.txt $(path)
@@ -65,7 +65,7 @@ build-$1: force
 		-v $(path)/../include:$(dest)/include \
 		-v $(path)/../lib:$(dest)/lib \
 		$(DOCKERTAG) aws-lambda-package-handler
-	rm $(path)/CMakeLists.txt
+	# rm $(path)/CMakeLists.txt
 .PHONY : build-$1
 endef
 $(foreach resource, $(TARGET), $(eval $(call build-resource,$(resource))))
