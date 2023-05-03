@@ -1,6 +1,9 @@
 #ifndef LAMBDA_SRC_CPP_SAMPLES_GET_HANDLER_H_
 #define LAMBDA_SRC_CPP_SAMPLES_GET_HANDLER_H_
 
+#include <aws/lambda-runtime/runtime.h>
+#include <aws/core/utils/json/JsonSerializer.h>
+
 #include<iostream>
 
 #include "cpp_lambda.h"
@@ -26,5 +29,7 @@ namespace CppSamplesGet {
     private:
         const Event& event;
     };
+
+    invocation_response handler(const invocation_request& request);
 }
 #endif  // LAMBDA_SRC_CPP_SAMPLES_GET_HANDLER_H_
