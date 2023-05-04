@@ -3,6 +3,17 @@
 
 #include <aws/lambda-runtime/runtime.h>
 
+#ifndef STAGE_MACRO_DEFINED_
+// CORS
+#define CORS_ALLOW_ORIGIN "*"
+#define CORS_ALLOW_METHODS "OPTIONS"
+#define CORS_ALLOW_HEADERS "*"
+#define CORS_EXPOSE_HEADERS "*"
+#define CORS_ALLOW_CREDENTIALS "*"
+#define CORS_MAX_AGE 86400
+
+#endif
+
 namespace CppLambda {
 
     namespace HttpMethod {
@@ -54,12 +65,13 @@ namespace CppLambda {
     }
 
     namespace CorsValue {
-        static constexpr auto ALLOW_ORIGIN = "*";
-        static constexpr auto ALLOW_METHODS = "GET,POST,OPTIONS";
-        static constexpr auto ALLOW_HEADERS = "*";
-        static constexpr auto EXPOSE_HEADERS = "*";
-        static constexpr auto ALLOW_CREDENTIALS = "*";
-        static int MAX_AGE = 86400;
+        // static constexpr auto ALLOW_ORIGIN = "*";
+        static constexpr auto ALLOW_ORIGIN = CORS_ALLOW_ORIGIN;
+        static constexpr auto ALLOW_METHODS = CORS_ALLOW_METHODS;
+        static constexpr auto ALLOW_HEADERS = CORS_ALLOW_HEADERS;
+        static constexpr auto EXPOSE_HEADERS = CORS_EXPOSE_HEADERS;
+        static constexpr auto ALLOW_CREDENTIALS = CORS_ALLOW_CREDENTIALS;
+        static int MAX_AGE = CORS_MAX_AGE;
     }
 
 }  // namespace CppLambda

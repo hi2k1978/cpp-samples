@@ -62,6 +62,7 @@ namespace CppSamplesGet {
     }
 
     // invocation_response handler(const invocation_request& request) {
+    //     using HandlerMap = std::map<EventType, std::unique_ptr<BaseHandler>>;
     //     Event event(request);
     //     event.initialize();        
 

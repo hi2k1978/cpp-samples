@@ -11,8 +11,15 @@
 #include<utility>
 #include<type_traits>
 
+#ifdef STAGE_MACRO_MAIN // stage: main
+#include "stages/stage_main.h"
+#else // stage: develop
+#include "stages/stage_develop.h"
+#endif
+
 #include "types/error_types.h"
 #include "types/invocation_types.h"
+
 
 namespace CppLambda {
     
@@ -85,8 +92,6 @@ namespace CppLambda {
         const StatusCode status_code;
         const std::string message;
     };
-
-    // using HandlerMap = std::map<EventType, std::unique_ptr<BaseHandler>>;
 
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
