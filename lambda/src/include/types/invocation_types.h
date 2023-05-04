@@ -12,10 +12,10 @@ namespace CppLambda {
     }  // namespace HttpMethod
 
     enum class EventType {
-        OTHERS = 0,
-        OPTIONS = 1,
-        GET = 2,
-        POST = 3,
+        OPTIONS = 0,
+        GET = 1,
+        POST = 2,
+        OTHERS = 254,
     };
     
     template<typename E, typename =

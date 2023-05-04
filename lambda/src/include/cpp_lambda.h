@@ -23,9 +23,9 @@ namespace CppLambda {
         EventType type;
         std::string http_method;
         std::string path;
-        JsonView headers;
-        JsonView body;
-        JsonView query;
+        JsonValue headers;
+        JsonValue body;
+        JsonValue query;
 
         explicit Event(const invocation_request& request) noexcept 
             : request(request) {};

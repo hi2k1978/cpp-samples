@@ -36,21 +36,21 @@ namespace CppLambda {
             path = pv.GetString("path");
         }
         if (pv.ValueExists("headers")) {
-            headers = pv.GetObject("headers");
+            headers = pv.GetObject("headers").Materialize();
         }
         if (pv.ValueExists("body")) {
             if (pv.GetObject("body").IsString()) {
                 std::string body_string = pv.GetString("body");
                 JsonValue body_json_value(body_string);
                 if (body_json_value.WasParseSuccessful()) {
-                    body = body_json_value.View();
+                    body = body_json_value;
                 }
             } else {
-                body = pv.GetObject("body");
+                body = pv.GetObject("body").Materialize();
             }
         }
         if (pv.ValueExists("queryStringParameters")) {
-            query = pv.GetObject("queryStringParameters");
+            query = pv.GetObject("queryStringParameters").Materialize();
         }
         // show();
     }
@@ -62,9 +62,9 @@ namespace CppLambda {
         std::cout << "httpMethod: " << http_method
                   << "(type: " << type << ")" << std::endl;
         std::cout << "path: " << path << std::endl;
-        std::cout << "headers: " << headers.WriteCompact() << std::endl;
-        std::cout << "body: " << body.WriteCompact() << std::endl;
-        std::cout << "query: " << query.WriteCompact() << std::endl;
+        std::cout << "headers: " << headers.View().WriteCompact() << std::endl;
+        std::cout << "body: " << body.View().WriteCompact() << std::endl;
+        std::cout << "query: " << query.View().WriteCompact() << std::endl;
         std::cout << std::endl;
         return;
     }
