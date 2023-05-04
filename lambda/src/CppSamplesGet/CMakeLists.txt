@@ -1,24 +1,28 @@
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD 11)
-
+set(LAMBDA_NAME CppSamplesGet)
+set(LAMBDA_LOWER_NAME cpp_samples_get)
+set(EXECUTE_NAME ${LAMBDA_NAME}_handler)
+set(TEST_NAME test_${LAMBDA_NAME})
 project(handler LANGUAGES CXX)
 
 find_package(aws-lambda-runtime REQUIRED)
 find_package(AWSSDK COMPONENTS core)
 
-# include_directories(../include)
-# add_subdirectory(../lib lib)
 include_directories(. ./include)
 add_subdirectory(lib)
 
-add_library(cpp_samples_get STATIC cpp_samples_get.cpp)
-target_link_libraries(cpp_samples_get AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_lambda)
-add_executable(${PROJECT_NAME} handler.cpp)
-target_link_libraries(${PROJECT_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_samples_get)
+add_library(${LAMBDA_LOWER_NAME} STATIC ${LAMBDA_LOWER_NAME}.cpp)
+target_link_libraries(${LAMBDA_LOWER_NAME} AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_lambda)
+add_executable(${EXECUTE_NAME} handler.cpp)
+set_target_properties(${EXECUTE_NAME}
+  PROPERTIES OUTPUT_NAME "handler")
+target_link_libraries(${EXECUTE_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} ${LAMBDA_LOWER_NAME})
 
-aws_lambda_package_target(${PROJECT_NAME})
+aws_lambda_package_target(${EXECUTE_NAME})
 
+## create googletest
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -28,6 +32,8 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(test_handler test_handler.cpp)
-target_link_libraries(test_handler gtest_main cpp_samples_get)
-add_test(NAME test_handler_test COMMAND test_handler)
+add_executable(${TEST_NAME} test_lambda.cpp)
+set_target_properties(${TEST_NAME}
+  PROPERTIES OUTPUT_NAME "test_lambda")
+target_link_libraries(${TEST_NAME} gtest_main ${LAMBDA_LOWER_NAME})
+add_test(NAME ${TEST_NAME}_test COMMAND ${TEST_NAME})

@@ -63,7 +63,7 @@ build-$1:
 		-v $(path):$(dest) \
 		-v $(path)/../include:$(dest)/include \
 		-v $(path)/../lib:$(dest)/lib \
-		$(DOCKERTAG) aws-lambda-package-handler
+		$(DOCKERTAG) aws-lambda-package-$1_handler
 .PHONY : build-$1
 endef
 $(foreach resource, $(TARGET), $(eval $(call build-resource,$(resource))))
