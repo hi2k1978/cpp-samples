@@ -83,7 +83,7 @@ namespace CppLambda {
         std::cout << std::endl;
     }
     
-   invocation_response Response::get() const noexcept {
+   invocation_response Response::create_response() const noexcept {
         JsonValue headers;
         headers.WithString(CorsKey::ALLOW_ORIGIN, CorsValue::ALLOW_ORIGIN);
         headers.WithString(CorsKey::ALLOW_METHODS, CorsValue::ALLOW_METHODS);
@@ -97,22 +97,22 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
-    invocation_response DefaultHandler::get_response() const noexcept {
+    invocation_response DefaultHandler::create_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
             body.WithString(ResponseKey::MESSAGE, message);
         }
         Response response(status_code, std::move(body));
-        return response.get();
+        return response.create_response();
     }
 
-    invocation_response ErrorHandler::get_response() const noexcept {
+    invocation_response ErrorHandler::create_response() const noexcept {
         JsonValue body;
         if (message.size() > 0) {
             body.WithString(ResponseKey::MESSAGE, message);
         }
         Response response(status_code, std::move(body));
-        return response.get();
+        return response.create_response();
     }
 
 }  // namespace CppLambda

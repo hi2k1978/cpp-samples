@@ -22,7 +22,7 @@ namespace CppSamplesGet {
         return result;
     }
 
-    auto GetHandler::get_response() const -> invocation_response {
+    auto GetHandler::create_response() const -> invocation_response {
         using namespace Aws::Utils::Json;
 
         GetEventValidator event_validator(event);
@@ -32,7 +32,7 @@ namespace CppSamplesGet {
             std::cerr << RunTimeError::EVENT_VALIDATION_ERROR << std::endl;
             event_validation_result.show();
             Response response(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
-            return response.get();
+            return response.create_response();
         }
  
         JsonValue body;
@@ -40,7 +40,7 @@ namespace CppSamplesGet {
         body.WithString(ResponseKey::RESULT, "success.");
 
         Response response(StatusCode::OK, std::move(body));
-        return response.get();
+        return response.create_response();
     }
 
     auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
@@ -58,14 +58,13 @@ namespace CppSamplesGet {
         Event event(request);
         event.initialize();
         std::unique_ptr<BaseHandler> target_handler = create_target_handler(event);
-        return target_handler->get_response();
+        return target_handler->create_response();
     }
 
     // invocation_response handler(const invocation_request& request) {
     //     Event event(request);
-    //     event.initialize();
+    //     event.initialize();        
 
-        
     //     HandlerMap handler_map;
     //     handler_map.emplace(EventType::OPTIONS, std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE));
     //     handler_map.emplace(EventType::GET, std::make_unique<GetHandler>(event));
@@ -77,6 +76,6 @@ namespace CppSamplesGet {
     //     } else {
     //         target_handler = (handler_map.at(EventType::OTHERS)).get();
     //     }
-    //     return target_handler->get_response();
+    //     return target_handler->create_response();
     // }
 }  // namespace CppSamplesGet

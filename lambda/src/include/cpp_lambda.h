@@ -55,7 +55,7 @@ namespace CppLambda {
             : status_code(status_code), body(std::move(body)) {}
         Response(StatusCode status_code, std::string message) noexcept
             : status_code(status_code), body(std::move(JsonValue("{message:" + message + "}"))) {}
-        invocation_response get() const noexcept;        
+        invocation_response create_response() const noexcept;        
     private:
         const StatusCode status_code;
         const JsonValue body;
@@ -63,14 +63,14 @@ namespace CppLambda {
 
     class BaseHandler {
     public:
-        virtual invocation_response get_response() const = 0;
+        virtual invocation_response create_response() const = 0;
     };
 
     class DefaultHandler : public BaseHandler {
     public:
         DefaultHandler(const StatusCode status_code, const std::string message) noexcept
             : status_code(status_code), message(message) {}
-        invocation_response get_response() const noexcept override;
+        invocation_response create_response() const noexcept override;
     private:
         const StatusCode status_code;
         const std::string message;
@@ -80,7 +80,7 @@ namespace CppLambda {
     public:
         ErrorHandler(const StatusCode status_code, const std::string message) noexcept
             : status_code(status_code), message(message) {}
-        invocation_response get_response() const noexcept override;
+        invocation_response create_response() const noexcept override;
     private:
         const StatusCode status_code;
         const std::string message;
