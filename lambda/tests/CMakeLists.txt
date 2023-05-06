@@ -1,8 +1,8 @@
 ## defined in parent
-# set(LAMBDA_NAMES CppSamplesGet)
+# set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplespost ...)
 set(TEST_NAME cpptest)
 
-set(LAMBDA_INCLUDE_DIRECTORIES ../src/${LAMBDA_NAMES})
+set(LAMBDA_INCLUDE_DIRECTORIES ../src/${LAMBDA_FUNCTIONS})
 list(TRANSFORM LAMBDA_INCLUDE_DIRECTORIES PREPEND "../src/")
 include_directories(
   ../src/include
@@ -19,4 +19,4 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_NAME}.cpp)
-target_link_libraries(${TEST_NAME} gtest_main ${LAMBDA_NAMES})
+target_link_libraries(${TEST_NAME} gtest_main ${LAMBDA_FUNCTIONS})
