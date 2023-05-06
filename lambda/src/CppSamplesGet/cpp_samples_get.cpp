@@ -37,7 +37,7 @@ namespace CppSamplesGet {
  
         JsonValue body;
         body.WithString(ResponseKey::MESSAGE, ResponseMessage::OK);
-        body.WithString(ResponseKey::RESULT, "success.");
+        body.WithString(ResponseKey::RESULT, "success...");
 
         Response response(StatusCode::OK, std::move(body));
         return response.create_response();

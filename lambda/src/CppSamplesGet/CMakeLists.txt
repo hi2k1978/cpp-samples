@@ -1,24 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
+# project(handler LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD 11)
 set(LAMBDA_NAME CppSamplesGet)
 set(LAMBDA_LOWER_NAME cpp_samples_get)
 set(EXECUTE_NAME ${LAMBDA_NAME}_handler)
 set(TEST_NAME test_${LAMBDA_NAME})
-project(handler LANGUAGES CXX)
 
-find_package(aws-lambda-runtime REQUIRED)
-find_package(AWSSDK COMPONENTS core)
-
-include_directories(. ./include)
-add_subdirectory(lib)
+include_directories(. ../include)
 
 add_library(${LAMBDA_LOWER_NAME} STATIC ${LAMBDA_LOWER_NAME}.cpp)
-target_link_libraries(${LAMBDA_LOWER_NAME} AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} cpp_lambda)
+target_link_libraries(${LAMBDA_LOWER_NAME} cpp_lambda)
+
 add_executable(${EXECUTE_NAME} handler.cpp)
 set_target_properties(${EXECUTE_NAME}
   PROPERTIES OUTPUT_NAME "handler")
-target_link_libraries(${EXECUTE_NAME} PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} ${LAMBDA_LOWER_NAME})
+target_link_libraries(${EXECUTE_NAME} PUBLIC ${LAMBDA_LOWER_NAME})
 
 aws_lambda_package_target(${EXECUTE_NAME})
 

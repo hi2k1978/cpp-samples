@@ -4,9 +4,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(handler LANGUAGES CXX)
 
-find_package(aws-lambda-runtime REQUIRED)
-find_package(AWSSDK COMPONENTS core)
+# find_package(aws-lambda-runtime REQUIRED)
+# find_package(AWSSDK COMPONENTS core)
 
 include_directories(../include)
 
 add_library(cpp_lambda STATIC cpp_lambda.cpp)
+target_link_libraries(cpp_lambda AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES})

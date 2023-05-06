@@ -1,6 +1,12 @@
+## SELF
+UID=$(shell id -u)
+GID=$(shell id -g)
+
 ## Docker variables
-DOCKERFILE:=docker/Dockerfile
-DOCKERTAG:=lambda-cpp-runtime:latest
+DOCKER_FILE:=docker/Dockerfile
+DOCKER_TAG:=lambda-cpp-runtime:latest
+DOCKER_SRCDIR:=$(abspath .)
+DOCKER_WORKDIR:=/tmp/src
 
 ## Makefile variables
 # TARGET:=CppSamplesGet CppSamplesPost
@@ -12,18 +18,22 @@ all: build
 
 clean: 
 	@echo "clean current directory & sub-directories"
-	@for dir in $(TARGET); do sudo rm -rf ./src/$$dir/build; done
-	ls src/**
+	@rm -rf ./build
 .PHONY : clean
 
 force:
 .PHONY : force
 
 show:
+	@echo
 	@echo Makefile Variables
 	@echo ==================
-	@echo "DOCKERFILE: " $(DOCKERFILE)
-	@echo "DOCKERTAG: " $(DOCKERTAG)
+	@echo "UID: " $(UID)
+	@echo "GID: " $(GID)
+	@echo "DOCKER_FILE: " $(DOCKER_FILE)
+	@echo "DOCKER_TAG: " $(DOCKER_TAG)
+	@echo "DOCKER_SRCDIR: " $(DOCKER_SRCDIR)
+	@echo "DOCKER_WORKDIR: " $(DOCKER_WORKDIR)
 	@echo "TARGET: " $(TARGET)
 	@echo
 .PHONY : show
@@ -34,19 +44,15 @@ lint:
 .PHONY : lint
 
 compiler-build: force
-	docker image build -t $(DOCKERTAG) -f $(DOCKERFILE) .
+	docker image build -t $(DOCKER_TAG) -f $(DOCKER_FILE) .
 .PHONY : compiler-build
 
 compiler-clean: force
-	docker image rm -f $(DOCKERTAG)
+	docker image rm -f $(DOCKER_TAG)
 .PHONY : compiler-clean
 
 compiler-rebuild: compiler-clean compiler-build
 .PHONY : compiler-rebuild
-
-deploy: 
-	./aws/deploy.sh
-.PHONY : deploy
 
 test: 
 	./aws/test.sh
@@ -55,22 +61,40 @@ test:
 full: build sam-invoke
 .PHONY : full
 
-define build-resource
-build-$1:
-	$(eval path:=$(abspath ./src/$1))
-	$(eval dest:=/tmp/src)
-	docker container run --rm \
-		-v $(path):$(dest) \
-		-v $(path)/../include:$(dest)/include \
-		-v $(path)/../lib:$(dest)/lib \
-		$(DOCKERTAG) aws-lambda-package-$1_handler
-.PHONY : build-$1
-endef
-$(foreach resource, $(TARGET), $(eval $(call build-resource,$(resource))))
+# define build-resource
+# build-$1:
+# 	$(eval path:=$(abspath ./src/$1))
+# 	$(eval dest:=/tmp/src)
+# 	docker container run --rm \
+# 		-v $(path):$(dest) \
+# 		-v $(path)/../include:$(dest)/include \
+# 		-v $(path)/../lib:$(dest)/lib \
+# 		$(DOCKER_TAG) aws-lambda-package-$1_handler
+# 		# $(DOCKER_TAG) all
+# .PHONY : build-$1
+# endef
+# $(foreach resource, $(TARGET), $(eval $(call build-resource,$(resource))))
 
-build: $(addprefix build-,$(TARGET))
+# build: $(addprefix build-,$(TARGET))
+# .PHONY : build
+build:
+	docker container run --rm \
+		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
+		$(DOCKER_TAG) $(UID) $(GID) all
 .PHONY : build
 
+package: build
+	docker container run --rm \
+		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
+		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package
+.PHONY : package
+
+rebuild: clean build
+.PHONY : rebuild
+
+deploy: package
+	./aws/deploy.sh
+.PHONY : deploy
 
 define sam-invoke-resource
 sam-invoke-$1-get: force
@@ -91,3 +115,6 @@ $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
 
 sam-invoke: $(addprefix sam-invoke-,$(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
 .PHONY : sam-invoke
+
+
+

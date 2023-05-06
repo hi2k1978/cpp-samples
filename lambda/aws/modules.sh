@@ -105,7 +105,7 @@ function deploy_lambda_functions() {
 
     # update lambda-functions
     for lambda_function in ${lambda_functions[@]}; do
-	local zip_file=./src/${lambda_function}/build/handler.zip
+	local zip_file=./build/src/${lambda_function}/handler.zip
 	local cmd="aws lambda  update-function-code
 	      	       --function-name ${lambda_function}
 		       --zip-file fileb://${zip_file}"
