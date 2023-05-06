@@ -94,7 +94,7 @@ build-package:
 		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-package
 
-build: build-source
+build: build-test
 .PHONY : build
 
 rebuild: clean build

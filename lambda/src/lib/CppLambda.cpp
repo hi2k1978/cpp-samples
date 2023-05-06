@@ -11,6 +11,9 @@ namespace CppLambda {
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
+    Event::Event(const invocation_request& request) noexcept 
+            : request(request) {};
+
     void Event::initialize() noexcept {
         JsonValue payload(request.payload);
         if (!payload.WasParseSuccessful()) {
@@ -69,6 +72,9 @@ namespace CppLambda {
         return;
     }
 
+    EventValidationResult::EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept
+        : is_valid(is_valid), error_messages(std::move(error_messages)) {}
+
     void EventValidationResult::show() const noexcept {
         std::cout << std::endl;
         std::cout << "Event Validate Errors" << std::endl;
@@ -83,7 +89,21 @@ namespace CppLambda {
         std::cout << std::endl;
     }
     
-   invocation_response Response::create_response() const noexcept {
+    inline JsonValue create_json_body(std::string message) {
+        JsonValue body;
+        if (message.size() > 0) {
+            body.WithString(ResponseKey::MESSAGE, message);
+        }
+        return body;
+    }
+
+    Response::Response(StatusCode status_code, JsonValue&& body) noexcept
+        : status_code(status_code), body(std::move(body)) {}
+
+    Response::Response(StatusCode status_code, std::string message) noexcept
+        : status_code(status_code), body(JsonValue(create_json_body(message))) {}
+
+    invocation_response Response::create_response() const noexcept {
         JsonValue headers;
         headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_ORIGIN, CorsValue::ACCESS_CONTROL_ALLOW_ORIGIN);
         headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_METHODS, CorsValue::ACCESS_CONTROL_ALLOW_METHODS);
@@ -96,6 +116,12 @@ namespace CppLambda {
         return invocation_response::success(response.View().WriteCompact(),
                                             ContentType::APPLICATION_JSON);
     }
+
+    DefaultHandler::DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept
+        : status_code(status_code), body(std::move(body)) {}
+
+    DefaultHandler::DefaultHandler(const StatusCode status_code, const std::string message) noexcept
+        : status_code(status_code), body(JsonValue(create_json_body(message))) {}
 
     invocation_response DefaultHandler::create_response() const noexcept {
         // bad code

@@ -34,8 +34,7 @@ namespace CppLambda {
         JsonValue body;
         JsonValue query;
 
-        explicit Event(const invocation_request& request) noexcept 
-            : request(request) {};
+        explicit Event(const invocation_request& request) noexcept;
         void initialize() noexcept;
         void show() const noexcept;
     private:
@@ -46,8 +45,7 @@ namespace CppLambda {
         const bool is_valid;
         const std::vector<std::string_view>  error_messages;
         
-        explicit EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept
-            : is_valid(is_valid), error_messages(std::move(error_messages)) {}
+        explicit EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept;
         void show() const noexcept;
     };  // struct ValidateResult
 
@@ -56,20 +54,10 @@ namespace CppLambda {
         virtual EventValidationResult validate() const noexcept = 0;
     };
 
-    inline JsonValue create_json_body(std::string message) {
-        JsonValue body;
-        if (message.size() > 0) {
-            body.WithString(ResponseKey::MESSAGE, message);
-        }
-        return body;
-    }
-
     class Response {
     public:
-        Response(StatusCode status_code, JsonValue&& body) noexcept
-            : status_code(status_code), body(std::move(body)) {}
-        Response(StatusCode status_code, std::string message) noexcept
-            : status_code(status_code), body(JsonValue(create_json_body(message))) {}
+        Response(StatusCode status_code, JsonValue&& body) noexcept;
+        Response(StatusCode status_code, std::string message) noexcept;
         invocation_response create_response() const noexcept;        
     private:
         const StatusCode status_code;
@@ -83,10 +71,8 @@ namespace CppLambda {
 
     class DefaultHandler : public BaseHandler {
     public:
-        DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept
-            : status_code(status_code), body(std::move(body)) {}
-        DefaultHandler(const StatusCode status_code, const std::string message) noexcept
-            : status_code(status_code), body(JsonValue(create_json_body(message))) {}
+        DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept;
+        DefaultHandler(const StatusCode status_code, const std::string message) noexcept;
         invocation_response create_response() const noexcept override;
     private:
         const StatusCode status_code;

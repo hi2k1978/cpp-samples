@@ -13,6 +13,9 @@ using namespace aws::lambda_runtime;
 namespace CppSamplesPost {
     using namespace CppLambda;
 
+    GetEventValidator::GetEventValidator(const Event& event) noexcept
+        : event(event) {}
+
     auto GetEventValidator::validate() const noexcept -> EventValidationResult {
         std::vector<std::string_view> error_messages;
         error_messages.push_back(EventValidationError::TEST);
@@ -21,6 +24,8 @@ namespace CppSamplesPost {
         EventValidationResult result(is_valid, std::move(error_messages));
         return result;
     }
+
+    GetHandler::GetHandler(const Event& event) noexcept : event(event) {}
 
     auto GetHandler::create_response() const -> invocation_response {
         using namespace Aws::Utils::Json;

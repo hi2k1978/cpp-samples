@@ -13,8 +13,7 @@ namespace CppSamplesPost {
 
     class GetEventValidator final : public BaseEventValidator {
     public:
-        explicit GetEventValidator(const Event& event) noexcept
-            : event(event) {}
+        explicit GetEventValidator(const Event& event) noexcept;
         EventValidationResult validate() const noexcept override;
 
     private:
@@ -23,7 +22,7 @@ namespace CppSamplesPost {
 
     class GetHandler final : public BaseHandler {
     public:
-        GetHandler(const Event& event) noexcept : event(event) {}
+        GetHandler(const Event& event) noexcept;
         invocation_response create_response() const override;
 
     private:

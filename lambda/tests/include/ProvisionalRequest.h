@@ -19,9 +19,7 @@ namespace CppTest {
     class Request {
     public: 
         Request(const std::string& http_method, const std::string& path,
-                const JsonValue& headers, const JsonValue& body, const JsonValue& query) noexcept
-            : http_method(http_method), path(path), headers(headers), body(body), query(query) {};
-
+                const JsonValue& headers, const JsonValue& body, const JsonValue& query) noexcept;
         invocation_request create_invocation_request();
         void show();
     private:
