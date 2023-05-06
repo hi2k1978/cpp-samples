@@ -1,6 +1,6 @@
 ## SELF
-UID=$(shell id -u)
-GID=$(shell id -g)
+UID:=$(shell id -u)
+GID:=$(shell id -g)
 
 ## Docker variables
 DOCKER_FILE:=docker/Dockerfile
@@ -78,19 +78,19 @@ full: build sam-invoke
 build-source:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
-		$(DOCKER_TAG) $(UID) $(GID) all
+		$(DOCKER_TAG) $(UID) $(GID) all # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-source
 
 build-test:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
-		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-test
+		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-test # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-test
 
 build-package:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
-		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package
+		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-package
 
 build: build-test
