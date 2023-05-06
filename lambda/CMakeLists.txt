@@ -19,7 +19,7 @@ set(AWS_LAMBDA_TEST_DEPENDS ${LAMBDA_NAMES})
 list(TRANSFORM AWS_LAMBDA_TEST_DEPENDS APPEND "Handler")
 add_custom_target(aws-lambda-test
   DEPENDS ${AWS_LAMBDA_TEST_DEPENDS}
-  DEPENDS lambda_test
+  DEPENDS cpptest
 )
 
 ## build-package

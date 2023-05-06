@@ -1,6 +1,6 @@
 ## defined in parent
 # set(LAMBDA_NAMES CppSamplesGet)
-set(TEST_NAME lambda_test)
+set(TEST_NAME cpptest)
 
 set(LAMBDA_INCLUDE_DIRECTORIES ../src/${LAMBDA_NAMES})
 list(TRANSFORM LAMBDA_INCLUDE_DIRECTORIES PREPEND "../src/")
