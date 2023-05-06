@@ -1,7 +1,8 @@
+## defined in parent
+# set(LAMBDA_NAMES CppSamplesGet)
 
-#set(subdirectory_list src tests)
-set(subdirectory_list lib CppSamplesGet)
-foreach(subdirectory IN LISTS subdirectory_list)
+set(subdirectories lib ${LAMBDA_NAMES})
+foreach(subdirectory IN LISTS subdirectories)
   add_subdirectory(${subdirectory})
 endforeach()
 

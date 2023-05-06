@@ -6,7 +6,7 @@
 #include<memory>
 #include<vector>
 
-#include "cpp_samples_get.h"
+#include "CppSamplesGet.h"
 
 using namespace aws::lambda_runtime;
 

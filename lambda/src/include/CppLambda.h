@@ -12,13 +12,13 @@
 #include<type_traits>
 
 #ifdef STAGE_MAIN // stage: main
-#include "stages/stage_main.h"
+#include "stages/StageMain.h"
 #else // stage: develop
-#include "stages/stage_develop.h"
+#include "stages/StageDevelop.h"
 #endif
 
-#include "types/error_types.h"
-#include "types/invocation_types.h"
+#include "types/ErrorTypes.h"
+#include "types/InvocationTypes.h"
 
 
 namespace CppLambda {

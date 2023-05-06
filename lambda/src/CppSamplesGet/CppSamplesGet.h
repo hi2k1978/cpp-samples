@@ -6,7 +6,7 @@
 
 #include<iostream>
 
-#include "cpp_lambda.h"
+#include "CppLambda.h"
 
 namespace CppSamplesGet {
     using namespace CppLambda;

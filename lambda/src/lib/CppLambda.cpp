@@ -4,7 +4,7 @@
 #include "iostream"
 #include "iomanip"
 
-#include "cpp_lambda.h"
+#include "CppLambda.h"
 
 namespace CppLambda {
 

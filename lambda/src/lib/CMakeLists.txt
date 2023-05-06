@@ -9,5 +9,5 @@ project(handler LANGUAGES CXX)
 
 include_directories(../include)
 
-add_library(cpp_lambda STATIC cpp_lambda.cpp)
-target_link_libraries(cpp_lambda AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES})
+add_library(CppLambda STATIC CppLambda.cpp)
+target_link_libraries(CppLambda AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES})

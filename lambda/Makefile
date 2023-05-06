@@ -107,7 +107,7 @@ deploy: build-package
 # $ ./google-test --gtest_filter=Cpp*Get.hoge-*-hige
 test:
 	@echo "ARGS: " $(ARGS)
-	./build/tests/test_lambda $(ARGS)
+	./build/tests/lambda_test $(ARGS)
 .PHONY : test
 
 

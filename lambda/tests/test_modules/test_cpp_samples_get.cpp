@@ -1,5 +1,5 @@
 #include"gtest/gtest.h"
-#include"cpp_samples_get.h"
+#include"CppSamplesGet.h"
 
 namespace CppSamplesGet {
     TEST(CppSamplesGet, hoge) {

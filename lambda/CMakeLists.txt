@@ -1,33 +1,34 @@
+project(CppSamples LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.5)
-set(CMAKE_CXX_STANDARD 17)
-set(LAMBDA_NAMES CppSamplesGet)
 
-project(cpp-samples LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_CXX_STANDARD 17)
+set(LAMBDA_NAMES CppSamplesGet)
 
 find_package(ZLIB)
 find_package(aws-lambda-runtime REQUIRED)
 find_package(AWSSDK COMPONENTS core)
 
-set(subdirectory_list src tests)
-foreach(subdirectory IN LISTS subdirectory_list)
+set(subdirectories src tests)
+foreach(subdirectory IN LISTS subdirectories)
   add_subdirectory(${subdirectory})
 endforeach()
 
 ## build-test
-set(LAMBDA_TEST_DEPENDS ${LAMBDA_NAMES})
-list(TRANSFORM LAMBDA_TEST_DEPENDS APPEND "_handler")
+set(AWS_LAMBDA_TEST_DEPENDS ${LAMBDA_NAMES})
+list(TRANSFORM AWS_LAMBDA_TEST_DEPENDS APPEND "Handler")
 add_custom_target(aws-lambda-test
-  DEPENDS ${LAMBDA_TEST_DEPENDS}
-  DEPENDS test_lambda
+  DEPENDS ${AWS_LAMBDA_TEST_DEPENDS}
+  DEPENDS lambda_test
 )
 
 
 ## build-package
-set(LAMBDA_PACKAGE_DEPENDS ${LAMBDA_NAMES})
-list(TRANSFORM LAMBDA_PACKAGE_DEPENDS PREPEND "aws-lambda-package-")
-list(TRANSFORM LAMBDA_PACKAGE_DEPENDS APPEND "_handler")
+set(AWS_LAMBDA_PACKAGE_DEPENDS ${LAMBDA_NAMES})
+list(TRANSFORM AWS_LAMBDA_PACKAGE_DEPENDS APPEND "Handler")
+list(TRANSFORM AWS_LAMBDA_PACKAGE_DEPENDS PREPEND "aws-lambda-package-")
 add_custom_target(aws-lambda-package
-  DEPENDS ${LAMBDA_PACKAGE_DEPENDS}
+  DEPENDS ${AWS_LAMBDA_PACKAGE_DEPENDS}
 )
 
 
