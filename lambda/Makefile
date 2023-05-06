@@ -12,6 +12,8 @@ DOCKER_WORKDIR:=/tmp/src
 # TARGET:=CppSamplesGet CppSamplesPost
 TARGET:=CppSamplesGet
 
+# ARGS
+ARGS:=
 
 all: build
 .PHONY : all
@@ -102,7 +104,10 @@ deploy: build-package
 .PHONY : deploy
 
 test:
-	./build/tests/test_lambda
+	@## EXAMPLES
+	@# > ./googletest --gtest_filter=Cpp*Get.hoge-*-hige
+	@echo "ARGS: " $(ARGS)
+	./build/tests/test_lambda $(ARGS)
 .PHONY : test
 
 
