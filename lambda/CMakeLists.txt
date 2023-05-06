@@ -9,10 +9,8 @@ find_package(ZLIB)
 find_package(aws-lambda-runtime REQUIRED)
 find_package(AWSSDK COMPONENTS core)
 
-set(subdirectories src tests)
-foreach(subdirectory IN LISTS subdirectories)
-  add_subdirectory(${subdirectory})
-endforeach()
+add_subdirectory(src)
+add_subdirectory(tests)
 
 ## build-test
 set(AWS_LAMBDA_TEST_DEPENDS ${LAMBDA_NAMES})
