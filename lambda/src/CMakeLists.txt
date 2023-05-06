@@ -1,8 +1,8 @@
 ## defined in parent
 # set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplespost ...)
 
-set(subdirectories lib ${LAMBDA_FUNCTIONS})
-foreach(subdirectory IN LISTS subdirectories)
+add_subdirectory(lib)
+foreach(subdirectory IN LISTS LAMBDA_FUNCTIONS)
   add_subdirectory(${subdirectory})
 endforeach()
 
