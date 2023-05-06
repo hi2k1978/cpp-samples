@@ -14,15 +14,20 @@ foreach(subdirectory IN LISTS subdirectory_list)
 endforeach()
 
 ## build-test
+set(LAMBDA_TEST_DEPENDS ${LAMBDA_NAMES})
+list(TRANSFORM LAMBDA_TEST_DEPENDS APPEND "_handler")
 add_custom_target(aws-lambda-test
+  DEPENDS ${LAMBDA_TEST_DEPENDS}
   DEPENDS test_lambda
 )
 
 
 ## build-package
-set(LAMBDA_DEPENDS ${LAMBDA_NAMES})
-list(TRANSFORM LAMBDA_DEPENDS PREPEND "aws-lambda-package-")
-list(TRANSFORM LAMBDA_DEPENDS APPEND "_handler")
+set(LAMBDA_PACKAGE_DEPENDS ${LAMBDA_NAMES})
+list(TRANSFORM LAMBDA_PACKAGE_DEPENDS PREPEND "aws-lambda-package-")
+list(TRANSFORM LAMBDA_PACKAGE_DEPENDS APPEND "_handler")
 add_custom_target(aws-lambda-package
-  DEPENDS ${LAMBDA_DEPENDS}
+  DEPENDS ${LAMBDA_PACKAGE_DEPENDS}
 )
+
+

@@ -6,7 +6,6 @@ set(LAMBDA_LIBS cpp_lambda)
 set(LAMBDA_NAME CppSamplesGet)
 set(LAMBDA_LOWER_NAME cpp_samples_get)
 set(EXECUTE_NAME ${LAMBDA_NAME}_handler)
-set(TEST_NAME test_${LAMBDA_NAME})
 
 include_directories(. ../include)
 
