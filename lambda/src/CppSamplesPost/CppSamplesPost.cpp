@@ -65,23 +65,4 @@ namespace CppSamplesPost {
         std::unique_ptr<BaseHandler> target_handler = create_target_handler(event);
         return target_handler->create_response();
     }
-
-    // invocation_response handler(const invocation_request& request) {
-    //     using HandlerMap = std::map<EventType, std::unique_ptr<BaseHandler>>;
-    //     Event event(request);
-    //     event.initialize();        
-
-    //     HandlerMap handler_map;
-    //     handler_map.emplace(EventType::OPTIONS, std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE));
-    //     handler_map.emplace(EventType::GET, std::make_unique<GetHandler>(event));
-    //     handler_map.emplace(EventType::OTHERS, std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST));
-
-    //     BaseHandler *target_handler;
-    //     if (handler_map.contains(event.type)) {
-    //         target_handler = (handler_map.at(event.type)).get();
-    //     } else {
-    //         target_handler = (handler_map.at(EventType::OTHERS)).get();
-    //     }
-    //     return target_handler->create_response();
-    // }
 }  // namespace CppSamplesPost
