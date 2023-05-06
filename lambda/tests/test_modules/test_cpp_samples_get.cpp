@@ -5,7 +5,6 @@ namespace CppSamplesGet {
     TEST(CppSamplesGet, hoge) {
         using namespace CppLambda;
         using namespace Aws::Utils::Json;
-        std::cout << "\n\nhoge\n\n" << std::endl;
         JsonValue body;
         body.WithString(ResponseKey::MESSAGE, ResponseMessage::OK);
         body.WithString(ResponseKey::RESULT, "success???");

@@ -54,10 +54,6 @@ compiler-clean: force
 compiler-rebuild: compiler-clean compiler-build
 .PHONY : compiler-rebuild
 
-test: 
-	./aws/test.sh
-.PHONY : test
-
 full: build sam-invoke
 .PHONY : full
 
@@ -77,24 +73,38 @@ full: build sam-invoke
 
 # build: $(addprefix build-,$(TARGET))
 # .PHONY : build
-build:
+build-source:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) all
-.PHONY : build
+.PHONY : build-source
 
-package: build
+build-test:
+	docker container run --rm \
+		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
+		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-test
+.PHONY : build-test
+
+build-package:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package
-.PHONY : package
+.PHONY : build-package
+
+build: build-test
+.PHONY : build
 
 rebuild: clean build
 .PHONY : rebuild
 
-deploy: package
+deploy: build-package
 	./aws/deploy.sh
 .PHONY : deploy
+
+test:
+	./build/tests/test_lambda
+.PHONY : test
+
 
 define sam-invoke-resource
 sam-invoke-$1-get: force
