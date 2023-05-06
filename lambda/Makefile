@@ -103,9 +103,9 @@ deploy: build-package
 	./aws/deploy.sh
 .PHONY : deploy
 
+## EXAMPLES
+# $ ./google-test --gtest_filter=Cpp*Get.hoge-*-hige
 test:
-	@## EXAMPLES
-	@# > ./googletest --gtest_filter=Cpp*Get.hoge-*-hige
 	@echo "ARGS: " $(ARGS)
 	./build/tests/test_lambda $(ARGS)
 .PHONY : test
