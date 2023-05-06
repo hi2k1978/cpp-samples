@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD 17)
-set(LAMBDA_NAMES CppSamplesGet)
+set(LAMBDA_NAMES CppSamplesGet CppSamplesPost)
 
 find_package(ZLIB)
 find_package(aws-lambda-runtime REQUIRED)
@@ -21,7 +21,6 @@ add_custom_target(aws-lambda-test
   DEPENDS ${AWS_LAMBDA_TEST_DEPENDS}
   DEPENDS lambda_test
 )
-
 
 ## build-package
 set(AWS_LAMBDA_PACKAGE_DEPENDS ${LAMBDA_NAMES})

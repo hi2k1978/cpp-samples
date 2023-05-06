@@ -20,6 +20,7 @@ all: build
 
 clean: 
 	@echo "clean current directory & sub-directories"
+	@for dir in $(TARGET); do sudo rm -rf ./src/$$dir/build; done
 	@rm -rf ./build
 .PHONY : clean
 
