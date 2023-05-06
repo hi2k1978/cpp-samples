@@ -121,7 +121,7 @@ namespace CppLambda {
         : status_code(status_code), body(std::move(body)) {}
 
     DefaultHandler::DefaultHandler(StatusCode status_code, std::string message) noexcept
-        : status_code(status_code), body(std::move(create_json_body(message))) {}
+        : status_code(status_code), body(create_json_body(message)) {}
 
     invocation_response DefaultHandler::create_response() const noexcept {
         Response response(status_code, JsonValue(body));
