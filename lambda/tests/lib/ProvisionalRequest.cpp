@@ -7,10 +7,6 @@
 
 namespace CppTest {
 
-    void hoge() {
-        std::cout << "\n\nhoge\n\n" << std::endl;
-    }
-    
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 

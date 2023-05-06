@@ -3,7 +3,8 @@
 #include"CppTestLib.h"
 
 int main(int argc, char **argv) {
-    CppTest::hoge();
+
+    CppTest::start_test();
     
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

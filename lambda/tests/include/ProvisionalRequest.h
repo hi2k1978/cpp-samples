@@ -9,8 +9,6 @@
 
 namespace CppTest {
 
-    void hoge();
-
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 

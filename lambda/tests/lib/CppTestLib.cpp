@@ -4,3 +4,11 @@
 #include<iostream>
 
 #include"ProvisionalRequest.h"
+
+namespace CppTest {
+    void start_test() {
+        std::cout << "CPP TESTS" << std::endl;
+        std::cout << "=========" << std::endl;
+    }
+}    
+
