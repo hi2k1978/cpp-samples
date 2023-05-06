@@ -98,21 +98,10 @@ namespace CppLambda {
     }
 
     invocation_response DefaultHandler::create_response() const noexcept {
-        JsonValue body;
-        if (message.size() > 0) {
-            body.WithString(ResponseKey::MESSAGE, message);
-        }
-        Response response(status_code, std::move(body));
+        // bad code
+        Response response(status_code, std::move(*(const_cast<JsonValue *>(&body))));
         return response.create_response();
     }
 
-    invocation_response ErrorHandler::create_response() const noexcept {
-        JsonValue body;
-        if (message.size() > 0) {
-            body.WithString(ResponseKey::MESSAGE, message);
-        }
-        Response response(status_code, std::move(body));
-        return response.create_response();
-    }
 
 }  // namespace CppLambda

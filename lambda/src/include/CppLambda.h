@@ -56,18 +56,26 @@ namespace CppLambda {
         virtual EventValidationResult validate() const noexcept = 0;
     };
 
+    inline JsonValue create_json_body(std::string message) {
+        JsonValue body;
+        if (message.size() > 0) {
+            body.WithString(ResponseKey::MESSAGE, message);
+        }
+        return body;
+    }
+
     class Response {
     public:
         Response(StatusCode status_code, JsonValue&& body) noexcept
             : status_code(status_code), body(std::move(body)) {}
         Response(StatusCode status_code, std::string message) noexcept
-            : status_code(status_code), body(std::move(JsonValue("{message:" + message + "}"))) {}
+            : status_code(status_code), body(JsonValue(create_json_body(message))) {}
         invocation_response create_response() const noexcept;        
     private:
         const StatusCode status_code;
         const JsonValue body;
     };
-
+    
     class BaseHandler {
     public:
         virtual invocation_response create_response() const = 0;
@@ -75,23 +83,16 @@ namespace CppLambda {
 
     class DefaultHandler : public BaseHandler {
     public:
+        DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept
+            : status_code(status_code), body(std::move(body)) {}
         DefaultHandler(const StatusCode status_code, const std::string message) noexcept
-            : status_code(status_code), message(message) {}
+            : status_code(status_code), body(JsonValue(create_json_body(message))) {}
         invocation_response create_response() const noexcept override;
     private:
         const StatusCode status_code;
-        const std::string message;
+        const JsonValue body;
     };
-
-    class ErrorHandler : public BaseHandler {
-    public:
-        ErrorHandler(const StatusCode status_code, const std::string message) noexcept
-            : status_code(status_code), message(message) {}
-        invocation_response create_response() const noexcept override;
-    private:
-        const StatusCode status_code;
-        const std::string message;
-    };
+    using ErrorHandler = DefaultHandler;
 
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_
