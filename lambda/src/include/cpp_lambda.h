@@ -11,7 +11,7 @@
 #include<utility>
 #include<type_traits>
 
-#ifdef STAGE_MACRO_MAIN // stage: main
+#ifdef STAGE_MAIN // stage: main
 #include "stages/stage_main.h"
 #else // stage: develop
 #include "stages/stage_develop.h"

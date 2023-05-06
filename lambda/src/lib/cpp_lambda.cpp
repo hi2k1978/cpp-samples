@@ -85,9 +85,9 @@ namespace CppLambda {
     
    invocation_response Response::create_response() const noexcept {
         JsonValue headers;
-        headers.WithString(CorsKey::ALLOW_ORIGIN, CorsValue::ALLOW_ORIGIN);
-        headers.WithString(CorsKey::ALLOW_METHODS, CorsValue::ALLOW_METHODS);
-        headers.WithString(CorsKey::ALLOW_HEADERS, CorsValue::ALLOW_HEADERS);
+        headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_ORIGIN, CorsValue::ACCESS_CONTROL_ALLOW_ORIGIN);
+        headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_METHODS, CorsValue::ACCESS_CONTROL_ALLOW_METHODS);
+        headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_HEADERS, CorsValue::ACCESS_CONTROL_ALLOW_HEADERS);
         
         JsonValue response;
         response.WithInteger(ResponseKey::STATUS_CODE, static_cast<int>(status_code));

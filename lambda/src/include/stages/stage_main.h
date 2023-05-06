@@ -1,11 +1,17 @@
 #ifndef STAGE_MACRO_DEFINED_
 #define STAGE_MACRO_DEFINED_
 
-// CORS
-#define CORS_ALLOW_ORIGIN "*"
-#define CORS_ALLOW_METHODS "GET,POST,PATCH,DELETE,OPTIONS"
-#define CORS_ALLOW_HEADERS "*"
-#define CORS_EXPOSE_HEADERS "*"
-#define CORS_ALLOW_CREDENTIALS "*"
-#define CORS_MAX_AGE 86400
+#include<iostream>
+
+namespace CppLambda {    
+    namespace Stage {
+        // CORS
+        static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = "*";
+        static constexpr auto ACCESS_CONTROL_ALLOW_METHODS = "GET,POST,PATCH,DELETE,OPTIONS";
+        static constexpr auto ACCESS_CONTROL_ALLOW_HEADERS = "*";
+        static constexpr auto ACCESS_CONTROL_EXPOSE_HEADERS = "*";
+        static constexpr auto ACCESS_CONTROL_ALLOW_CREDENTIALS = "*";
+        static constexpr auto ACCESS_CONTROL_MAX_AGE = 86400;
+    }
+}
 #endif

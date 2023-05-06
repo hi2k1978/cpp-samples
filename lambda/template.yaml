@@ -12,7 +12,7 @@ Resources:
   CppSamplesGet:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/CppSamplesGet/build/handler.zip
+      CodeUri: ./build/src/CppSamplesGet/handler.zip
       Handler: handler
       PackageType: Zip
       Runtime: provided
@@ -33,7 +33,7 @@ Resources:
   # CppSamplesPost:
   #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
   #   Properties:
-  #     CodeUri: ./src/CppSamplesPost/build/handler.zip
+  #     CodeUri: ./build/src/CppSamplesPost/handler.zip
   #     Handler: handler
   #     PackageType: Zip
   #     Runtime: provided

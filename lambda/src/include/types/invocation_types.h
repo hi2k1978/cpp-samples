@@ -3,17 +3,6 @@
 
 #include <aws/lambda-runtime/runtime.h>
 
-#ifndef STAGE_MACRO_DEFINED_
-// CORS
-#define CORS_ALLOW_ORIGIN "*"
-#define CORS_ALLOW_METHODS "OPTIONS"
-#define CORS_ALLOW_HEADERS "*"
-#define CORS_EXPOSE_HEADERS "*"
-#define CORS_ALLOW_CREDENTIALS "*"
-#define CORS_MAX_AGE 86400
-
-#endif
-
 namespace CppLambda {
 
     namespace HttpMethod {
@@ -56,22 +45,22 @@ namespace CppLambda {
     }  // namespace ErrorMessage
 
     namespace CorsKey {
-        static constexpr auto ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-        static constexpr auto ALLOW_METHODS = "Access-Control-Allow-Methods";
-        static constexpr auto ALLOW_HEADERS = "Access-Control-Allow-Headers";
-        static constexpr auto EXPOSE_HEADERS = "Access-Control-Expose-Headers";
-        static constexpr auto ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
-        static constexpr auto MAX_AGE = "Access-Control-Max-Age";
+        static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+        static constexpr auto ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+        static constexpr auto ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
+        static constexpr auto ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+        static constexpr auto ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+        static constexpr auto ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age";
     }
 
     namespace CorsValue {
-        // static constexpr auto ALLOW_ORIGIN = "*";
-        static constexpr auto ALLOW_ORIGIN = CORS_ALLOW_ORIGIN;
-        static constexpr auto ALLOW_METHODS = CORS_ALLOW_METHODS;
-        static constexpr auto ALLOW_HEADERS = CORS_ALLOW_HEADERS;
-        static constexpr auto EXPOSE_HEADERS = CORS_EXPOSE_HEADERS;
-        static constexpr auto ALLOW_CREDENTIALS = CORS_ALLOW_CREDENTIALS;
-        static int MAX_AGE = CORS_MAX_AGE;
+        // static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = "*";
+        static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = Stage::ACCESS_CONTROL_ALLOW_ORIGIN;
+        static constexpr auto ACCESS_CONTROL_ALLOW_METHODS = Stage::ACCESS_CONTROL_ALLOW_METHODS;
+        static constexpr auto ACCESS_CONTROL_ALLOW_HEADERS = Stage::ACCESS_CONTROL_ALLOW_HEADERS;
+        static constexpr auto ACCESS_CONTROL_EXPOSE_HEADERS = Stage::ACCESS_CONTROL_EXPOSE_HEADERS;
+        static constexpr auto ACCESS_CONTROL_ALLOW_CREDENTIALS = Stage::ACCESS_CONTROL_ALLOW_CREDENTIALS;
+        static int MAX_AGE = Stage::ACCESS_CONTROL_MAX_AGE;
     }
 
 }  // namespace CppLambda
