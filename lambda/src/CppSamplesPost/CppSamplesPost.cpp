@@ -48,7 +48,7 @@ namespace CppSamplesPost {
         return response.create_response();
     }
 
-    auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
+    inline auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
         switch(event.type) {
         case EventType::OPTIONS:
             return std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE);

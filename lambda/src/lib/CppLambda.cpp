@@ -89,26 +89,14 @@ namespace CppLambda {
         std::cout << std::endl;
     }
     
-    inline JsonValue create_json_body(std::string message) {
-        JsonValue body;
-        if (message.size() > 0) {
-            body.WithString(ResponseKey::MESSAGE, message);
-        }
-        return body;
-    }
-
     Response::Response(StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}
 
-    Response::Response(StatusCode status_code, std::string message) noexcept
-        : status_code(status_code), body(create_json_body(message)) {}
+    Response::Response(StatusCode status_code, const std::string& message) noexcept
+        : status_code(status_code), body(create_body(message)) {}
 
     invocation_response Response::create_response() const noexcept {
-        JsonValue headers;
-        headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_ORIGIN, CorsValue::ACCESS_CONTROL_ALLOW_ORIGIN);
-        headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_METHODS, CorsValue::ACCESS_CONTROL_ALLOW_METHODS);
-        headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_HEADERS, CorsValue::ACCESS_CONTROL_ALLOW_HEADERS);
-        
+        JsonValue headers = create_headers();
         JsonValue response;
         response.WithInteger(ResponseKey::STATUS_CODE, static_cast<int>(status_code));
         response.WithString(ResponseKey::HEADERS, headers.View().WriteCompact());
@@ -117,15 +105,39 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
+    inline JsonValue Response::create_body(const std::string& message) {
+        JsonValue new_body;
+        if (message.size() > 0) {
+            new_body.WithString(ResponseKey::MESSAGE, message);
+        }
+        return new_body;
+    }
+
+    JsonValue Response::create_headers() const noexcept {
+        JsonValue new_headers;
+        new_headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_ORIGIN, CorsValue::ACCESS_CONTROL_ALLOW_ORIGIN);
+        new_headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_METHODS, CorsValue::ACCESS_CONTROL_ALLOW_METHODS);
+        new_headers.WithString(CorsKey::ACCESS_CONTROL_ALLOW_HEADERS, CorsValue::ACCESS_CONTROL_ALLOW_HEADERS);
+        return new_headers;
+    }
+    
     DefaultHandler::DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}
 
-    DefaultHandler::DefaultHandler(StatusCode status_code, std::string message) noexcept
-        : status_code(status_code), body(create_json_body(message)) {}
+    DefaultHandler::DefaultHandler(StatusCode status_code, const std::string& message) noexcept
+        : status_code(status_code), body(create_body(message)) {}
 
     invocation_response DefaultHandler::create_response() const noexcept {
         Response response(status_code, JsonValue(body));
         return response.create_response();
+    }
+
+    inline JsonValue DefaultHandler::create_body(const std::string& message) {
+        JsonValue new_body;
+        if (message.size() > 0) {
+            new_body.WithString(ResponseKey::MESSAGE, message);
+        }
+        return new_body;
     }
 
 

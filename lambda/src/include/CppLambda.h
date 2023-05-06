@@ -27,6 +27,10 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
     struct Event {
+        explicit Event(const invocation_request& request) noexcept;
+        void initialize() noexcept;
+        void show() const noexcept;
+
         EventType type;
         std::string http_method;
         std::string path;
@@ -34,19 +38,17 @@ namespace CppLambda {
         JsonValue body;
         JsonValue query;
 
-        explicit Event(const invocation_request& request) noexcept;
-        void initialize() noexcept;
-        void show() const noexcept;
     private:
         const invocation_request& request;
     };
 
     struct EventValidationResult {
+        explicit EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept;
+        void show() const noexcept;
+
         const bool is_valid;
         const std::vector<std::string_view>  error_messages;
         
-        explicit EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept;
-        void show() const noexcept;
     };  // struct ValidateResult
 
     class BaseEventValidator {
@@ -57,9 +59,12 @@ namespace CppLambda {
     class Response {
     public:
         Response(StatusCode status_code, JsonValue&& body) noexcept;
-        Response(StatusCode status_code, std::string message) noexcept;
+        Response(StatusCode status_code, const std::string& message) noexcept;
         invocation_response create_response() const noexcept;        
+
     private:
+        inline JsonValue create_body(const std::string& message);
+        JsonValue create_headers() const noexcept;
         const StatusCode status_code;
         const JsonValue body;
     };
@@ -72,9 +77,10 @@ namespace CppLambda {
     class DefaultHandler : public BaseHandler {
     public:
         DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept;
-        DefaultHandler(StatusCode status_code, std::string message) noexcept;
+        DefaultHandler(StatusCode status_code, const std::string& message) noexcept;
         invocation_response create_response() const noexcept override;
     private:
+        inline JsonValue create_body(const std::string& message);
         const StatusCode status_code;
         const JsonValue body;
     };
