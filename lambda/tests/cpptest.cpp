@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
 
-    CppTest::start_test();
+    CppLambdaTest::start_test();
     
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
