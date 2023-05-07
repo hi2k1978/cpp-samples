@@ -23,8 +23,8 @@ namespace CppSamplesPost {
         validation_error_messages.push_back(EventValidationError::TEST);
         validation_error_messages.push_back(EventValidationError::TEST);
 
-        bool is_valid = true;
-        if (is_valid) {
+        bool result = true;
+        if (result) {
             return EventValidationResult(true, ErrorCode::NONE, ErrorMessage::NONE, std::move(validation_error_messages));
         } else {
             return EventValidationResult(false,
@@ -43,7 +43,7 @@ namespace CppSamplesPost {
         GetEventValidator event_validator(event);
         EventValidationResult event_validation_result = event_validator.validate();
         // TODO: additional coding is required. validator always returns true.
-        if (!event_validation_result.is_valid) {
+        if (!event_validation_result.result) {
             // TODO: replace logger
             std::cerr << event_validation_result.error_code << ": "
                       <<  event_validation_result.error_message << std::endl;
@@ -73,7 +73,7 @@ namespace CppSamplesPost {
     auto handler(const invocation_request& request) -> invocation_response {
         Event event(request);
         EventInitializationResult event_initialization_result = event.initialize();
-        if (!event_initialization_result.is_valid) {
+        if (!event_initialization_result.result) {
             // TODO: replace logger
             std::cerr << event_initialization_result.error_code << ": "
                       <<  event_initialization_result.error_message << std::endl;

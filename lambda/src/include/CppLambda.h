@@ -27,10 +27,10 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
     struct BaseReturnResult {
-        explicit BaseReturnResult(const bool is_valid,
+        explicit BaseReturnResult(const bool result,
                                   std::string_view&& error_code,
                                   std::string_view&& error_message) noexcept;
-        const bool is_valid;
+        const bool result;
         const std::string_view error_code;
         const std::string_view  error_message;
     };  // struct BaseReturnResult
@@ -54,11 +54,11 @@ namespace CppLambda {
     };
 
     struct EventValidationResult {
-        explicit EventValidationResult(const bool is_valid,
+        explicit EventValidationResult(const bool result,
                                   std::string_view&& error_code,
                                   std::string_view&& error_message,
                                   std::vector<std::string_view>&& validation_error_messages) noexcept;
-        const bool is_valid;
+        const bool result;
         const std::string_view error_code;
         const std::string_view error_message;
         const std::vector<std::string_view>  validation_error_messages;

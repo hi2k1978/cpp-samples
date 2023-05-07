@@ -11,10 +11,10 @@ namespace CppLambda {
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
-   BaseReturnResult::BaseReturnResult(const bool is_valid,
+   BaseReturnResult::BaseReturnResult(const bool result,
                                       std::string_view&& error_code,
                                       std::string_view&& error_message) noexcept
-       : is_valid(is_valid), error_code(std::move(error_code)), error_message(std::move(error_message)) {}
+       : result(result), error_code(std::move(error_code)), error_message(std::move(error_message)) {}
 
     Event::Event(const invocation_request& request) noexcept 
             : request(request) {};
@@ -85,11 +85,11 @@ namespace CppLambda {
         return;
     }
 
-    EventValidationResult::EventValidationResult(const bool is_valid,
+    EventValidationResult::EventValidationResult(const bool result,
                                                  std::string_view&& error_code,
                                                  std::string_view&& error_message,
                                                  std::vector<std::string_view>&& validation_error_messages) noexcept
-        : is_valid(is_valid), error_code(std::move(error_code)),
+        : result(result), error_code(std::move(error_code)),
           error_message(std::move(error_message)), validation_error_messages(std::move(validation_error_messages)) {}
 
     
