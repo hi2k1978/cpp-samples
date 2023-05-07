@@ -73,6 +73,7 @@ namespace CppLambda {
     public:
         Response(StatusCode status_code, JsonValue&& body) noexcept;
         Response(StatusCode status_code, const std::string& message) noexcept;
+        Response(StatusCode status_code) noexcept;
         invocation_response create_response() const noexcept;        
 
     private:
@@ -92,6 +93,7 @@ namespace CppLambda {
     public:
         DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept;
         DefaultHandler(StatusCode status_code, const std::string& message) noexcept;
+        DefaultHandler(StatusCode status_code) noexcept;
         invocation_response create_response() const noexcept override;
     private:
         inline JsonValue create_body(const std::string& message);

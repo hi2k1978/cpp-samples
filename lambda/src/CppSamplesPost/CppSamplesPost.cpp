@@ -62,7 +62,7 @@ namespace CppSamplesPost {
     inline auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
         switch(event.event_type) {
         case EventType::OPTIONS:
-            return std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE);
+            return std::make_unique<DefaultHandler>(StatusCode::OK);
         case EventType::GET:
             return std::make_unique<GetHandler>(event);
         default:

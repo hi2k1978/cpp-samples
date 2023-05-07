@@ -12,8 +12,8 @@ namespace CppLambda {
     using namespace Aws::Utils::Json;
 
    BaseReturnResult::BaseReturnResult(const bool is_valid,
-                                                 std::string_view&& error_code,
-                                                 std::string_view&& error_message) noexcept
+                                      std::string_view&& error_code,
+                                      std::string_view&& error_message) noexcept
        : is_valid(is_valid), error_code(std::move(error_code)), error_message(std::move(error_message)) {}
 
     Event::Event(const invocation_request& request) noexcept 
@@ -99,6 +99,9 @@ namespace CppLambda {
     Response::Response(StatusCode status_code, const std::string& message) noexcept
         : Response(status_code, create_body(message)) {}
 
+    Response::Response(StatusCode status_code) noexcept
+        : Response(status_code, JsonValue()) {}
+
     invocation_response Response::create_response() const noexcept {
         JsonValue headers = create_headers();
         JsonValue response;
@@ -130,6 +133,9 @@ namespace CppLambda {
 
     DefaultHandler::DefaultHandler(StatusCode status_code, const std::string& message) noexcept
         : DefaultHandler(status_code, create_body(message)) {}
+
+    DefaultHandler::DefaultHandler(StatusCode status_code) noexcept
+        : DefaultHandler(status_code, JsonValue()) {}
 
     invocation_response DefaultHandler::create_response() const noexcept {
         Response response(status_code, JsonValue(body));
