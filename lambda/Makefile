@@ -9,8 +9,8 @@ DOCKER_SRCDIR:=$(abspath .)
 DOCKER_WORKDIR:=/tmp/src
 
 ## Makefile variables
-# TARGET:=CppSamplesGet CppSamplesPost
-TARGET:=CppSamplesGet
+# TARGET:=CppSamplesGet
+TARGET:=CppSamplesGet CppSamplesPost
 
 # ARGS
 ARGS:=
@@ -113,23 +113,45 @@ test:
 
 
 define sam-invoke-resource
+sam-invoke-$1-options: force
+	$(eval event:=$(wildcard ls ./events/event-$1-options.json))
+ifeq ($(event), ./events/event-$1-options.json)
+	@echo $1 ": OPTIONS"
+	@echo "================================"
+	@sam local invoke --event $(event) $1 2> /dev/null
+	@echo 
+	@echo 
+endif
+.PHONY : sam-invoke-$1-options
+
 sam-invoke-$1-get: force
 	$(eval event:=$(wildcard ls ./events/event-$1-get.json))
 ifeq ($(event), ./events/event-$1-get.json)
-	sam local invoke --event $(event) $1; 
+	@echo $1 ": GET"
+	@echo "================================"
+	@sam local invoke --event $(event) $1 2> /dev/null
+	@echo 
+	@echo 
 endif
 .PHONY : sam-invoke-$1-get
 
 sam-invoke-$1-post: force
 	$(eval event:=$(wildcard ls ./events/event-$1-post.json))
 ifeq ($(event), ./events/event-$1-post.json)
-	sam local invoke --event ./events/event-$1-post.json $1
+	@echo $1 ": POST"
+	@echo "================================"
+	@sam local invoke --event $(event) $1 2> /dev/null
+	@echo 
+	@echo 
 endif
 .PHONY : sam-invoke-$1-post
+
+sam-invoke-$1: sam-invoke-$1-options sam-invoke-$1-get sam-invoke-$1-post force
+.PHONY : sam-invoke-$1
 endef
 $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
 
-sam-invoke: $(addprefix sam-invoke-,$(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
+sam-invoke: $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)) $(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
 .PHONY : sam-invoke
 
 

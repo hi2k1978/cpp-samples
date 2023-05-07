@@ -30,26 +30,34 @@ Resources:
       #     Type: Linear10PercentEvery1Minute
     Metadata:
       # BuildMethod: makefile
-  # CppSamplesPost:
-  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-  #   Properties:
-  #     CodeUri: ./build/src/CppSamplesPost/handler.zip
-  #     Handler: handler
-  #     PackageType: Zip
-  #     Runtime: provided
-  #     MemorySize: 512
-  #     Events:
-  #       CppSamplesPost:
-  #         Type: Api
-  #         Properties:
-  #           Path: /cpp-sample-post
-  #           Method: post
-  #   Metadata:
-  #     # BuildMethod: makefile
+  CppSamplesPost:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./build/src/CppSamplesPost/handler.zip
+      Handler: handler
+      PackageType: Zip
+      Runtime: provided
+      MemorySize: 512
+      Events:
+        CppSamplesPost:
+          Type: Api
+          Properties:
+            Path: /cpp-sample-post
+            Method: post
+      AutoPublishAlias: dev
+      FunctionName: 'cpp-sample-post'
+      # Role: 'arn:aws:iam::xxxxxxxxxxxx:role/FullAccess'
+      # DeploymentPreference:
+      #     Type: Linear10PercentEvery1Minute
+    Metadata:
+      # BuildMethod: makefile
 
 Outputs:
   CppSamplesGet:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/cpp-sample-get/"
+  CppSamplesPost:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/cpp-sample-post/"
     
 
