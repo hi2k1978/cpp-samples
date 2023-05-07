@@ -11,14 +11,21 @@ namespace CppLambda {
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
+   BaseReturnResult::BaseReturnResult(const bool is_valid,
+                                                 std::string_view&& error_code,
+                                                 std::string_view&& error_message) noexcept
+       : is_valid(is_valid), error_code(std::move(error_code)), error_message(std::move(error_message)) {}
+
     Event::Event(const invocation_request& request) noexcept 
             : request(request) {};
 
-    void Event::initialize() noexcept {
+    EventInitializationResult Event::initialize() noexcept {
         JsonValue payload(request.payload);
         if (!payload.WasParseSuccessful()) {
             std::cerr << "InvalidJSON: Failed to parse input JSON" << std::endl;
-            return;
+            return EventInitializationResult(false,
+                                             ErrorCode::EVENT_INITIALIZATION_ERROR,
+                                             ErrorMessage::EVENT_INITIALIZATION_ERROR);
         }
         JsonView pv = payload.View();
 
@@ -35,8 +42,10 @@ namespace CppLambda {
                 event_type = EventType::OTHERS;
             }
         } else {
-            // create invocation_response of EventType::OTHERS when httpMethod does not exist in invocation_request
-            event_type = EventType::OTHERS;
+            std::cerr << "InvalidJSON: httpMethod does not exist." << std::endl;
+            return EventInitializationResult(false,
+                                             ErrorCode::EVENT_INITIALIZATION_ERROR,
+                                             ErrorMessage::EVENT_INITIALIZATION_ERROR);
         }
         if (pv.ValueExists("path")) {
             path = pv.GetString("path");
@@ -59,7 +68,8 @@ namespace CppLambda {
             query = pv.GetObject("queryStringParameters").Materialize();
         }
         // show();
-    }
+        return EventInitializationResult(true, ErrorCode::NONE, ErrorMessage::NONE);
+   }
 
     void Event::show() const noexcept {
         std::cout << std::endl;
@@ -75,25 +85,13 @@ namespace CppLambda {
         return;
     }
 
-    BaseReturnResult::BaseReturnResult(const bool is_valid,
-                                                 const std::string_view error_code,
-                                                 std::vector<std::string_view>&& error_messages) noexcept
-        : is_valid(is_valid), error_code(error_code), error_messages(std::move(error_messages)) {}
+    EventValidationResult::EventValidationResult(const bool is_valid,
+                                                 std::string_view&& error_code,
+                                                 std::string_view&& error_message,
+                                                 std::vector<std::string_view>&& validation_error_messages) noexcept
+        : is_valid(is_valid), error_code(std::move(error_code)),
+          error_message(std::move(error_message)), validation_error_messages(std::move(validation_error_messages)) {}
 
-    void BaseReturnResult::show() const noexcept {
-        std::cout << std::endl;
-        std::cout << "Event Validate Errors" << std::endl;
-        std::cout << "=====================" << std::endl;
-        std::cout << "     is_valid: " << is_valid << std::endl;
-        for (int ii = 0; auto error_message : error_messages) {
-            std::cout << std::right << std::setw(3) << ii;
-            std::cout << ": ";
-            std::cout << error_code << std::endl;
-            std::cout << error_message << std::endl;
-            ii++;
-        }
-        std::cout << std::endl;
-    }
     
     Response::Response(StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}

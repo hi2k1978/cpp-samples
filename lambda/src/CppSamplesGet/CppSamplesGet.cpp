@@ -14,15 +14,25 @@ namespace CppSamplesGet {
     using namespace CppLambda;
 
     GetEventValidator::GetEventValidator(const Event& event) noexcept
-            : event(event) {}
+        : event(event) {}
     
     auto GetEventValidator::validate() const noexcept -> EventValidationResult {
-        std::vector<std::string_view> error_messages;
-        error_messages.push_back(EventValidationError::TEST);
+        std::vector<std::string_view> validation_error_messages;
+        // TODO: remove after test is finished.
+        validation_error_messages.push_back(EventValidationError::TEST);
+        validation_error_messages.push_back(EventValidationError::TEST);
+        validation_error_messages.push_back(EventValidationError::TEST);
 
         bool is_valid = true;
-        EventValidationResult result(is_valid, ErrorCode::EVENT_VALIDATION_ERROR, std::move(error_messages));
-        return result;
+        if (is_valid) {
+            return EventValidationResult(true, ErrorCode::NONE, ErrorMessage::NONE, std::move(validation_error_messages));
+        } else {
+            return EventValidationResult(false,
+                                         ErrorCode::EVENT_VALIDATION_ERROR,
+                                         ErrorMessage::EVENT_VALIDATION_ERROR,
+                                         std::move(validation_error_messages));
+            
+        }
     }
 
     GetHandler::GetHandler(const Event& event) noexcept : event(event) {}
@@ -34,8 +44,9 @@ namespace CppSamplesGet {
         EventValidationResult event_validation_result = event_validator.validate();
         // TODO: additional coding is required. validator always returns true.
         if (!event_validation_result.is_valid) {
-            std::cerr << RunTimeError::EVENT_VALIDATION_ERROR << std::endl;
-            event_validation_result.show();
+            // TODO: replace logger
+            std::cerr << event_validation_result.error_code << ": "
+                      <<  event_validation_result.error_message << std::endl;
             Response response(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
             return response.create_response();
         }
@@ -61,7 +72,15 @@ namespace CppSamplesGet {
     
     auto handler(const invocation_request& request) -> invocation_response {
         Event event(request);
-        event.initialize();
+        EventInitializationResult event_initialization_result = event.initialize();
+        if (!event_initialization_result.is_valid) {
+            // TODO: replace logger
+            std::cerr << event_initialization_result.error_code << ": "
+                      <<  event_initialization_result.error_message << std::endl;
+            Response response(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+            return response.create_response();
+        }
+        
         std::unique_ptr<BaseHandler> target_handler = create_target_handler(event);
         return target_handler->create_response();
     }

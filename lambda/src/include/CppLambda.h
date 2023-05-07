@@ -28,19 +28,18 @@ namespace CppLambda {
 
     struct BaseReturnResult {
         explicit BaseReturnResult(const bool is_valid,
-                                  const std::string_view error_code,
-                                  std::vector<std::string_view>&& error_messages) noexcept;
-        void show() const noexcept;
-
+                                  std::string_view&& error_code,
+                                  std::string_view&& error_message) noexcept;
         const bool is_valid;
         const std::string_view error_code;
-        const std::vector<std::string_view>  error_messages;
-        
-    };  // struct ValidateResult
+        const std::string_view  error_message;
+    };  // struct BaseReturnResult
+
+    using EventInitializationResult = BaseReturnResult;
 
     struct Event {
         explicit Event(const invocation_request& request) noexcept;
-        void initialize() noexcept;
+        EventInitializationResult initialize() noexcept;
         void show() const noexcept;
 
         EventType event_type;
@@ -54,7 +53,16 @@ namespace CppLambda {
         const invocation_request& request;
     };
 
-    using EventValidationResult = BaseReturnResult;
+    struct EventValidationResult {
+        explicit EventValidationResult(const bool is_valid,
+                                  std::string_view&& error_code,
+                                  std::string_view&& error_message,
+                                  std::vector<std::string_view>&& validation_error_messages) noexcept;
+        const bool is_valid;
+        const std::string_view error_code;
+        const std::string_view error_message;
+        const std::vector<std::string_view>  validation_error_messages;
+    };  // struct EventValidateResult
     
     class BaseEventValidator {
     public:
