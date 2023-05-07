@@ -5,17 +5,17 @@
 #include"CppLambda.h"
 #include"TestMod.h"
 
-
+// N: Normal, Q: Ouasi-normal, A: Abnormal
 namespace CppLambda {
-    TEST(lib__CppLambda, BaseReturnResult__test_constructor) {
+    TEST(N__lib__CppLambda, BaseReturnResult__test_constructor) {
         BaseReturnResult target(true, ErrorCode::EVENT_INITIALIZATION_ERROR, ErrorMessage::EVENT_INITIALIZATION_ERROR);
-        // dry test
+        // test
         EXPECT_EQ(target.result, true);
         EXPECT_EQ(target.error_code, ErrorCode::EVENT_INITIALIZATION_ERROR);
         EXPECT_EQ(target.error_message,  ErrorMessage::EVENT_INITIALIZATION_ERROR);
     }
 
-    TEST(lib__CppLambda, Response__test_constructor_001) {
+    TEST(N__lib__CppLambda, Response__test_constructor_001__main_constructor) {
         JsonValue body;
         body.WithString("message", "test_constructor_001");
         body.WithString("result", "successful");
@@ -41,7 +41,7 @@ namespace CppLambda {
         EXPECT_EQ(res_body_string, expect_body_string);
     }
 
-    TEST(lib__CppLambda, Response__test_constructor_002) {
+    TEST(N__lib__CppLambda, Response__test_constructor_002__delegating_constructor) {
         // StatusCode::BAD_REQUEST == 400
         Response response(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
         invocation_response target = response.create_response();
@@ -58,13 +58,12 @@ namespace CppLambda {
         const std::string expect_body_string = expect_body.View().WriteCompact();
 
         // test
-        // EXPECT_EQ(static_cast<StatusCode>(res_status_code), static_cast<StatusCode>(400));
         EXPECT_EQ(res_status_code, 400);
         // both stirngs are "{"message":"bad request."}" or some kind.
         EXPECT_EQ(res_body_string, expect_body_string);
     }
 
-    TEST(lib__CppLambda, Response__test_constructor_003) {
+    TEST(N__lib__CppLambda, Response__test_constructor_003__delegating_constructor) {
         // StatusCode::OK == 200
         Response response(StatusCode::OK);
         invocation_response target = response.create_response();
@@ -72,14 +71,15 @@ namespace CppLambda {
         const JsonValue payload = JsonValue(target.get_payload());
         const auto payload_view = payload.View();
         const int res_status_code = static_cast<int>(payload_view.GetInteger("statusCode"));
-        const std::string res_body_string = payload_view.GetString("body");
+        const JsonValue res_body(payload_view.GetString("body"));
+        const std::string res_body_string = res_body.View().WriteCompact();
 
         // test
         EXPECT_EQ(res_status_code, 200);
         EXPECT_EQ(res_body_string, "{}");
     }
 
-    TEST(lib__CppLambda, Response__test_headers) {
+    TEST(N__lib__CppLambda, Response__test_response_headers) {
         // StatusCode::BAD_REQUEST == 400
         Response response(StatusCode::OK);
         invocation_response target = response.create_response();
