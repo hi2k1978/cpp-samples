@@ -5,13 +5,18 @@
 
 namespace CppLambda {
 
+    namespace ErrorCode {
+        static constexpr auto EVENT_VALIDATION_ERROR = "E000001"; 
+        static constexpr auto ERROR = "E999999"; 
+    }
+    
     namespace EventValidationError {
-        static constexpr auto TEST = "This is a test error message.";
-    } // namespace VALIDATE_ERROR
+        static constexpr auto TEST = "This is an error test.";
+    }
 
     namespace RunTimeError {
         static constexpr auto EVENT_VALIDATION_ERROR = "Event validation is failed.";
-    }  // namespace HttpMethod
+    }
     
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_TYPES_ERROR_TYPES_H_

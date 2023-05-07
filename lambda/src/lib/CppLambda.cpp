@@ -26,14 +26,17 @@ namespace CppLambda {
             http_method = pv.GetString("httpMethod");
             std::transform(http_method.cbegin(), http_method.cend(), http_method.begin(), toupper);
             if (http_method ==  HttpMethod::OPTIONS) {
-                type = EventType::OPTIONS;
+                event_type = EventType::OPTIONS;
             } else if (http_method ==  HttpMethod::GET) {
-                type = EventType::GET;
+                event_type = EventType::GET;
             } else if (http_method == HttpMethod::POST) {
-                type = EventType::POST;
+                event_type = EventType::POST;
             } else {
-                type = EventType::OTHERS;
+                event_type = EventType::OTHERS;
             }
+        } else {
+            // create invocation_response of EventType::OTHERS when httpMethod does not exist in invocation_request
+            event_type = EventType::OTHERS;
         }
         if (pv.ValueExists("path")) {
             path = pv.GetString("path");
@@ -63,7 +66,7 @@ namespace CppLambda {
         std::cout << "Event Parameters" << std::endl;
         std::cout << "================" << std::endl;
         std::cout << "httpMethod: " << http_method
-                  << "(type: " << type << ")" << std::endl;
+                  << "(type: " << event_type << ")" << std::endl;
         std::cout << "path: " << path << std::endl;
         std::cout << "headers: " << headers.View().WriteCompact() << std::endl;
         std::cout << "body: " << body.View().WriteCompact() << std::endl;
@@ -72,10 +75,12 @@ namespace CppLambda {
         return;
     }
 
-    EventValidationResult::EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept
-        : is_valid(is_valid), error_messages(std::move(error_messages)) {}
+    BaseReturnResult::BaseReturnResult(const bool is_valid,
+                                                 const std::string_view error_code,
+                                                 std::vector<std::string_view>&& error_messages) noexcept
+        : is_valid(is_valid), error_code(error_code), error_messages(std::move(error_messages)) {}
 
-    void EventValidationResult::show() const noexcept {
+    void BaseReturnResult::show() const noexcept {
         std::cout << std::endl;
         std::cout << "Event Validate Errors" << std::endl;
         std::cout << "=====================" << std::endl;
@@ -83,6 +88,7 @@ namespace CppLambda {
         for (int ii = 0; auto error_message : error_messages) {
             std::cout << std::right << std::setw(3) << ii;
             std::cout << ": ";
+            std::cout << error_code << std::endl;
             std::cout << error_message << std::endl;
             ii++;
         }

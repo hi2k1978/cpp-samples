@@ -21,7 +21,7 @@ namespace CppSamplesPost {
         error_messages.push_back(EventValidationError::TEST);
 
         bool is_valid = true;
-        EventValidationResult result(is_valid, std::move(error_messages));
+        EventValidationResult result(is_valid, ErrorCode::EVENT_VALIDATION_ERROR, std::move(error_messages));
         return result;
     }
 
@@ -49,7 +49,7 @@ namespace CppSamplesPost {
     }
 
     inline auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
-        switch(event.type) {
+        switch(event.event_type) {
         case EventType::OPTIONS:
             return std::make_unique<DefaultHandler>(StatusCode::OK, ResponseMessage::NONE);
         case EventType::GET:

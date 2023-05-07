@@ -26,12 +26,24 @@ namespace CppLambda {
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
+    struct BaseReturnResult {
+        explicit BaseReturnResult(const bool is_valid,
+                                  const std::string_view error_code,
+                                  std::vector<std::string_view>&& error_messages) noexcept;
+        void show() const noexcept;
+
+        const bool is_valid;
+        const std::string_view error_code;
+        const std::vector<std::string_view>  error_messages;
+        
+    };  // struct ValidateResult
+
     struct Event {
         explicit Event(const invocation_request& request) noexcept;
         void initialize() noexcept;
         void show() const noexcept;
 
-        EventType type;
+        EventType event_type;
         std::string http_method;
         std::string path;
         JsonValue headers;
@@ -42,15 +54,8 @@ namespace CppLambda {
         const invocation_request& request;
     };
 
-    struct EventValidationResult {
-        explicit EventValidationResult(const bool is_valid, std::vector<std::string_view>&& error_messages) noexcept;
-        void show() const noexcept;
-
-        const bool is_valid;
-        const std::vector<std::string_view>  error_messages;
-        
-    };  // struct ValidateResult
-
+    using EventValidationResult = BaseReturnResult;
+    
     class BaseEventValidator {
     public:
         virtual EventValidationResult validate() const noexcept = 0;
