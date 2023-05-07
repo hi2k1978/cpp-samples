@@ -71,13 +71,13 @@ namespace CppLambda {
 
     class Response {
     public:
-        Response(StatusCode status_code, JsonValue&& body) noexcept;
-        Response(StatusCode status_code, const std::string& message) noexcept;
-        Response(StatusCode status_code) noexcept;
+        Response(const StatusCode status_code, JsonValue&& body) noexcept;
+        Response(const StatusCode status_code, std::string&& message) noexcept;
+        Response(const StatusCode status_code) noexcept;
         invocation_response create_response() const noexcept;        
 
     private:
-        inline JsonValue create_body(const std::string& message);
+        inline JsonValue create_body(std::string&& message);
         JsonValue create_headers() const noexcept;
 
         const StatusCode status_code;
@@ -91,12 +91,12 @@ namespace CppLambda {
 
     class DefaultHandler : public BaseHandler {
     public:
-        DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept;
-        DefaultHandler(StatusCode status_code, const std::string& message) noexcept;
-        DefaultHandler(StatusCode status_code) noexcept;
+        DefaultHandler(const StatusCode status_code, JsonValue&& body) noexcept;
+        DefaultHandler(const StatusCode status_code, std::string&& message) noexcept;
+        DefaultHandler(const StatusCode status_code) noexcept;
         invocation_response create_response() const noexcept override;
     private:
-        inline JsonValue create_body(const std::string& message);
+        inline JsonValue create_body(std::string&& message);
 
         const StatusCode status_code;
         const JsonValue body;

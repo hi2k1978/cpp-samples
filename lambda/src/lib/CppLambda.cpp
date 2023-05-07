@@ -93,13 +93,13 @@ namespace CppLambda {
           error_message(std::move(error_message)), validation_error_messages(std::move(validation_error_messages)) {}
 
     
-    Response::Response(StatusCode status_code, JsonValue&& body) noexcept
+    Response::Response(const StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}
 
-    Response::Response(StatusCode status_code, const std::string& message) noexcept
-        : Response(status_code, create_body(message)) {}
+    Response::Response(const StatusCode status_code, std::string&& message) noexcept
+        : Response(status_code, create_body(std::move(message))) {}
 
-    Response::Response(StatusCode status_code) noexcept
+    Response::Response(const StatusCode status_code) noexcept
         : Response(status_code, JsonValue()) {}
 
     invocation_response Response::create_response() const noexcept {
@@ -112,10 +112,10 @@ namespace CppLambda {
                                             ContentType::APPLICATION_JSON);
     }
 
-    inline JsonValue Response::create_body(const std::string& message) {
+    inline JsonValue Response::create_body(std::string&& message) {
         JsonValue new_body;
         if (message.size() > 0) {
-            new_body.WithString(ResponseKey::MESSAGE, message);
+            new_body.WithString(ResponseKey::MESSAGE, std::move(message));
         }
         return new_body;
     }
@@ -128,13 +128,13 @@ namespace CppLambda {
         return new_headers;
     }
     
-    DefaultHandler::DefaultHandler(StatusCode status_code, JsonValue&& body) noexcept
+    DefaultHandler::DefaultHandler(const StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}
 
-    DefaultHandler::DefaultHandler(StatusCode status_code, const std::string& message) noexcept
-        : DefaultHandler(status_code, create_body(message)) {}
+    DefaultHandler::DefaultHandler(const StatusCode status_code, std::string&& message) noexcept
+        : DefaultHandler(status_code, create_body(std::move(message))) {}
 
-    DefaultHandler::DefaultHandler(StatusCode status_code) noexcept
+    DefaultHandler::DefaultHandler(const StatusCode status_code) noexcept
         : DefaultHandler(status_code, JsonValue()) {}
 
     invocation_response DefaultHandler::create_response() const noexcept {
@@ -142,10 +142,10 @@ namespace CppLambda {
         return response.create_response();
     }
 
-    inline JsonValue DefaultHandler::create_body(const std::string& message) {
+    inline JsonValue DefaultHandler::create_body(std::string&& message) {
         JsonValue new_body;
         if (message.size() > 0) {
-            new_body.WithString(ResponseKey::MESSAGE, message);
+            new_body.WithString(ResponseKey::MESSAGE, std::move(message));
         }
         return new_body;
     }
