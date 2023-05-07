@@ -2,7 +2,7 @@
 #define CPP_TEST_H_
 #include"ProvisionalRequest.h"
 
-namespace CppLambdaTest {
+namespace TestMod {
     void start_test();
 }
 

@@ -7,7 +7,7 @@
 #include<iostream>
 
 
-namespace CppLambdaTest {
+namespace TestMod {
 
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;

@@ -1,12 +1,15 @@
 ## defined in parent
 # set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplespost ...)
 set(TEST_NAME cpptest)
+set(MAIN_TEST_LIB TestMod)
 
+set(LIB_INCLUDE_DIRECTORIES ../src/lib)
 set(LAMBDA_INCLUDE_DIRECTORIES ../src/${LAMBDA_FUNCTIONS})
 list(TRANSFORM LAMBDA_INCLUDE_DIRECTORIES PREPEND "../src/")
 include_directories(
   ./include
   ../src/include
+  ${LIB_INCLUDE_DIRECTORIES}
   ${LAMBDA_INCLUDE_DIRECTORIES}
 )
 
@@ -22,6 +25,6 @@ FetchContent_MakeAvailable(googletest)
 add_subdirectory(./lib)
 
 add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_NAME}.cpp)
-target_link_libraries(${TEST_NAME} gtest_main CppTestLib ${LAMBDA_FUNCTIONS})
+target_link_libraries(${TEST_NAME} gtest_main ${MAIN_TEST_LIB} ${LAMBDA_FUNCTIONS})
 
 

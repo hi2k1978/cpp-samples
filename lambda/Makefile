@@ -106,6 +106,7 @@ deploy: build-package
 
 ## EXAMPLES
 # $ ./google-test --gtest_filter=Cpp*Get.hoge-*-hige
+# example: make test ARGS="--gtest_filter=*__CppLambda.*"
 test:
 	@echo "ARGS: " $(ARGS)
 	./build/tests/cpptest $(ARGS)

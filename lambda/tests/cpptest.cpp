@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
-#include "TestModules/TestModules.h"
-#include"CppTestLib.h"
+#include "test_modules/TestModules.h"
+#include"TestMod.h"
 
 int main(int argc, char **argv) {
 
-    CppLambdaTest::start_test();
+    TestMod::start_test();
     
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

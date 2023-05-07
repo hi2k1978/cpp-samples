@@ -5,7 +5,7 @@
 
 #include"ProvisionalRequest.h"
 
-namespace CppLambdaTest {
+namespace TestMod {
     void start_test() {
         std::cout << "CPP TESTS" << std::endl;
         std::cout << "=========" << std::endl;
