@@ -11,10 +11,10 @@
 #include<utility>
 #include<type_traits>
 
-#ifdef STAGE_MAIN // stage: main
-#include "stages/StageMain.h"
-#else // stage: develop
-#include "stages/StageDevelop.h"
+#ifdef BUILD_TYPE_RELEASE // build_type: Release
+#include "build_types/BuildTypeRelease.h"
+#else // build_type: Debug
+#include "build_types/BuildTypeDebug.h"
 #endif
 
 #include "types/ErrorTypes.h"

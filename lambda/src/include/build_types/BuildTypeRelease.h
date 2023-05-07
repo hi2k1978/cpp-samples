@@ -1,10 +1,10 @@
-#ifndef STAGE_MACRO_DEFINED_
-#define STAGE_MACRO_DEFINED_
+#ifndef BUILD_TYPE_DEFINED_
+#define BUILD_TYPE_DEFINED_
 
 #include<iostream>
 
 namespace CppLambda {    
-    namespace Stage {
+    namespace Env {
         // CORS
         static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = "*";
         static constexpr auto ACCESS_CONTROL_ALLOW_METHODS = "GET,POST,PATCH,DELETE,OPTIONS";

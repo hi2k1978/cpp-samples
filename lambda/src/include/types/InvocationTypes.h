@@ -55,12 +55,12 @@ namespace CppLambda {
 
     namespace CorsValue {
         // static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = "*";
-        static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = Stage::ACCESS_CONTROL_ALLOW_ORIGIN;
-        static constexpr auto ACCESS_CONTROL_ALLOW_METHODS = Stage::ACCESS_CONTROL_ALLOW_METHODS;
-        static constexpr auto ACCESS_CONTROL_ALLOW_HEADERS = Stage::ACCESS_CONTROL_ALLOW_HEADERS;
-        static constexpr auto ACCESS_CONTROL_EXPOSE_HEADERS = Stage::ACCESS_CONTROL_EXPOSE_HEADERS;
-        static constexpr auto ACCESS_CONTROL_ALLOW_CREDENTIALS = Stage::ACCESS_CONTROL_ALLOW_CREDENTIALS;
-        static int MAX_AGE = Stage::ACCESS_CONTROL_MAX_AGE;
+        static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = Env::ACCESS_CONTROL_ALLOW_ORIGIN;
+        static constexpr auto ACCESS_CONTROL_ALLOW_METHODS = Env::ACCESS_CONTROL_ALLOW_METHODS;
+        static constexpr auto ACCESS_CONTROL_ALLOW_HEADERS = Env::ACCESS_CONTROL_ALLOW_HEADERS;
+        static constexpr auto ACCESS_CONTROL_EXPOSE_HEADERS = Env::ACCESS_CONTROL_EXPOSE_HEADERS;
+        static constexpr auto ACCESS_CONTROL_ALLOW_CREDENTIALS = Env::ACCESS_CONTROL_ALLOW_CREDENTIALS;
+        static int MAX_AGE = Env::ACCESS_CONTROL_MAX_AGE;
     }
 
 }  // namespace CppLambda

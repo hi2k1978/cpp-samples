@@ -1,7 +1,9 @@
 FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG BUILD_TYPE=Debug
+# Debug or Release 
+# ARG BUILD_TYPE=Debug
+ARG BUILD_TYPE=Release
 ARG INSTALL_PREFIX=/usr/local
 
 RUN apt-get update && apt-get install -y \
@@ -22,7 +24,6 @@ RUN git clone https://github.com/awslabs/aws-lambda-cpp-runtime.git && \
     cd aws-lambda-cpp-runtime && \
     mkdir build && \
     cd build && \
-    # Debug or Release 
     cmake .. -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
     -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX && \
@@ -35,7 +36,6 @@ RUN git clone https://github.com/aws/aws-sdk-cpp.git && \
     git submodule update --init --recursive && \
     mkdir build && \
     cd build && \
-    # Debug or Release 
     cmake .. -DBUILD_ONLY="core" \
     -DBUILD_SHARED_LIBS=OFF \
     -DENABLE_UNITY_BUILD=ON \
