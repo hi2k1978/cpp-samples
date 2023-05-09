@@ -20,6 +20,7 @@ namespace CppLambda {
 
     namespace EventValidationError {
         static constexpr auto TEST = "This is an error test.";
+        static constexpr auto EXAMPLE = "This is an error example.";
     }
 
     

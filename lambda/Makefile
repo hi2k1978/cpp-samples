@@ -105,7 +105,7 @@ deploy: build-package
 .PHONY : deploy
 
 ## EXAMPLES
-# $ ./google-test --gtest_filter=Cpp*Get.hoge-*-hige
+# $ ./google-test --gtest_filter=*CppLambda.*
 # example: make test ARGS="--gtest_filter=*__CppLambda.*"
 test:
 	@echo "ARGS: " $(ARGS)
