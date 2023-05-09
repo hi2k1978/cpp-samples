@@ -152,7 +152,7 @@ sam-invoke-$1: sam-invoke-$1-options sam-invoke-$1-get sam-invoke-$1-post force
 endef
 $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
 
-sam-invoke: $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)) $(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
+sam-invoke: build-package $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)) $(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
 .PHONY : sam-invoke
 
 

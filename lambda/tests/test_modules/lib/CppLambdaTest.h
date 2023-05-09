@@ -15,6 +15,40 @@ namespace CppLambda {
         EXPECT_EQ(target.error_message,  ErrorMessage::EVENT_INITIALIZATION_ERROR);
     }
 
+    TEST(N__lib_CppLambda, Event__test_constructor_initialize__only_httpMethod_has_value) {
+        JsonValue request_body;
+        request_body.WithString("httpMethod", "GET");
+        invocation_request request;
+        request.payload = request_body.View().WriteCompact();
+        Event event(request);
+        EventInitializationResult result = event.initialize();
+        
+        EXPECT_EQ(result.result, true);
+        EXPECT_EQ(event.event_type, EventType::GET);
+        EXPECT_EQ(event.http_method, "GET");
+        EXPECT_EQ(event.path, "");
+        EXPECT_EQ(event.headers.View().WriteCompact(), "{}");
+        EXPECT_EQ(event.body.View().WriteCompact(), "{}");
+        EXPECT_EQ(event.query.View().WriteCompact(), "{}");
+    }
+
+    TEST(N__lib_CppLambda, Event__test_constructor_initialize__every_member_variable_has_value) {
+        JsonValue request_body;
+        request_body.WithString("httpMethod", "GET");
+        invocation_request request;
+        request.payload = request_body.View().WriteCompact();
+        Event event(request);
+        EventInitializationResult result = event.initialize();
+        
+        EXPECT_EQ(result.result, true);
+        EXPECT_EQ(event.event_type, EventType::GET);
+        EXPECT_EQ(event.http_method, "GET");
+        EXPECT_EQ(event.path, "");
+        EXPECT_EQ(event.headers.View().WriteCompact(), "{}");
+        EXPECT_EQ(event.body.View().WriteCompact(), "{}");
+        EXPECT_EQ(event.query.View().WriteCompact(), "{}");
+    }
+
     TEST(N__lib_CppLambda, EventValidationResult__test_constructor) {
         std::vector<std::string_view> validation_error_messages { EventValidationError::TEST, EventValidationError::EXAMPLE};
         EventValidationResult target(true, ErrorCode::EVENT_VALIDATION_ERROR, ErrorMessage::EVENT_VALIDATION_ERROR, std::move(validation_error_messages));
