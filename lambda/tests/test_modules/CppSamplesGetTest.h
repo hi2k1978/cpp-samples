@@ -1,3 +1,4 @@
+// -*- mode: cc-mode; compile-command: "make -C ../../ build test ARGS=--gtest_filter=*_CppSamplesGet*.*" -*-
 #include"gtest/gtest.h"
 #include"CppSamplesGet.h"
 

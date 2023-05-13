@@ -108,7 +108,20 @@ deploy: build-package
 # $ ./google-test --gtest_filter=*CppLambda.*
 # example: make test ARGS="--gtest_filter=*__CppLambda.*"
 test:
-	@echo "ARGS: " $(ARGS)
+	@echo gtest_filter_exapmle: make test ARGS="--gtest_filter=*__CppLambda.*"
+	@echo
+	@echo
+	@echo "################################################################"
+	@echo "  RUN TEST"
+	@echo "################################################################"
+	@echo
+	@echo "ARGS: $(ARGS)"
+	@echo "TEST TYPE:"
+	@echo "  [N]: Normal"
+	@echo "  [Q]: Quasi-normal"
+	@echo "  [A]: Abnormal"
+	@echo
+	@echo
 	./build/tests/cpptest $(ARGS)
 .PHONY : test
 
