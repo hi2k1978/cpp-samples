@@ -22,20 +22,17 @@ namespace AwsService {
         using PutItemRequest = Aws::DynamoDB::Model::PutItemRequest;
 
         struct Result {
-            Result(const bool is_success, Aws::String&& error_message, Item&& item) noexcept;
-            Result(const bool is_success) noexcept;
-            Result(const bool is_success, Item&& item) noexcept;
             Result(const bool is_success, Aws::String&& error_message) noexcept;
+            Result(const bool is_success) noexcept;
             
             const bool is_success;
             const Aws::String error_message;
-            const Item item;
         }; // struct Result
     
         class Client {
         public:
             Client(const Aws::Client::ClientConfiguration &config) noexcept;
-            auto get_item(GetItemRequest& request) -> Result;
+            auto get_item(GetItemRequest& request) -> std::tuple<Result, Item>;
             auto put_item(PutItemRequest& request) -> Result;
         private:
             Aws::DynamoDB::DynamoDBClient client;
