@@ -14,7 +14,7 @@ namespace CppSamplesPost {
     class EventValidator final : public BaseEventValidator {
     public:
         explicit EventValidator(const Event& event) noexcept;
-        EventValidationResult validate() const noexcept override;
+        std::tuple<DefaultResult, std::vector<std::string_view>> validate() const noexcept override;
 
     private:
         const Event& event;        

@@ -26,20 +26,21 @@ namespace CppLambda {
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
 
-    struct BaseReturnResult {
-        explicit BaseReturnResult(const bool result,
+    struct DefaultResult {
+        explicit DefaultResult(const bool is_success,
                                   std::string_view&& error_code,
                                   std::string_view&& error_message) noexcept;
-        const bool result;
+        DefaultResult(const bool is_success) noexcept;
+        
+        const bool is_success;
         const std::string_view error_code;
         const std::string_view  error_message;
-    };  // struct BaseReturnResult
+    };  // struct DefaultResult
 
-    using EventInitializationResult = BaseReturnResult;
 
     struct Event {
         explicit Event(const invocation_request& request) noexcept;
-        EventInitializationResult initialize() noexcept;
+        DefaultResult initialize() noexcept;
         void show() const noexcept;
 
         EventType event_type;
@@ -53,20 +54,9 @@ namespace CppLambda {
         const invocation_request& request;
     };
 
-    struct EventValidationResult {
-        explicit EventValidationResult(const bool result,
-                                  std::string_view&& error_code,
-                                  std::string_view&& error_message,
-                                  std::vector<std::string_view>&& validation_error_messages) noexcept;
-        const bool result;
-        const std::string_view error_code;
-        const std::string_view error_message;
-        const std::vector<std::string_view>  validation_error_messages;
-    };  // struct EventValidateResult
-    
     class BaseEventValidator {
     public:
-        virtual EventValidationResult validate() const noexcept = 0;
+        virtual std::tuple<DefaultResult, std::vector<std::string_view>> validate() const noexcept = 0;
     };
 
     class Response {

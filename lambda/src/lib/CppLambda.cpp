@@ -9,21 +9,26 @@
 namespace CppLambda {
 
     using namespace aws::lambda_runtime;
-    using namespace Aws::Utils::Json;
+    using JsonValue = Aws::Utils::Json::JsonValue;
+    using JsonView = Aws::Utils::Json::JsonView;
+    // using namespace Aws::Utils::Json;
 
-   BaseReturnResult::BaseReturnResult(const bool result,
-                                      std::string_view&& error_code,
-                                      std::string_view&& error_message) noexcept
-       : result(result), error_code(std::move(error_code)), error_message(std::move(error_message)) {}
+    DefaultResult::DefaultResult(const bool is_success,
+                                std::string_view&& error_code,
+                                std::string_view&& error_message) noexcept
+        : is_success(is_success), error_code(std::move(error_code)), error_message(std::move(error_message)) {}
+
+    DefaultResult::DefaultResult(const bool is_success) noexcept
+        : DefaultResult(is_success, ErrorCode::NONE, ErrorMessage::NONE) {}
 
     Event::Event(const invocation_request& request) noexcept 
             : request(request) {};
 
-    EventInitializationResult Event::initialize() noexcept {
+    DefaultResult Event::initialize() noexcept {
         JsonValue payload(request.payload);
         if (!payload.WasParseSuccessful()) {
             std::cerr << "InvalidJSON: Failed to parse input JSON" << std::endl;
-            return EventInitializationResult(false,
+            return DefaultResult(false,
                                              ErrorCode::EVENT_INITIALIZATION_ERROR,
                                              ErrorMessage::EVENT_INITIALIZATION_ERROR);
         }
@@ -43,9 +48,9 @@ namespace CppLambda {
             }
         } else {
             std::cerr << "InvalidJSON: httpMethod does not exist." << std::endl;
-            return EventInitializationResult(false,
-                                             ErrorCode::EVENT_INITIALIZATION_ERROR,
-                                             ErrorMessage::EVENT_INITIALIZATION_ERROR);
+            return DefaultResult(false,
+                                 ErrorCode::EVENT_INITIALIZATION_ERROR,
+                                 ErrorMessage::EVENT_INITIALIZATION_ERROR);
         }
         if (pv.ValueExists("path")) {
             path = pv.GetString("path");
@@ -68,7 +73,7 @@ namespace CppLambda {
             query = pv.GetObject("queryStringParameters").Materialize();
         }
         // show();
-        return EventInitializationResult(true, ErrorCode::NONE, ErrorMessage::NONE);
+        return DefaultResult(true, ErrorCode::NONE, ErrorMessage::NONE);
    }
 
     void Event::show() const noexcept {
@@ -84,14 +89,6 @@ namespace CppLambda {
         std::cout << std::endl;
         return;
     }
-
-    EventValidationResult::EventValidationResult(const bool result,
-                                                 std::string_view&& error_code,
-                                                 std::string_view&& error_message,
-                                                 std::vector<std::string_view>&& validation_error_messages) noexcept
-        : result(result), error_code(std::move(error_code)),
-          error_message(std::move(error_message)), validation_error_messages(std::move(validation_error_messages)) {}
-
     
     Response::Response(const StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}

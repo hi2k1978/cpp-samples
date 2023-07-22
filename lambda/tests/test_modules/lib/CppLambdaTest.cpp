@@ -7,12 +7,12 @@
 #include"TestLambda.h"
 
 namespace CppLambda {
-    TEST(lib_CppLambda, N__BaseReturnResult__test_constructor) {
-        BaseReturnResult target(true, ErrorCode::EVENT_INITIALIZATION_ERROR, ErrorMessage::EVENT_INITIALIZATION_ERROR);
+    TEST(lib_CppLambda, N__DefaultResult__test_constructor) {
+        DefaultResult result(true, ErrorCode::EVENT_INITIALIZATION_ERROR, ErrorMessage::EVENT_INITIALIZATION_ERROR);
         // test
-        EXPECT_EQ(target.result, true);
-        EXPECT_EQ(target.error_code, ErrorCode::EVENT_INITIALIZATION_ERROR);
-        EXPECT_EQ(target.error_message,  ErrorMessage::EVENT_INITIALIZATION_ERROR);
+        EXPECT_EQ(result.is_success, true);
+        EXPECT_EQ(result.error_code, ErrorCode::EVENT_INITIALIZATION_ERROR);
+        EXPECT_EQ(result.error_message,  ErrorMessage::EVENT_INITIALIZATION_ERROR);
     }
 
     TEST(lib_CppLambda, N__Event__test_constructor_init__only_httpMethod_has_value) {
@@ -21,9 +21,9 @@ namespace CppLambda {
         invocation_request request;
         request.payload = request_body.View().WriteCompact();
         Event event(request);
-        EventInitializationResult result = event.initialize();
+        DefaultResult result = event.initialize();
         
-        EXPECT_EQ(result.result, true);
+        EXPECT_EQ(result.is_success, true);
         EXPECT_EQ(event.event_type, EventType::GET);
         EXPECT_EQ(event.http_method, "GET");
         EXPECT_EQ(event.path, "");
@@ -39,9 +39,9 @@ namespace CppLambda {
         invocation_request request;
         request.payload = request_body.View().WriteCompact();
         Event event(request);
-        EventInitializationResult result = event.initialize();
+        DefaultResult result = event.initialize();
         
-        EXPECT_EQ(result.result, true);
+        EXPECT_EQ(result.is_success, true);
         EXPECT_EQ(event.event_type, EventType::GET);
         EXPECT_EQ(event.http_method, "GET");
         EXPECT_EQ(event.path, "");
@@ -54,9 +54,9 @@ namespace CppLambda {
         invocation_request request;
         request.payload = "invalid payload: not a json format";
         Event event(request);
-        EventInitializationResult result = event.initialize();
+        DefaultResult result = event.initialize();
         
-        EXPECT_EQ(result.result, false);
+        EXPECT_EQ(result.is_success, false);
         EXPECT_EQ(result.error_code, ErrorCode::EVENT_INITIALIZATION_ERROR);
         EXPECT_EQ(result.error_message, ErrorMessage::EVENT_INITIALIZATION_ERROR);
     }
@@ -66,22 +66,11 @@ namespace CppLambda {
         invocation_request request;
         request.payload = request_body.View().WriteCompact();
         Event event(request);
-        EventInitializationResult result = event.initialize();
+        DefaultResult result = event.initialize();
         
-        EXPECT_EQ(result.result, false);
+        EXPECT_EQ(result.is_success, false);
         EXPECT_EQ(result.error_code, ErrorCode::EVENT_INITIALIZATION_ERROR);
         EXPECT_EQ(result.error_message, ErrorMessage::EVENT_INITIALIZATION_ERROR);
-    }
-
-    TEST(lib_CppLambda, N__EventValidationResult__test_constructor) {
-        std::vector<std::string_view> validation_error_messages { EventValidationError::TEST, EventValidationError::EXAMPLE};
-        EventValidationResult target(true, ErrorCode::EVENT_VALIDATION_ERROR, ErrorMessage::EVENT_VALIDATION_ERROR, std::move(validation_error_messages));
-        // test
-        EXPECT_EQ(target.result, true);
-        EXPECT_EQ(target.error_code, ErrorCode::EVENT_VALIDATION_ERROR);
-        EXPECT_EQ(target.error_message,  ErrorMessage::EVENT_VALIDATION_ERROR);
-        EXPECT_EQ(target.validation_error_messages.at(0), EventValidationError::TEST);
-        EXPECT_EQ(target.validation_error_messages.at(1), EventValidationError::EXAMPLE);
     }
 
     TEST(lib_CppLambda, N__Response__test_constructor__main_constructor_and_create_response) {
