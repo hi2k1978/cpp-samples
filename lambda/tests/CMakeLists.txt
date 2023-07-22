@@ -1,7 +1,7 @@
 ## defined in parent
 # set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplespost ...)
 set(TEST_NAME cpptest)
-set(MAIN_TEST_LIB TestMod)
+set(MAIN_TEST_LIB TestLambda)
 
 set(LIB_INCLUDE_DIRECTORIES ../src/lib)
 set(LAMBDA_INCLUDE_DIRECTORIES ../src/${LAMBDA_FUNCTIONS})

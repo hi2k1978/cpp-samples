@@ -4,7 +4,7 @@
 
 #include"gtest/gtest.h"
 #include"CppLambda.h"
-#include"TestMod.h"
+#include"TestLambda.h"
 
 namespace CppLambda {
     TEST(lib_CppLambda, N__BaseReturnResult__test_constructor) {

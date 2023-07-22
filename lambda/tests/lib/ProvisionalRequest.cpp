@@ -5,7 +5,7 @@
 
 #include"ProvisionalRequest.h"
 
-namespace TestMod {
+namespace TestLambda {
 
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;

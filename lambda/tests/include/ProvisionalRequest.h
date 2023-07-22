@@ -1,5 +1,5 @@
-#ifndef TEST_MODULES_H_
-#define TEST_MODULES_H_
+#ifndef PROVISIONAL_REQUEST_H_
+#define PROVISIONAL_REQUEST_H_
 
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
@@ -7,7 +7,7 @@
 #include<iostream>
 
 
-namespace TestMod {
+namespace TestLambda {
 
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
