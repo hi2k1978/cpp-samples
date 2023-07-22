@@ -3,7 +3,7 @@
 
 #include<iostream>
 
-namespace CppLambda {
+namespace AwsLambda {
 
     namespace ErrorCode {
         static constexpr auto NONE= ""; 
@@ -24,5 +24,5 @@ namespace CppLambda {
     }
 
     
-}  // namespace CppLambda
+}  // namespace AwsLambda
 #endif  // LAMBDA_SRC_INCLUDE_TYPES_ERROR_TYPES_H_

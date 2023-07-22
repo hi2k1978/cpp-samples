@@ -4,7 +4,7 @@
 
 namespace CppSamplesPost {
     TEST(CppSamplesPost, test2) {
-        using namespace CppLambda;
+        using namespace AwsLambda;
         using namespace Aws::Utils::Json;
         JsonValue body;
         body.WithString(ResponseKey::MESSAGE, ResponseMessage::OK);

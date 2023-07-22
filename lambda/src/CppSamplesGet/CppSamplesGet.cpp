@@ -11,7 +11,7 @@
 using namespace aws::lambda_runtime;
 
 namespace CppSamplesGet {
-    using namespace CppLambda;
+    using namespace AwsLambda;
 
     EventValidator::EventValidator(const Event& event) noexcept
         : event(event) {}

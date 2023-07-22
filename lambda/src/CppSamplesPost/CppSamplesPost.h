@@ -6,10 +6,10 @@
 
 #include<iostream>
 
-#include "CppLambda.h"
+#include "AwsLambda.h"
 
 namespace CppSamplesPost {
-    using namespace CppLambda;
+    using namespace AwsLambda;
 
     class EventValidator final : public BaseEventValidator {
     public:

@@ -21,7 +21,7 @@
 #include "types/InvocationTypes.h"
 
 
-namespace CppLambda {
+namespace AwsLambda {
     
     using namespace aws::lambda_runtime;
     using namespace Aws::Utils::Json;
@@ -93,5 +93,5 @@ namespace CppLambda {
     };
     using ErrorEventHandler = DefaultEventHandler;
 
-}  // namespace CppLambda
+}  // namespace AwsLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_

@@ -3,7 +3,7 @@
 
 #include<iostream>
 
-namespace CppLambda {    
+namespace AwsLambda {    
     namespace Env {
         // CORS
         static constexpr auto ACCESS_CONTROL_ALLOW_ORIGIN = "*";

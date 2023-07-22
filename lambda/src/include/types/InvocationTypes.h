@@ -3,7 +3,7 @@
 
 #include <aws/lambda-runtime/runtime.h>
 
-namespace CppLambda {
+namespace AwsLambda {
 
     namespace HttpMethod {
         static constexpr auto OPTIONS = "OPTIONS";
@@ -63,5 +63,5 @@ namespace CppLambda {
         static int MAX_AGE = Env::ACCESS_CONTROL_MAX_AGE;
     }
 
-}  // namespace CppLambda
+}  // namespace AwsLambda
 #endif  // LAMBDA_SRC_INCLUDE_TYPES_INVOCATION_TYPES_H_

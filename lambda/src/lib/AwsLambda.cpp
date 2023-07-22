@@ -4,9 +4,9 @@
 #include "iostream"
 #include "iomanip"
 
-#include "CppLambda.h"
+#include "AwsLambda.h"
 
-namespace CppLambda {
+namespace AwsLambda {
 
     using namespace aws::lambda_runtime;
     using JsonValue = Aws::Utils::Json::JsonValue;
@@ -148,4 +148,4 @@ namespace CppLambda {
     }
 
 
-}  // namespace CppLambda
+}  // namespace AwsLambda

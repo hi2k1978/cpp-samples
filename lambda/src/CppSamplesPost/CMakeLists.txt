@@ -1,4 +1,4 @@
-set(LAMBDA_LIBS CppLambda)
+set(LAMBDA_LIBS AwsLambda)
 set(LAMBDA_FUNCTION CppSamplesPost)
 set(LAMBDA_EXECUTE ${LAMBDA_FUNCTION}Handler)
 
