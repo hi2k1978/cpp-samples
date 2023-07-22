@@ -36,7 +36,7 @@ RUN git clone https://github.com/aws/aws-sdk-cpp.git && \
     git submodule update --init --recursive && \
     mkdir build && \
     cd build && \
-    cmake .. -DBUILD_ONLY="core" \
+    cmake .. -DBUILD_ONLY="core;dynamodb" \
     -DBUILD_SHARED_LIBS=OFF \
     -DENABLE_UNITY_BUILD=ON \
     -DCUSTOM_MEMORY_MANAGEMENT=OFF \

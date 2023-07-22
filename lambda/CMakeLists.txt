@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 
 find_package(ZLIB)
 find_package(aws-lambda-runtime REQUIRED)
-find_package(AWSSDK COMPONENTS core)
+find_package(AWSSDK COMPONENTS core dynamodb)
 
 set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD 17)
