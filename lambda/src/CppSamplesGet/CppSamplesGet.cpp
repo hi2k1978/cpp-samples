@@ -36,7 +36,8 @@ namespace CppSamplesGet {
         using namespace Aws::Utils::Json;
 
         EventValidator event_validator(event);
-        auto [result, verrors] = event_validator.validate();
+        std::tuple<DefaultResult, std::vector<std::string_view>> valid = event_validator.validate();
+        auto& [result, verrors] = valid;
         // TODO: additional coding is required. validator always returns true.
         if (!result.is_success) {
             // TODO: replace logger
