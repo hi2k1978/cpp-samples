@@ -32,8 +32,8 @@ namespace AwsService {
         class Client {
         public:
             Client(const Aws::Client::ClientConfiguration &config) noexcept;
-            auto get_item(GetItemRequest& request) -> std::tuple<Result, Item>;
-            auto put_item(PutItemRequest& request) -> Result;
+            auto get_item(GetItemRequest& request) -> std::tuple<Result, Item> const;
+            auto put_item(PutItemRequest& request) -> Result const;
         private:
             Aws::DynamoDB::DynamoDBClient client;
         }; // class DynamoDB

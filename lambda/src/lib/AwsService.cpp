@@ -7,7 +7,7 @@
 #include <aws/dynamodb/model/GetItemRequest.h>
 #include <iostream>
 
-#include "AwsDynamoDB.h"
+#include "AwsService.h"
 
 namespace AwsService {
 
@@ -23,7 +23,7 @@ namespace AwsService {
             Aws::DynamoDB::DynamoDBClient client(config);
         }
             
-        auto Client::get_item(GetItemRequest& request) -> std::tuple<Result, Item> {
+        auto Client::get_item(GetItemRequest& request) -> std::tuple<Result, Item> const {
             const Aws::DynamoDB::Model::GetItemOutcome &outcome = client.GetItem(request);
             bool is_success = outcome.IsSuccess();
             if (is_success) {
@@ -34,7 +34,7 @@ namespace AwsService {
             }
         }
         
-        auto Client::put_item(PutItemRequest& request) -> Result {
+        auto Client::put_item(PutItemRequest& request) -> Result const {
             const Aws::DynamoDB::Model::PutItemOutcome outcome = client.PutItem(request);
             bool is_success = outcome.IsSuccess();
             if (is_success) {
