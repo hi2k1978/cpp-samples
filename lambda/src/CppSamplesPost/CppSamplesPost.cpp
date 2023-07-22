@@ -13,10 +13,10 @@ using namespace aws::lambda_runtime;
 namespace CppSamplesPost {
     using namespace CppLambda;
 
-    GetEventValidator::GetEventValidator(const Event& event) noexcept
+    EventValidator::EventValidator(const Event& event) noexcept
         : event(event) {}
 
-    auto GetEventValidator::validate() const noexcept -> EventValidationResult {
+    auto EventValidator::validate() const noexcept -> EventValidationResult {
         std::vector<std::string_view> validation_error_messages;
         // TODO: remove after test is finished.
         validation_error_messages.push_back(EventValidationError::TEST);
@@ -35,12 +35,12 @@ namespace CppSamplesPost {
         }
     }
 
-    GetHandler::GetHandler(const Event& event) noexcept : event(event) {}
+    EventHandler::EventHandler(const Event& event) noexcept : event(event) {}
 
-    auto GetHandler::create_response() const -> invocation_response {
+    auto EventHandler::create_response() const -> invocation_response {
         using namespace Aws::Utils::Json;
 
-        GetEventValidator event_validator(event);
+        EventValidator event_validator(event);
         EventValidationResult event_validation_result = event_validator.validate();
         // TODO: additional coding is required. validator always returns true.
         if (!event_validation_result.result) {
@@ -59,14 +59,16 @@ namespace CppSamplesPost {
         return response.create_response();
     }
 
-    inline auto create_target_handler(const Event& event) -> std::unique_ptr<BaseHandler> {
+    inline auto create_target_handler(const Event& event) -> std::unique_ptr<BaseEventHandler> {
         switch(event.event_type) {
         case EventType::OPTIONS:
-            return std::make_unique<DefaultHandler>(StatusCode::OK);
-        case EventType::GET:
-            return std::make_unique<GetHandler>(event);
+            return std::make_unique<DefaultEventHandler>(StatusCode::OK);
+        case EventType::POST:
+            return std::make_unique<EventHandler>(event);
+        case EventType::GET: // health check
+            return std::make_unique<DefaultEventHandler>(StatusCode::OK);
         default:
-            return std::make_unique<ErrorHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+            return std::make_unique<ErrorEventHandler>(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
         }
     }
     
@@ -81,7 +83,7 @@ namespace CppSamplesPost {
             return response.create_response();
         }
 
-        std::unique_ptr<BaseHandler> target_handler = create_target_handler(event);
+        std::unique_ptr<BaseEventHandler> target_handler = create_target_handler(event);
         return target_handler->create_response();
     }
 }  // namespace CppSamplesPost

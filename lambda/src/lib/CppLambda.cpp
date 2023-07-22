@@ -128,21 +128,21 @@ namespace CppLambda {
         return new_headers;
     }
     
-    DefaultHandler::DefaultHandler(const StatusCode status_code, JsonValue&& body) noexcept
+    DefaultEventHandler::DefaultEventHandler(const StatusCode status_code, JsonValue&& body) noexcept
         : status_code(status_code), body(std::move(body)) {}
 
-    DefaultHandler::DefaultHandler(const StatusCode status_code, std::string&& message) noexcept
-        : DefaultHandler(status_code, create_body(std::move(message))) {}
+    DefaultEventHandler::DefaultEventHandler(const StatusCode status_code, std::string&& message) noexcept
+        : DefaultEventHandler(status_code, create_body(std::move(message))) {}
 
-    DefaultHandler::DefaultHandler(const StatusCode status_code) noexcept
-        : DefaultHandler(status_code, JsonValue()) {}
+    DefaultEventHandler::DefaultEventHandler(const StatusCode status_code) noexcept
+        : DefaultEventHandler(status_code, JsonValue()) {}
 
-    invocation_response DefaultHandler::create_response() const noexcept {
+    invocation_response DefaultEventHandler::create_response() const noexcept {
         Response response(status_code, JsonValue(body));
         return response.create_response();
     }
 
-    inline JsonValue DefaultHandler::create_body(std::string&& message) {
+    inline JsonValue DefaultEventHandler::create_body(std::string&& message) {
         JsonValue new_body;
         if (message.size() > 0) {
             new_body.WithString(ResponseKey::MESSAGE, std::move(message));

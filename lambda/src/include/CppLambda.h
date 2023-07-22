@@ -84,16 +84,16 @@ namespace CppLambda {
         const JsonValue body;
     };
     
-    class BaseHandler {
+    class BaseEventHandler {
     public:
         virtual invocation_response create_response() const = 0;
     };
 
-    class DefaultHandler : public BaseHandler {
+    class DefaultEventHandler : public BaseEventHandler {
     public:
-        DefaultHandler(const StatusCode status_code, JsonValue&& body) noexcept;
-        DefaultHandler(const StatusCode status_code, std::string&& message) noexcept;
-        DefaultHandler(const StatusCode status_code) noexcept;
+        DefaultEventHandler(const StatusCode status_code, JsonValue&& body) noexcept;
+        DefaultEventHandler(const StatusCode status_code, std::string&& message) noexcept;
+        DefaultEventHandler(const StatusCode status_code) noexcept;
         invocation_response create_response() const noexcept override;
     private:
         inline JsonValue create_body(std::string&& message);
@@ -101,7 +101,7 @@ namespace CppLambda {
         const StatusCode status_code;
         const JsonValue body;
     };
-    using ErrorHandler = DefaultHandler;
+    using ErrorEventHandler = DefaultEventHandler;
 
 }  // namespace CppLambda
 #endif  // LAMBDA_SRC_INCLUDE_CPP_LAMBDA_H_

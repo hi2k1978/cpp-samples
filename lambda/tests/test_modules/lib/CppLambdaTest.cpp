@@ -15,7 +15,7 @@ namespace CppLambda {
         EXPECT_EQ(target.error_message,  ErrorMessage::EVENT_INITIALIZATION_ERROR);
     }
 
-    TEST(lib_CppLambda, N__Event__test_constructor_initialize__only_httpMethod_has_value) {
+    TEST(lib_CppLambda, N__Event__test_constructor_init__only_httpMethod_has_value) {
         JsonValue request_body;
         request_body.WithString("httpMethod", "GET");
         invocation_request request;
@@ -50,7 +50,7 @@ namespace CppLambda {
         EXPECT_EQ(event.query.View().WriteCompact(), "{}");
     }
 
-    TEST(lib_CppLambda, Q__Event__test_constructor_initialize__invalid_payload__request_payload_is_not_json_format_string) {
+    TEST(lib_CppLambda, Q__Event__test_constructor_init__invalid_payload__request_payload_is_not_json_format_string) {
         invocation_request request;
         request.payload = "invalid payload: not a json format";
         Event event(request);
@@ -61,7 +61,7 @@ namespace CppLambda {
         EXPECT_EQ(result.error_message, ErrorMessage::EVENT_INITIALIZATION_ERROR);
     }
 
-    TEST(lib_CppLambda, Q__Event__test_constructor_initialize__invalid_payload__request_payload_has_no_httpMethod_key) {
+    TEST(lib_CppLambda, Q__Event__test_constructor_init__invalid_payload__request_payload_has_no_httpMethod_key) {
         JsonValue request_body;
         invocation_request request;
         request.payload = request_body.View().WriteCompact();
@@ -169,13 +169,13 @@ namespace CppLambda {
         EXPECT_EQ(res_headers_string, expect_headers_string);
     }
 
-    TEST(lib_CppLambda, N__DefaultHandler__test_constructor__main_constructor_and_create_response) {
+    TEST(lib_CppLambda, N__DefaultEventHandler__test_constructor__main_constructor_and_create_response) {
         JsonValue body;
         body.WithString("message", "test_main_constructor");
         body.WithString("result", "successful");
 
         // StatusCode::OK == 200
-        DefaultHandler default_handler(StatusCode::OK, std::move(body));
+        DefaultEventHandler default_handler(StatusCode::OK, std::move(body));
         invocation_response target = default_handler.create_response();
 
         const JsonValue payload = JsonValue(target.get_payload());
@@ -195,9 +195,9 @@ namespace CppLambda {
         EXPECT_EQ(res_body_string, expect_body_string);
     }
 
-    TEST(lib_CppLambda, N__DefaultHandler__test_constructor__delegating_constructor_001) {
+    TEST(lib_CppLambda, N__DefaultEventHandler__test_constructor__delegating_constructor_001) {
         // StatusCode::BAD_REQUEST == 400
-        DefaultHandler default_handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
+        DefaultEventHandler default_handler(StatusCode::BAD_REQUEST, ResponseMessage::BAD_REQUEST);
         invocation_response target = default_handler.create_response();
 
         const JsonValue payload = JsonValue(target.get_payload());
@@ -217,9 +217,9 @@ namespace CppLambda {
         EXPECT_EQ(res_body_string, expect_body_string);
     }
 
-    TEST(lib_CppLambda, N__DefaultHandler__test_constructor__delegating_constructor_002) {
+    TEST(lib_CppLambda, N__DefaultEventHandler__test_constructor__delegating_constructor_002) {
         // StatusCode::OK == 200
-        DefaultHandler default_handler(StatusCode::OK);
+        DefaultEventHandler default_handler(StatusCode::OK);
         invocation_response target = default_handler.create_response();
         
         const JsonValue payload = JsonValue(target.get_payload());
@@ -233,9 +233,9 @@ namespace CppLambda {
         EXPECT_EQ(res_body_string, "{}");
     }
 
-    TEST(lib_CppLambda, N__DefaultHandler__test_response_headers) {
+    TEST(lib_CppLambda, N__DefaultEventHandler__test_response_headers) {
         // StatusCode::BAD_REQUEST == 400
-        DefaultHandler default_handler(StatusCode::OK);
+        DefaultEventHandler default_handler(StatusCode::OK);
         invocation_response target = default_handler.create_response();
 
         const JsonValue payload = JsonValue(target.get_payload());

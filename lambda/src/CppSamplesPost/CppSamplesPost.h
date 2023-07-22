@@ -11,18 +11,18 @@
 namespace CppSamplesPost {
     using namespace CppLambda;
 
-    class GetEventValidator final : public BaseEventValidator {
+    class EventValidator final : public BaseEventValidator {
     public:
-        explicit GetEventValidator(const Event& event) noexcept;
+        explicit EventValidator(const Event& event) noexcept;
         EventValidationResult validate() const noexcept override;
 
     private:
         const Event& event;        
     };
 
-    class GetHandler final : public BaseHandler {
+    class EventHandler final : public BaseEventHandler {
     public:
-        GetHandler(const Event& event) noexcept;
+        EventHandler(const Event& event) noexcept;
         invocation_response create_response() const override;
 
     private:
