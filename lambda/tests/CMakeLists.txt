@@ -21,10 +21,18 @@ FetchContent_Declare(
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+FetchContent_GetProperties(googletest)
+
+enable_testing()
+# find_package(Threads REQUIRED)
+# find_package(GTest REQUIRED)
+
+# message(STATUS "gtest_SOURCE_DIR = ${gtest_SOURCE_DIR}")
+# message(STATUS "gmock_SOURCE_DIR = ${gmock_SOURCE_DIR}")
 
 add_subdirectory(./lib)
 
 add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_NAME}.cpp)
-target_link_libraries(${TEST_NAME} gtest_main ${MAIN_TEST_LIB} ${LAMBDA_FUNCTIONS})
+target_link_libraries(${TEST_NAME} gtest_main gmock_main ${MAIN_TEST_LIB} ${LAMBDA_FUNCTIONS})
 
 

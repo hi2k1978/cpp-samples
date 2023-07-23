@@ -1,10 +1,12 @@
 // -*- mode: cc-mode; compile-command: "make -C ../../../ build test ARGS=--gtest_filter=lib_AwsLambda.*" -*-
 #include<iostream>
-#include<vector>
+// #include<vector>
 
+#include"gmock/gmock.h"
 #include"gtest/gtest.h"
 #include"AwsLambda.h"
 #include"TestLambda.h"
+using ::testing::AtLeast;
 
 namespace AwsLambda {
     TEST(lib_AwsLambda, N_DefaultResult_TestConstructor) {
