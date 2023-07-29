@@ -1,5 +1,5 @@
-#ifndef AWS_DYNAMODB_H_
-#define AWS_DYNAMODB_H_
+#ifndef AWS_SERVICE_H_
+#define AWS_SERVICE_H_
 
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
@@ -32,15 +32,33 @@ namespace AwsService {
             const Aws::String error_message;
         }; // struct Result
     
-        class Client {
+        template<class DynamoDBClient=Aws::DynamoDB::DynamoDBClient> class Client {
         public:
-            Client(const Aws::Client::ClientConfiguration &config) noexcept;
-            auto get_item(GetItemRequest& request) -> std::tuple<Result, Item> const;
-            auto put_item(PutItemRequest& request) -> Result const;
-        private:
-            Aws::DynamoDB::DynamoDBClient client;
+            Client(const Aws::Client::ClientConfiguration &clientConfig) // noexcept
+                : client(DynamoDBClient(clientConfig)) {}
+ 
+            
+            auto get_item(const GetItemRequest& request) -> std::tuple<Result, Item> const {
+                const Aws::DynamoDB::Model::GetItemOutcome &outcome = client.GetItem(request);
+                if (outcome.IsSuccess()) {
+                    return {Result(true), outcome.GetResult().GetItem()};
+                } else {
+                    return {Result(false, outcome.GetError().GetMessage()), Item()};
+                }
+            }
+        
+            auto put_item(const PutItemRequest& request) -> Result const {
+                const Aws::DynamoDB::Model::PutItemOutcome outcome = client.PutItem(request);
+                if (outcome.IsSuccess()) {
+                    return Result(true);
+                } else {
+                    return Result(false, outcome.GetError().GetMessage());
+                }
+            }
+         private:
+            const DynamoDBClient client;
         }; // class DynamoDB
 
     } // namespace Dynamodb    
 }  // namespace AwsService
-#endif  // AWS_DYNAMODB_H_
+#endif  // AWS_SERVICE_H_
