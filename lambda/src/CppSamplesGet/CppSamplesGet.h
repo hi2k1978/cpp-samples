@@ -7,6 +7,7 @@
 #include<iostream>
 
 #include "AwsLambda.h"
+#include "AwsService.h"
 
 namespace CppSamplesGet {
     using namespace AwsLambda;

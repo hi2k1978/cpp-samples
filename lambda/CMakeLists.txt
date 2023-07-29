@@ -7,8 +7,10 @@ find_package(AWSSDK COMPONENTS core dynamodb)
 
 set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD 17)
-set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplesPost)
 set(AWS_LIBLARIES AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES})
+
+set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplesPost)
+set(LAMBDA_LIBS AwsLambda AwsService)
 
 add_subdirectory(src)
 add_subdirectory(tests)

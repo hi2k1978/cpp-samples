@@ -1,12 +1,6 @@
 #include <aws/lambda-runtime/runtime.h>
 #include <aws/core/utils/json/JsonSerializer.h>
 
-#include <aws/core/Aws.h>
-#include <aws/dynamodb/DynamoDBClient.h>
-#include <aws/dynamodb/model/AttributeDefinition.h>
-#include <aws/dynamodb/model/GetItemRequest.h>
-#include <iostream>
-
 #include "AwsService.h"
 
 namespace AwsService {
@@ -21,6 +15,7 @@ namespace AwsService {
 
         Client::Client(const Aws::Client::ClientConfiguration &config) noexcept {
             Aws::DynamoDB::DynamoDBClient client(config);
+            int i;
         }
             
         auto Client::get_item(GetItemRequest& request) -> std::tuple<Result, Item> const {
