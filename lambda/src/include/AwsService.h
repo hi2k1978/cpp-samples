@@ -15,9 +15,6 @@
 
 namespace AwsService {
     
-    using namespace aws::lambda_runtime;
-    using namespace Aws::Utils::Json;
-
     namespace DynamoDB {
 
         using Item = Aws::Map<Aws::String, Aws::DynamoDB::Model::AttributeValue>;
@@ -32,33 +29,19 @@ namespace AwsService {
             const Aws::String error_message;
         }; // struct Result
     
-        template<class DynamoDBClient=Aws::DynamoDB::DynamoDBClient> class Client {
+        template<typename DynamoDBClient=Aws::DynamoDB::DynamoDBClient> class Client {
         public:
-            Client(const Aws::Client::ClientConfiguration &clientConfig) // noexcept
-                : client(DynamoDBClient(clientConfig)) {}
- 
-            
-            auto get_item(const GetItemRequest& request) -> std::tuple<Result, Item> const {
-                const Aws::DynamoDB::Model::GetItemOutcome &outcome = client.GetItem(request);
-                if (outcome.IsSuccess()) {
-                    return {Result(true), outcome.GetResult().GetItem()};
-                } else {
-                    return {Result(false, outcome.GetError().GetMessage()), Item()};
-                }
-            }
-        
-            auto put_item(const PutItemRequest& request) -> Result const {
-                const Aws::DynamoDB::Model::PutItemOutcome outcome = client.PutItem(request);
-                if (outcome.IsSuccess()) {
-                    return Result(true);
-                } else {
-                    return Result(false, outcome.GetError().GetMessage());
-                }
-            }
-         private:
+            Client(const Aws::Client::ClientConfiguration &clientConfig) noexcept;
+            auto get_item(const GetItemRequest& request) -> std::tuple<Result, Item> const;
+            auto put_item(const PutItemRequest& request) -> Result const;
+
+        private:
             const DynamoDBClient client;
         }; // class DynamoDB
 
     } // namespace Dynamodb    
 }  // namespace AwsService
+
+// include template implement at last
+#include "AwsService.hpp"
 #endif  // AWS_SERVICE_H_
