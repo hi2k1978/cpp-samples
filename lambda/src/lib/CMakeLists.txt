@@ -1,5 +1,5 @@
 include_directories(../include)
 
-add_library(AwsLambda STATIC AwsLambda.cpp)
-add_library(AwsService STATIC AwsService.cpp)
-# target_link_libraries(AwsLambda AwsService ${AWS_LIBLARIES})
+foreach(AWS_LAMBDA_LIB IN LISTS AWS_LAMBDA_LIBS)
+  add_library(${AWS_LAMBDA_LIB} STATIC ${AWS_LAMBDA_LIB}.cpp)
+endforeach()

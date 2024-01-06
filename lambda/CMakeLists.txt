@@ -9,26 +9,29 @@ set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD 17)
 set(AWS_LIBLARIES AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES})
 
-set(LAMBDA_FUNCTIONS CppSamplesGet CppSamplesPost)
-set(LAMBDA_LIBS AwsLambda AwsService)
+set(AWS_LAMBDA_LIBS AwsLambda AwsService)
+set(AWS_LAMBDA_FUNCTIONS CppSamplesGet CppSamplesPost)
+# AWS_LAMBDA_FUNCTION_HANDLERS
+## EX: LambdaFunction => LambdaFunctionHandler
+set(AWS_LAMBDA_FUNCTION_HANDLERS ${AWS_LAMBDA_FUNCTIONS})
+list(TRANSFORM AWS_LAMBDA_FUNCTION_HANDLERS APPEND "Handler")
+# AWS_LAMBDA_PACKAGES
+## EX: LambdaFunctionHandler => aws-lambda-package-LambdaFunctionHandler
+set(AWS_LAMBDA_PACKAGES ${AWS_LAMBDA_FUNCTION_HANDLERS})
+list(TRANSFORM AWS_LAMBDA_PACKAGES PREPEND "aws-lambda-package-")
 
 add_subdirectory(src)
 add_subdirectory(tests)
 
 ## build-test
-set(AWS_LAMBDA_TEST_DEPENDS ${LAMBDA_FUNCTIONS})
-list(TRANSFORM AWS_LAMBDA_TEST_DEPENDS APPEND "Handler")
 add_custom_target(aws-lambda-test
-  DEPENDS ${AWS_LAMBDA_TEST_DEPENDS}
+  DEPENDS ${AWS_LAMBDA_FUNCTION_HANDLERS}
   DEPENDS cpptest
 )
 
 ## build-package
-set(AWS_LAMBDA_PACKAGE_DEPENDS ${LAMBDA_FUNCTIONS})
-list(TRANSFORM AWS_LAMBDA_PACKAGE_DEPENDS APPEND "Handler")
-list(TRANSFORM AWS_LAMBDA_PACKAGE_DEPENDS PREPEND "aws-lambda-package-")
 add_custom_target(aws-lambda-package
-  DEPENDS ${AWS_LAMBDA_PACKAGE_DEPENDS}
+  DEPENDS ${AWS_LAMBDA_PACKAGES}
 )
 
 
