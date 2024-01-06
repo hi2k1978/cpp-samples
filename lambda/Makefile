@@ -46,6 +46,7 @@ lint:
 	cpplint $(target)
 .PHONY : lint
 
+# compiler
 compiler-build: force
 	docker image build -t $(DOCKER_TAG) -f $(DOCKER_FILE) .
 .PHONY : compiler-build
@@ -56,51 +57,33 @@ compiler-clean: force
 
 compiler-rebuild: compiler-clean compiler-build
 .PHONY : compiler-rebuild
-
-full: build sam-invoke
-.PHONY : full
-
-# define build-resource
-# build-$1:
-# 	$(eval path:=$(abspath ./src/$1))
-# 	$(eval dest:=/tmp/src)
-# 	docker container run --rm \
-# 		-v $(path):$(dest) \
-# 		-v $(path)/../include:$(dest)/include \
-# 		-v $(path)/../lib:$(dest)/lib \
-# 		$(DOCKER_TAG) aws-lambda-package-$1_handler
-# 		# $(DOCKER_TAG) all
-# .PHONY : build-$1
-# endef
-# $(foreach resource, $(TARGET), $(eval $(call build-resource,$(resource))))
-
-# build: $(addprefix build-,$(TARGET))
-# .PHONY : build
+# build
 build-binary:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) all # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-binary
 
-build-test:
+build-tests:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-test # CAUTION: Security Risk of Privilege Escalation.
-.PHONY : build-test
+.PHONY : build-tests
 
-build-package:
+build-packages:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package # CAUTION: Security Risk of Privilege Escalation.
-.PHONY : build-package
+.PHONY : build-packages
 
-build: build-test
+build: build-tests
 .PHONY : build
 
 rebuild: clean build
 .PHONY : rebuild
 
-deploy: build-package
+# deploy
+deploy: build-packages
 	./aws/deploy.sh
 .PHONY : deploy
 
@@ -108,8 +91,6 @@ deploy: build-package
 # $ ./google-test --gtest_filter=*CppLambda.*
 # example: make test ARGS="--gtest_filter=*__CppLambda.*"
 test:
-	@echo gtest_filter_exapmle: make test ARGS="--gtest_filter=*__CppLambda.*"
-	@echo
 	@echo
 	@echo "################################################################"
 	@echo "  RUN TEST"
@@ -123,6 +104,12 @@ test:
 	@echo
 	@echo
 	./build/tests/cpptest $(ARGS)
+	@echo
+	@echo "################################################################"
+	@echo "if you want to run specific tests, use gtest_filter"
+	@echo "EX: make test ARGS=\"--gtest_filter=*_Example.*\""
+	@echo "################################################################"
+	@echo
 .PHONY : test
 
 
@@ -165,7 +152,15 @@ sam-invoke-$1: sam-invoke-$1-options sam-invoke-$1-get sam-invoke-$1-post force
 endef
 $(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
 
-sam-invoke: build-package $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)) $(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
+# sam-invoke: build-packages $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)) $(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
+# .PHONY : sam-invoke
+sam-invoke-options: $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)))
+.PHONY : sam-invoke-options
+sam-invoke-get: $(addprefix sam-invoke-,$(addsuffix -get,$(TARGET)))
+.PHONY : sam-invoke-get
+sam-invoke-post: $(addprefix sam-invoke-,$(addsuffix -post,$(TARGET)))
+.PHONY : sam-invoke-post
+sam-invoke: build-packages sam-invoke-options sam-invoke-get sam-invoke-post
 .PHONY : sam-invoke
 
 
