@@ -9,8 +9,8 @@ DOCKER_SRCDIR:=$(abspath .)
 DOCKER_WORKDIR:=/tmp/src
 
 ## Makefile variables
-# TARGET:=CppSamplesGet
-TARGET:=CppSamplesGet CppSamplesPost
+# LAMBDAS:=CppSamplesGet
+LAMBDAS:=CppSamplesGet CppSamplesPost
 
 # ARGS
 ARGS:=
@@ -20,7 +20,7 @@ all: build
 
 clean: 
 	@echo "clean current directory & sub-directories"
-	@# for dir in $(TARGET); do sudo rm -rf ./src/$$dir/build; done
+	@# for lambda in $(LAMBDAS); do sudo rm -rf ./src/$$lambda/build; done
 	@rm -rf ./build
 .PHONY : clean
 
@@ -37,7 +37,7 @@ show:
 	@echo "DOCKER_TAG: " $(DOCKER_TAG)
 	@echo "DOCKER_SRCDIR: " $(DOCKER_SRCDIR)
 	@echo "DOCKER_WORKDIR: " $(DOCKER_WORKDIR)
-	@echo "TARGET: " $(TARGET)
+	@echo "LAMBDAS: " $(LAMBDAS)
 	@echo
 .PHONY : show
 
@@ -45,8 +45,9 @@ lint:
 	$(eval target:=$(wildcard src/**/*.h) $(wildcard src/**/*.cpp)) 
 	cpplint $(target)
 .PHONY : lint
-
-# compiler
+################################################################
+## build compiler
+################################################################
 compiler-build: force
 	docker image build -t $(DOCKER_TAG) -f $(DOCKER_FILE) .
 .PHONY : compiler-build
@@ -57,7 +58,10 @@ compiler-clean: force
 
 compiler-rebuild: compiler-clean compiler-build
 .PHONY : compiler-rebuild
-# build
+
+################################################################
+## build lambdas & tests
+################################################################
 build-binary:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
@@ -67,13 +71,13 @@ build-binary:
 build-tests:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
-		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-test # CAUTION: Security Risk of Privilege Escalation.
+		$(DOCKER_TAG) $(UID) $(GID) build-tests # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-tests
 
 build-packages:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
-		$(DOCKER_TAG) $(UID) $(GID) aws-lambda-package # CAUTION: Security Risk of Privilege Escalation.
+		$(DOCKER_TAG) $(UID) $(GID) build-packages # CAUTION: Security Risk of Privilege Escalation.
 .PHONY : build-packages
 
 build: build-tests
@@ -82,11 +86,16 @@ build: build-tests
 rebuild: clean build
 .PHONY : rebuild
 
-# deploy
+################################################################
+## deploy
+################################################################
 deploy: build-packages
 	./aws/deploy.sh
 .PHONY : deploy
 
+################################################################
+## run test
+################################################################
 ## EXAMPLES
 # $ ./google-test --gtest_filter=*CppLambda.*
 # example: make test ARGS="--gtest_filter=*__CppLambda.*"
@@ -113,8 +122,11 @@ test:
 .PHONY : test
 
 
-define sam-invoke-resource
-sam-invoke-$1-options: force
+################################################################
+## sam-invoke
+################################################################
+define sam-invoke-lambda
+sam-invoke-options-$1: force
 	$(eval event:=$(wildcard ls ./events/event-$1-options.json))
 ifeq ($(event), ./events/event-$1-options.json)
 	@echo $1 ": OPTIONS"
@@ -123,9 +135,9 @@ ifeq ($(event), ./events/event-$1-options.json)
 	@echo 
 	@echo 
 endif
-.PHONY : sam-invoke-$1-options
+.PHONY : sam-invoke-options-$1
 
-sam-invoke-$1-get: force
+sam-invoke-get-$1: force
 	$(eval event:=$(wildcard ls ./events/event-$1-get.json))
 ifeq ($(event), ./events/event-$1-get.json)
 	@echo $1 ": GET"
@@ -134,9 +146,9 @@ ifeq ($(event), ./events/event-$1-get.json)
 	@echo 
 	@echo 
 endif
-.PHONY : sam-invoke-$1-get
+.PHONY : sam-invoke-get-$1
 
-sam-invoke-$1-post: force
+sam-invoke-post-$1: force
 	$(eval event:=$(wildcard ls ./events/event-$1-post.json))
 ifeq ($(event), ./events/event-$1-post.json)
 	@echo $1 ": POST"
@@ -145,20 +157,18 @@ ifeq ($(event), ./events/event-$1-post.json)
 	@echo 
 	@echo 
 endif
-.PHONY : sam-invoke-$1-post
+.PHONY : sam-invoke-post-$1
 
-sam-invoke-$1: sam-invoke-$1-options sam-invoke-$1-get sam-invoke-$1-post force
+sam-invoke-$1: sam-invoke-options-$1 sam-invoke-get-$1 sam-invoke-post-$1
 .PHONY : sam-invoke-$1
 endef
-$(foreach resource, $(TARGET), $(eval $(call sam-invoke-resource,$(resource))))
+$(foreach lambda, $(LAMBDAS), $(eval $(call sam-invoke-lambda,$(lambda))))
 
-# sam-invoke: build-packages $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)) $(addsuffix -get,$(TARGET)) $(addsuffix -post,$(TARGET)))
-# .PHONY : sam-invoke
-sam-invoke-options: $(addprefix sam-invoke-,$(addsuffix -options,$(TARGET)))
+sam-invoke-options: $(addprefix sam-invoke-options-,$(LAMBDAS))
 .PHONY : sam-invoke-options
-sam-invoke-get: $(addprefix sam-invoke-,$(addsuffix -get,$(TARGET)))
+sam-invoke-get: $(addprefix sam-invoke-get-,$(LAMBDAS))
 .PHONY : sam-invoke-get
-sam-invoke-post: $(addprefix sam-invoke-,$(addsuffix -post,$(TARGET)))
+sam-invoke-post: $(addprefix sam-invoke-post-,$(LAMBDAS))
 .PHONY : sam-invoke-post
 sam-invoke: build-packages sam-invoke-options sam-invoke-get sam-invoke-post
 .PHONY : sam-invoke

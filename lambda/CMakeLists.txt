@@ -24,13 +24,13 @@ add_subdirectory(src)
 add_subdirectory(tests)
 
 ## build-test
-add_custom_target(aws-lambda-test
+add_custom_target(build-tests
   DEPENDS ${AWS_LAMBDA_FUNCTION_HANDLERS}
   DEPENDS cpptest
 )
 
-## build-package
-add_custom_target(aws-lambda-package
+## build-packages
+add_custom_target(build-packages
   DEPENDS ${AWS_LAMBDA_PACKAGES}
 )
 
