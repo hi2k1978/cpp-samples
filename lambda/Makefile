@@ -1,4 +1,4 @@
-## SELF
+## My IDs
 UID:=$(shell id -u)
 GID:=$(shell id -g)
 
@@ -29,15 +29,15 @@ force:
 
 show:
 	@echo
-	@echo Makefile Variables
-	@echo ==================
-	@echo "UID: " $(UID)
-	@echo "GID: " $(GID)
-	@echo "DOCKER_FILE: " $(DOCKER_FILE)
-	@echo "DOCKER_TAG: " $(DOCKER_TAG)
-	@echo "DOCKER_SRCDIR: " $(DOCKER_SRCDIR)
-	@echo "DOCKER_WORKDIR: " $(DOCKER_WORKDIR)
-	@echo "LAMBDAS: " $(LAMBDAS)
+	@echo Makefile Variable List
+	@echo ======================
+	@echo UID: $(UID)
+	@echo GID: $(GID)
+	@echo DOCKER_FILE: $(DOCKER_FILE)
+	@echo DOCKER_TAG: $(DOCKER_TAG)
+	@echo DOCKER_SRCDIR: $(DOCKER_SRCDIR)
+	@echo DOCKER_WORKDIR: $(DOCKER_WORKDIR)
+	@echo LAMBDAS: $(LAMBDAS)
 	@echo
 .PHONY : show
 
@@ -62,11 +62,11 @@ compiler-rebuild: compiler-clean compiler-build
 ################################################################
 ## build lambdas & tests
 ################################################################
-build-binary:
+build-binaries:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) all # CAUTION: Security Risk of Privilege Escalation.
-.PHONY : build-binary
+.PHONY : build-binaries
 
 build-tests:
 	docker container run --rm \
@@ -101,23 +101,23 @@ deploy: build-packages
 # example: make test ARGS="--gtest_filter=*__CppLambda.*"
 test:
 	@echo
-	@echo "################################################################"
-	@echo "  RUN TEST"
-	@echo "################################################################"
+	@echo ################################################################
+	@echo   RUN TEST
+	@echo ################################################################
 	@echo
-	@echo "ARGS: $(ARGS)"
-	@echo "TEST TYPE:"
-	@echo "  [N]: Normal"
-	@echo "  [Q]: Quasi-normal"
-	@echo "  [A]: Abnormal"
+	@echo ARGS: $(ARGS)
+	@echo TEST TYPE:
+	@echo   [N]: Normal
+	@echo   [Q]: Quasi-normal
+	@echo   [A]: Abnormal
 	@echo
 	@echo
 	./build/tests/cpptest $(ARGS)
 	@echo
-	@echo "################################################################"
-	@echo "if you want to run specific tests, use gtest_filter"
-	@echo "EX: make test ARGS=\"--gtest_filter=*_Example.*\""
-	@echo "################################################################"
+	@echo ################################################################
+	@echo if you want to run specific tests, use gtest_filter
+	@echo EX: make test ARGS="--gtest_filter=*_Example.*"
+	@echo ################################################################
 	@echo
 .PHONY : test
 
