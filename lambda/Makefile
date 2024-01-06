@@ -19,13 +19,10 @@ all: build
 .PHONY : all
 
 clean: 
-	@echo "clean current directory & sub-directories"
+	@echo "remove ./build"
 	@# for lambda in $(LAMBDAS); do sudo rm -rf ./src/$$lambda/build; done
 	@rm -rf ./build
 .PHONY : clean
-
-force:
-.PHONY : force
 
 show:
 	@echo
@@ -48,11 +45,11 @@ lint:
 ################################################################
 ## build compiler
 ################################################################
-compiler-build: force
+compiler-build: 
 	docker image build -t $(DOCKER_TAG) -f $(DOCKER_FILE) .
 .PHONY : compiler-build
 
-compiler-clean: force
+compiler-clean: 
 	docker image rm -f $(DOCKER_TAG)
 .PHONY : compiler-clean
 
@@ -126,7 +123,7 @@ test:
 ## sam-invoke
 ################################################################
 define sam-invoke-lambda
-sam-invoke-options-$1: force
+sam-invoke-options-$1: 
 	$(eval event:=$(wildcard ls ./events/event-$1-options.json))
 ifeq ($(event), ./events/event-$1-options.json)
 	@echo $1 ": OPTIONS"
@@ -137,7 +134,7 @@ ifeq ($(event), ./events/event-$1-options.json)
 endif
 .PHONY : sam-invoke-options-$1
 
-sam-invoke-get-$1: force
+sam-invoke-get-$1: 
 	$(eval event:=$(wildcard ls ./events/event-$1-get.json))
 ifeq ($(event), ./events/event-$1-get.json)
 	@echo $1 ": GET"
@@ -148,7 +145,7 @@ ifeq ($(event), ./events/event-$1-get.json)
 endif
 .PHONY : sam-invoke-get-$1
 
-sam-invoke-post-$1: force
+sam-invoke-post-$1: 
 	$(eval event:=$(wildcard ls ./events/event-$1-post.json))
 ifeq ($(event), ./events/event-$1-post.json)
 	@echo $1 ": POST"
