@@ -34,12 +34,24 @@ namespace AwsService {
     }
 
     TEST_F(lib_AwsService, N_DynamoDB_Client_TestGetItem) {
-        DynamoDB::Client<DynamoDB::MockDynamoDBClient> client(clientConfig);
+
+        Aws::DynamoDB::Model::GetItemRequest request;
+        request.SetTableName("TestTable");
+        request.AddKey("pKey", Aws::DynamoDB::Model::AttributeValue().SetS("TestValue001"));
+
+        Aws::DynamoDB::Model::GetItemOutcome outcome;
+
+        DynamoDB::Client client(clientConfig);
+        // EXPECT_CALL(client, GetItem(request))
+        //     .Times(AtLeast(1));
+
+
+        
         EXPECT_EQ(true, true);
     }
 
     TEST_F(lib_AwsService, N_DynamoDB_Client_TestPutItem) {
-        DynamoDB::Client<DynamoDB::MockDynamoDBClient> client(clientConfig);
+        DynamoDB::Client client(clientConfig);
         EXPECT_EQ(true, true);
     }
 }

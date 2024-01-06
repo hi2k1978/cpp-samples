@@ -9,6 +9,7 @@
 #include <aws/dynamodb/DynamoDBClient.h>
 #include <aws/dynamodb/model/AttributeDefinition.h>
 #include <aws/dynamodb/model/GetItemRequest.h>
+#include <aws/dynamodb/model/GetItemResult.h>
 #include <aws/dynamodb/model/PutItemRequest.h>
 #include <aws/dynamodb/model/PutItemResult.h>
 #include <iostream>
@@ -18,6 +19,7 @@ namespace AwsService {
     namespace DynamoDB {
 
         using Item = Aws::Map<Aws::String, Aws::DynamoDB::Model::AttributeValue>;
+        using DynamoDBClient = Aws::DynamoDB::DynamoDBClient;
         using GetItemRequest = Aws::DynamoDB::Model::GetItemRequest;
         using PutItemRequest = Aws::DynamoDB::Model::PutItemRequest;
 
@@ -28,20 +30,17 @@ namespace AwsService {
             const bool is_success;
             const Aws::String error_message;
         }; // struct Result
-    
-        template<typename DynamoDBClient=Aws::DynamoDB::DynamoDBClient> class Client {
+        
+        class Client {
         public:
-            Client(const Aws::Client::ClientConfiguration &clientConfig) noexcept;
+            Client(const DynamoDBClient &client) noexcept;
             auto get_item(const GetItemRequest& request) -> std::tuple<Result, Item> const;
             auto put_item(const PutItemRequest& request) -> Result const;
 
         private:
-            const DynamoDBClient client;
+            const Aws::DynamoDB::DynamoDBClient& client_;
         }; // class DynamoDB
 
     } // namespace Dynamodb    
 }  // namespace AwsService
-
-// include template implement at last
-#include "AwsService.hpp"
 #endif  // AWS_SERVICE_H_

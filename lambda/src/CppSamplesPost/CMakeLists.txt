@@ -8,6 +8,6 @@ add_library(${LAMBDA_FUNCTION} STATIC ${LAMBDA_FUNCTION}.cpp)
 add_executable(${LAMBDA_EXECUTE} Handler.cpp)
 set_target_properties(${LAMBDA_EXECUTE}
   PROPERTIES OUTPUT_NAME "handler")
-target_link_libraries(${LAMBDA_EXECUTE} PUBLIC ${LAMBDA_FUNCTION} ${LAMBDA_LIBS})
+target_link_libraries(${LAMBDA_EXECUTE} PUBLIC ${LAMBDA_FUNCTION} ${LAMBDA_LIBS} ${AWS_LIBLARIES})
 
 aws_lambda_package_target(${LAMBDA_EXECUTE})

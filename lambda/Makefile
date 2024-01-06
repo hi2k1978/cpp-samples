@@ -76,11 +76,11 @@ full: build sam-invoke
 
 # build: $(addprefix build-,$(TARGET))
 # .PHONY : build
-build-source:
+build-binary:
 	docker container run --rm \
 		-v $(DOCKER_SRCDIR):$(DOCKER_WORKDIR) \
 		$(DOCKER_TAG) $(UID) $(GID) all # CAUTION: Security Risk of Privilege Escalation.
-.PHONY : build-source
+.PHONY : build-binary
 
 build-test:
 	docker container run --rm \

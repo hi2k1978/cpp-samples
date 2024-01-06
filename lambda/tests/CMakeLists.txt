@@ -33,6 +33,7 @@ enable_testing()
 add_subdirectory(./lib)
 
 add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_NAME}.cpp)
-target_link_libraries(${TEST_NAME} gtest_main gmock_main ${MAIN_TEST_LIB} ${LAMBDA_FUNCTIONS} ${LAMBDA_LIBS})
+target_link_libraries(${TEST_NAME} gtest_main gmock_main ${MAIN_TEST_LIB} ${LAMBDA_FUNCTIONS} ${LAMBDA_LIBS} ${AWS_LIBLARIES})
+# target_link_libraries(${TEST_NAME} gtest_main gmock_main ${MAIN_TEST_LIB} ${LAMBDA_FUNCTIONS} ${LAMBDA_LIBS})
 
 
